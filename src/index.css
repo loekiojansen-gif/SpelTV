@@ -1,0 +1,796 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Share+Tech+Mono&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+:root {
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  color-scheme: light;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+
+*, ::before, ::after {
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+body, button, input, select, textarea {
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f6f8fa;
+  color: #1e293b;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  -webkit-overscroll-behavior: none;
+}
+
+/* Wii Themed Input & Textarea Box */
+input[type="text"],
+input[type="number"],
+input[type="search"],
+textarea,
+select {
+  background: linear-gradient(180deg, #ffffff 0%, #f4faff 60%, #e8f4fd 100%) !important;
+  border: 2px solid #bae6fd !important;
+  box-shadow: inset 0 2px 4px rgba(12, 74, 110, 0.05), 0 2px 6px rgba(12, 74, 110, 0.08) !important;
+  font-family: 'Fredoka', 'Nunito', system-ui, sans-serif !important;
+  color: #0f172a !important;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+textarea:focus,
+select:focus {
+  background: #ffffff !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.35), inset 0 1px 2px rgba(12, 74, 110, 0.05) !important;
+  color: #0f172a !important;
+}
+
+/* Wii Sports 3D Title Outline Effect */
+.wii-title-shadow {
+  text-shadow:
+    0 2px 0 #0284c7,
+    0 4px 8px rgba(2, 132, 199, 0.45);
+}
+
+/* Wii Skeuomorphic Glossy Card with Light Gradient */
+.wii-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(246, 251, 255, 0.95) 50%, rgba(236, 247, 255, 0.92) 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 8px 24px -4px rgba(12, 74, 110, 0.14), 0 2px 6px -1px rgba(12, 74, 110, 0.08);
+}
+
+/* Wii Inner Card / Text Box with Subtle Gradient */
+.wii-box {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fcff 60%, #eff8ff 100%);
+  border: 1.5px solid #dbeafe;
+  box-shadow: 0 2px 8px rgba(12, 74, 110, 0.06);
+}
+
+/* Wii Glossy Green Button */
+.wii-btn-green {
+  background: linear-gradient(180deg, #bef264 0%, #84cc16 45%, #65a30d 100%);
+  border: 2px solid #d9f99d;
+  box-shadow: 0 4px 14px rgba(101, 163, 13, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  color: #14300a;
+}
+
+.wii-btn-green:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 6px rgba(101, 163, 13, 0.3);
+}
+
+/* Wii Glossy Blue Button */
+.wii-btn-blue {
+  background: linear-gradient(180deg, #7dd3fc 0%, #38bdf8 45%, #0284c7 100%);
+  border: 2px solid #bae6fd;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  color: #ffffff;
+}
+
+.wii-btn-blue:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+}
+
+/* Wii Glossy Red Button */
+.wii-btn-red {
+  background: linear-gradient(180deg, #fca5a5 0%, #ef4444 45%, #b91c1c 100%);
+  border: 2px solid #fecaca;
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  color: #ffffff;
+}
+
+.wii-btn-red:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 6px rgba(185, 28, 28, 0.25);
+}
+
+/* Wii Glossy White/Neutral Button */
+.wii-btn-white {
+  background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 60%, #e0f2fe 100%);
+  border: 2px solid #bae6fd;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.12), inset 0 1px 0 #ffffff;
+  color: #0369a1;
+}
+
+.wii-btn-white:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 60%, #bae6fd 100%);
+  border-color: #7dd3fc;
+  color: #0284c7;
+}
+
+.wii-btn-white:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 4px rgba(2, 132, 199, 0.15);
+}
+
+/* Wii Glossy Yellow/Trophy Button */
+.wii-btn-yellow {
+  background: linear-gradient(180deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
+  border: 2px solid #fef9c3;
+  box-shadow: 0 4px 12px rgba(202, 138, 4, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  color: #713f12;
+}
+
+.wii-btn-yellow:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 6px rgba(202, 138, 4, 0.25);
+}
+
+/* Wii Modal Card */
+.wii-modal-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 3px solid #ffffff;
+  box-shadow: 0 20px 40px -10px rgba(12, 74, 110, 0.35), 0 0 0 1px rgba(186, 230, 253, 0.8);
+}
+
+/* Wii Hole Banner */
+.wii-hole-banner {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #075985 100%);
+  border: 2px solid #38bdf8;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+
+/* Wii HUD Badge */
+.wii-hud-badge {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid #bae6fd;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12);
+}
+
+/* Wii Sports 3D Golf Ball Bubble */
+.wii-golfball-bubble {
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #f8fafc 40%, #e2e8f0 85%, #cbd5e1 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.22), inset 0 2px 3px rgba(255, 255, 255, 1), inset 0 -2px 4px rgba(100, 116, 139, 0.4);
+  color: #0f172a;
+}
+
+/* Wii Sports Glossy Fairway Green Bubble */
+.wii-bubble-green {
+  background: radial-gradient(circle at 35% 30%, #d9f99d 0%, #84cc16 50%, #4d7c0f 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(77, 124, 15, 0.35), inset 0 2px 2px rgba(255, 255, 255, 0.9), inset 0 -2px 4px rgba(20, 83, 45, 0.5);
+  color: #14300a;
+}
+
+/* Wii Sports Glossy Amber Bubble */
+.wii-bubble-amber {
+  background: radial-gradient(circle at 35% 30%, #fef08a 0%, #f59e0b 50%, #b45309 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(180, 83, 9, 0.35), inset 0 2px 2px rgba(255, 255, 255, 0.9), inset 0 -2px 4px rgba(120, 53, 15, 0.5);
+  color: #451a03;
+}
+
+/* Wii Sports Glossy Purple Bubble */
+.wii-bubble-purple {
+  background: radial-gradient(circle at 35% 30%, #e9d5ff 0%, #a855f7 50%, #6b21a8 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(107, 33, 168, 0.35), inset 0 2px 2px rgba(255, 255, 255, 0.9), inset 0 -2px 4px rgba(88, 28, 135, 0.5);
+  color: #ffffff;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(224, 242, 254, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #38bdf8;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #84cc16;
+}
+
+/* Slot Machine Cylinder Drum 3D perspective and curved wheel simulation */
+.reel-drum-wrapper {
+  perspective: 450px;
+  transform-style: preserve-3d;
+}
+
+.reel-cylinder-item-top {
+  transform: rotateX(32deg) scale(0.85);
+  transform-origin: bottom center;
+  opacity: 0.38;
+}
+
+.reel-cylinder-item-center {
+  transform: rotateX(0deg) scale(1);
+  transform-origin: center center;
+  opacity: 1;
+}
+
+.reel-cylinder-item-bottom {
+  transform: rotateX(-32deg) scale(0.85);
+  transform-origin: top center;
+  opacity: 0.38;
+}
+
+/* Subtle sparkle & confetti floating particle animation */
+@keyframes slotSparklePop {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4) rotate(0deg);
+  }
+  30% {
+    opacity: 0.95;
+    transform: translate(var(--tx, 0px), var(--ty, -14px)) scale(1.1) rotate(45deg);
+  }
+  70% {
+    opacity: 0.8;
+    transform: translate(calc(var(--tx, 0px) * 1.3), calc(var(--ty, -14px) - 10px)) scale(0.9) rotate(90deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--tx, 0px) * 1.5), calc(var(--ty, -14px) - 22px)) scale(0.3) rotate(135deg);
+  }
+}
+
+.animate-slot-sparkle {
+  animation: slotSparklePop 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Authentic Channel Menu Background with Horizontal Pinstripes/Scanlines */
+.party-menu-bg {
+  background-color: #f6f8fa;
+  background-image: 
+    repeating-linear-gradient(
+      to bottom,
+      #f6f8fa 0px,
+      #f6f8fa 2.5px,
+      #e9edf2 2.5px,
+      #e9edf2 4px
+    );
+  background-size: 100% 4px;
+}
+
+/* Authentic CRT TV Rounded Channel Frame */
+.party-channel-frame {
+  position: relative;
+  background: linear-gradient(180deg, #ffffff 0%, #f4f6f9 55%, #e1e7ee 100%);
+  border: 2.2px solid rgba(255, 255, 255, 0.95);
+  border-radius: 1.25rem;
+  box-shadow: 
+    0 5px 14px rgba(15, 23, 42, 0.08),
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 2px rgba(148, 163, 184, 0.25);
+  transition: all 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+  overflow: hidden;
+}
+
+.party-channel-frame:hover {
+  transform: translateY(-2px) scale(1.03);
+  border-color: #00a0e9;
+  box-shadow: 
+    0 8px 22px rgba(0, 160, 233, 0.28),
+    0 0 0 2px rgba(56, 189, 248, 0.4);
+}
+
+.party-channel-frame:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Authentic Channel Curved Glass Sheen */
+.party-channel-sheen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border-top-left-radius: 1.15rem;
+  border-top-right-radius: 1.15rem;
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* Static Noise TV Channel Frame */
+.party-noise-frame {
+  position: relative;
+  background: #1e293b;
+  border: 2.5px solid #cbd5e1;
+  border-radius: 1.15rem;
+  box-shadow: 
+    0 4px 10px rgba(15, 23, 42, 0.08),
+    inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  transition: all 0.18s ease;
+}
+
+.party-noise-frame:hover {
+  border-color: #94a3b8;
+  transform: scale(1.02);
+}
+
+/* CRT Scanline Overlay */
+.crt-scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  );
+  background-size: 100% 3px;
+  pointer-events: none;
+}
+
+/* Digital 7-Segment LCD Clock Look */
+.party-digital-clock {
+  font-family: 'Orbitron', 'Share Tech Mono', 'Courier New', monospace !important;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #334155;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Authentic Curved Bottom Bar Shelf */
+.party-bottom-shelf {
+  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+  border-top: 2px solid #ffffff;
+  box-shadow: 0 -4px 14px rgba(15, 23, 42, 0.08);
+}
+
+.party-bottom-arch {
+  border-top: 3.5px solid #00a0e9;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+  box-shadow: 0 -2px 8px rgba(0, 160, 233, 0.2);
+}
+
+/* Embossed Silver Circular Button */
+.party-round-button {
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #f1f5f9 50%, #cbd5e1 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 
+    0 4px 8px rgba(15, 23, 42, 0.15),
+    inset 0 2px 2px rgba(255, 255, 255, 0.9),
+    inset 0 -2px 3px rgba(148, 163, 184, 0.4);
+  transition: all 0.15s ease;
+}
+
+.party-round-button:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 6px 12px rgba(0, 160, 233, 0.25),
+    inset 0 2px 2px rgba(255, 255, 255, 1);
+}
+
+.party-round-button:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.2);
+}
+
+/* Channel Icons Dynamic Living Movement */
+@keyframes channelIconFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(2.5deg);
+  }
+}
+
+@keyframes channelDiceTumble {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-6deg) scale(1.06);
+  }
+  75% {
+    transform: rotate(6deg) scale(0.97);
+  }
+}
+
+@keyframes channelTrophyGleam {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+  50% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.85));
+  }
+}
+
+@keyframes channelWheelSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-channel-float {
+  animation: channelIconFloat 4.2s ease-in-out infinite;
+}
+
+.animate-channel-dice {
+  animation: channelDiceTumble 4.5s ease-in-out infinite;
+}
+
+.animate-channel-trophy {
+  animation: channelTrophyGleam 4.5s ease-in-out infinite;
+}
+
+.animate-channel-wheel {
+  animation: channelWheelSpin 18s linear infinite;
+}
+
+/* Golf ball rolling from RIGHT to LEFT into the hole and repeating (slower, smoother) */
+@keyframes golfBallPuttRTL {
+  0% {
+    transform: translate(32px, 2px) scale(0.95) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+    transform: translate(22px, 1px) scale(1) rotate(-120deg);
+  }
+  60% {
+    transform: translate(-2px, 1px) scale(1) rotate(-360deg);
+    opacity: 1;
+  }
+  74% {
+    transform: translate(-7px, 1.5px) scale(0.65) rotate(-460deg);
+    opacity: 0.85;
+  }
+  86% {
+    transform: translate(-9px, 2px) scale(0.15) rotate(-520deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-9px, 2px) scale(0.1) rotate(-520deg);
+    opacity: 0;
+  }
+}
+
+.animate-golf-putt-rtl {
+  animation: golfBallPuttRTL 3.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+/* Chwazi side view finger tapping up and down onto the phone (slower, gentler) */
+@keyframes chwaziTapDown {
+  0%, 100% {
+    transform: translate(0px, -12px) rotate(0deg);
+  }
+  45% {
+    transform: translate(0px, 3px) rotate(0deg);
+  }
+  55% {
+    transform: translate(0px, 4px) rotate(0deg);
+  }
+  75% {
+    transform: translate(0px, -9px) rotate(0deg);
+  }
+}
+
+.animate-chwazi-finger-tap {
+  animation: chwaziTapDown 2.6s ease-in-out infinite;
+}
+
+/* 30 Seconds Hourglass flip animation */
+@keyframes hourglassFlip {
+  0%, 70% {
+    transform: rotate(0deg);
+  }
+  82%, 100% {
+    transform: rotate(180deg);
+  }
+}
+
+.animate-hourglass-flip {
+  animation: hourglassFlip 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform-origin: center center;
+}
+
+/* Dual Rolling Dice 3D Tumbling (slower, smoother) */
+@keyframes diceTumbleA {
+  0% {
+    transform: translate(-2px, 0px) rotate(0deg) scale(1);
+  }
+  30% {
+    transform: translate(-5px, -6px) rotate(-25deg) scale(1.08);
+  }
+  65% {
+    transform: translate(0px, 3px) rotate(15deg) scale(0.94);
+  }
+  100% {
+    transform: translate(-2px, 0px) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes diceTumbleB {
+  0% {
+    transform: translate(2px, 0px) rotate(15deg) scale(0.98);
+  }
+  35% {
+    transform: translate(6px, 4px) rotate(35deg) scale(0.92);
+  }
+  70% {
+    transform: translate(0px, -5px) rotate(-15deg) scale(1.06);
+  }
+  100% {
+    transform: translate(2px, 0px) rotate(15deg) scale(0.98);
+  }
+}
+
+.animate-dice-roll-a {
+  animation: diceTumbleA 4.2s ease-in-out infinite;
+}
+
+.animate-dice-roll-b {
+  animation: diceTumbleB 4.5s ease-in-out infinite 0.4s;
+}
+
+/* True Solid 3D Cube Dice System */
+:root {
+  --die-size: 72px;
+  --die-half: 36px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --die-size: 82px;
+    --die-half: 41px;
+  }
+}
+
+.dice-cube-scene {
+  width: var(--die-size);
+  height: var(--die-size);
+  perspective: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dice-cube {
+  width: var(--die-size);
+  height: var(--die-size);
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.2, 0.85, 0.35, 1.15);
+}
+
+/* Solid Opaque 3D Face Styling with Closed Edges & Corners */
+.dice-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  border: 1px solid #94a3b8;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.08);
+  backface-visibility: visible;
+}
+
+/* Solid Inner Core to prevent any see-through gaps */
+.dice-cube-solid-core {
+  position: absolute;
+  inset: 1px;
+  background-color: #f1f5f9;
+  border-radius: 2px;
+  transform: translateZ(0);
+}
+
+/* 6 Solid Faces of the 3D Cube (Opposites sum to 7) */
+.dice-face-1 {
+  transform: rotateY(0deg) translateZ(var(--die-half));
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 60%, #f1f5f9 100%);
+}
+.dice-face-6 {
+  transform: rotateY(180deg) translateZ(var(--die-half));
+  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 60%, #e2e8f0 100%);
+}
+.dice-face-2 {
+  transform: rotateY(90deg) translateZ(var(--die-half));
+  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 60%, #e2e8f0 100%);
+}
+.dice-face-5 {
+  transform: rotateY(-90deg) translateZ(var(--die-half));
+  background: linear-gradient(145deg, #f1f5f9 0%, #e2e8f0 60%, #cbd5e1 100%);
+}
+.dice-face-3 {
+  transform: rotateX(90deg) translateZ(var(--die-half));
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 70%, #f1f5f9 100%);
+}
+.dice-face-4 {
+  transform: rotateX(-90deg) translateZ(var(--die-half));
+  background: linear-gradient(145deg, #e2e8f0 0%, #cbd5e1 60%, #94a3b8 100%);
+}
+
+/* 3D Tumble Rolling Animation */
+@keyframes diceCubeTumble {
+  0% {
+    transform: translateY(-24px) rotateX(20deg) rotateY(30deg) rotateZ(10deg);
+  }
+  20% {
+    transform: translateY(12px) rotateX(190deg) rotateY(200deg) rotateZ(90deg);
+  }
+  40% {
+    transform: translateY(-20px) rotateX(380deg) rotateY(410deg) rotateZ(190deg);
+  }
+  65% {
+    transform: translateY(8px) rotateX(570deg) rotateY(610deg) rotateZ(280deg);
+  }
+  85% {
+    transform: translateY(-6px) rotateX(690deg) rotateY(700deg) rotateZ(330deg);
+  }
+  100% {
+    transform: translateY(0px) rotateX(720deg) rotateY(720deg) rotateZ(360deg);
+  }
+}
+
+.animate-cube-tumble {
+  animation: diceCubeTumble 0.7s cubic-bezier(0.25, 0.9, 0.4, 1) infinite;
+}
+
+/* True 3D Coin with Physical Thickness and Permanent Sides */
+.coin-3d-scene {
+  width: 84px;
+  height: 84px;
+  perspective: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coin-3d {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.2, 0.85, 0.35, 1.15);
+}
+
+.coin-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  box-shadow: 0 0 0 3px #ca8a04, 0 0 0 5px #a16207, 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.coin-face-front {
+  background: radial-gradient(circle at 35% 35%, #fef08a 0%, #eab308 55%, #ca8a04 100%);
+  transform: translateZ(4px);
+  border: 3px solid #fef9c3;
+  color: #713f12;
+}
+
+.coin-face-back {
+  background: radial-gradient(circle at 35% 35%, #fed7aa 0%, #f97316 55%, #c2410c 100%);
+  transform: rotateY(180deg) translateZ(4px);
+  border: 3px solid #ffedd5;
+  color: #431407;
+}
+
+/* Coin Edge Rim for 3D thickness */
+.coin-edge-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: #ca8a04;
+  box-shadow: 0 0 0 4px #a16207;
+  transform: translateZ(0px);
+}
+
+/* 3D Coin Flip Animations */
+@keyframes coinFlipToKop {
+  0% {
+    transform: translateY(-28px) rotateY(0deg) scale(0.9);
+  }
+  50% {
+    transform: translateY(14px) rotateY(720deg) scale(1.12);
+  }
+  100% {
+    transform: translateY(0px) rotateY(1440deg) scale(1);
+  }
+}
+
+@keyframes coinFlipToMunt {
+  0% {
+    transform: translateY(-28px) rotateY(0deg) scale(0.9);
+  }
+  50% {
+    transform: translateY(14px) rotateY(720deg) scale(1.12);
+  }
+  100% {
+    transform: translateY(0px) rotateY(1620deg) scale(1);
+  }
+}
+
+.animate-coin-flip-kop {
+  animation: coinFlipToKop 1.35s cubic-bezier(0.2, 0.85, 0.25, 1) forwards;
+}
+
+.animate-coin-flip-munt {
+  animation: coinFlipToMunt 1.35s cubic-bezier(0.2, 0.85, 0.25, 1) forwards;
+}
+
+@keyframes diceShadowPulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.25;
+  }
+  25% {
+    transform: scale(1.2);
+    opacity: 0.65;
+  }
+  50% {
+    transform: scale(0.8);
+    opacity: 0.3;
+  }
+  75% {
+    transform: scale(1.1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+}
+
+.animate-dice-shadow {
+  animation: diceShadowPulse 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+{
+  "name": "Pub Golf Pro",
+  "description": "Interactieve spellen en party tools voor elke gezellige avond",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
+
+
