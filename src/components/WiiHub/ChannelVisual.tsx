@@ -3,6 +3,13 @@ import { SubAppId } from '../../types';
 import { Hourglass } from 'lucide-react';
 import { MiiFace } from '../MiiMaker/MiiFace';
 import { NoiseVisual } from './NoiseChannel';
+import {
+  OpJeKopVisual,
+  SpionVisual,
+  SnelsteVingerVisual,
+  HogerLagerVisual,
+  NooitVisual,
+} from './NewChannelVisuals';
 
 export const DEFAULT_CHANNEL_ORDER: string[] = [
   // Page 1 (0 - 11)
@@ -24,14 +31,68 @@ export const DEFAULT_CHANNEL_ORDER: string[] = [
   'THIRTY_SECONDS',
   'WIE_IS',
   'UNDERCOVER',
-  'NOISE_18',
-  'NOISE_19',
-  'NOISE_20',
-  'NOISE_21',
-  'NOISE_22',
+  'OP_JE_KOP',
+  'SPION',
+  'SNELSTE_VINGER',
+  'HOGER_LAGER',
+  'NOOIT',
   'NOISE_23',
   'NOISE_24',
 ];
+
+const GAME_CHANNEL_IDS = DEFAULT_CHANNEL_ORDER.filter(id => !id.startsWith('NOISE_'));
+const CHANNEL_ORDER_KEY = 'party_channels_custom_order';
+
+/**
+ * Laadt de zelf ingedeelde kanaalvolgorde.
+ * Kanalen die er sinds de vorige versie bij zijn gekomen schuiven automatisch
+ * in de eerste lege "Binnenkort" plek, zodat een eigen indeling bewaard blijft.
+ */
+export function loadChannelOrder(): string[] {
+  try {
+    const saved = localStorage.getItem(CHANNEL_ORDER_KEY);
+    if (!saved) return DEFAULT_CHANNEL_ORDER;
+
+    const parsed: unknown = JSON.parse(saved);
+    if (!Array.isArray(parsed) || parsed.length !== DEFAULT_CHANNEL_ORDER.length) {
+      return DEFAULT_CHANNEL_ORDER;
+    }
+
+    const order = parsed as string[];
+    const isKnown = (id: unknown) =>
+      typeof id === 'string' && (id.startsWith('NOISE_') || GAME_CHANNEL_IDS.includes(id));
+    if (!order.every(isKnown) || new Set(order).size !== order.length) {
+      return DEFAULT_CHANNEL_ORDER;
+    }
+
+    const next = [...order];
+    for (const gameId of GAME_CHANNEL_IDS) {
+      if (next.includes(gameId)) continue;
+      const freeSlot = next.findIndex(id => id.startsWith('NOISE_'));
+      if (freeSlot === -1) return DEFAULT_CHANNEL_ORDER;
+      next[freeSlot] = gameId;
+    }
+    return next;
+  } catch {
+    return DEFAULT_CHANNEL_ORDER;
+  }
+}
+
+export function saveChannelOrder(order: string[]): void {
+  try {
+    localStorage.setItem(CHANNEL_ORDER_KEY, JSON.stringify(order));
+  } catch {
+    // Opslag niet beschikbaar
+  }
+}
+
+export function clearChannelOrder(): void {
+  try {
+    localStorage.removeItem(CHANNEL_ORDER_KEY);
+  } catch {
+    // Opslag niet beschikbaar
+  }
+}
 
 export function getChannelTitle(channelId: string): string {
   switch (channelId) {
@@ -69,6 +130,16 @@ export function getChannelTitle(channelId: string): string {
       return 'Wie is?';
     case 'UNDERCOVER':
       return 'Undercover';
+    case 'OP_JE_KOP':
+      return 'Op je Kop';
+    case 'SPION':
+      return 'Spion';
+    case 'SNELSTE_VINGER':
+      return 'Snelste Vinger';
+    case 'HOGER_LAGER':
+      return 'Hoger of Lager';
+    case 'NOOIT':
+      return 'Ik heb nog nooit';
     default:
       if (channelId.startsWith('NOISE_')) {
         return 'Binnenkort';
@@ -78,25 +149,7 @@ export function getChannelTitle(channelId: string): string {
 }
 
 export function isGameChannel(channelId: string): channelId is SubAppId {
-  return [
-    'PUB_GOLF',
-    'CHWAZI',
-    'DICE',
-    'SCORE_KEEPER',
-    'WHEEL',
-    'SLABAKKEN',
-    'TEAM_MAKER',
-    'TOURNAMENT',
-    'CROCODILE',
-    'BOMB',
-    'CAMEL_RACE',
-    'CARD_CATALOG',
-    'BOER_ZOEKT_VROUW',
-    'MII_MAKER',
-    'THIRTY_SECONDS',
-    'WIE_IS',
-    'UNDERCOVER',
-  ].includes(channelId);
+  return GAME_CHANNEL_IDS.includes(channelId);
 }
 
 interface ChannelVisualProps {
@@ -785,6 +838,21 @@ export function ChannelVisual({
           </div>
         </div>
       );
+
+    case 'OP_JE_KOP':
+      return <OpJeKopVisual />;
+
+    case 'SPION':
+      return <SpionVisual />;
+
+    case 'SNELSTE_VINGER':
+      return <SnelsteVingerVisual />;
+
+    case 'HOGER_LAGER':
+      return <HogerLagerVisual />;
+
+    case 'NOOIT':
+      return <NooitVisual />;
 
     default:
       return null;

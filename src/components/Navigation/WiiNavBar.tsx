@@ -33,6 +33,11 @@ const APP_HEADER_CONFIG: Record<SubAppId, { emoji: string; title: string }> = {
   THIRTY_SECONDS: { emoji: '⏱️', title: '30 Seconds' },
   WIE_IS: { emoji: '❓', title: 'Wie is?' },
   UNDERCOVER: { emoji: '👽', title: 'Undercover' },
+  OP_JE_KOP: { emoji: '🤯', title: 'Op je Kop' },
+  SPION: { emoji: '🕵️', title: 'Spion' },
+  SNELSTE_VINGER: { emoji: '⚡', title: 'Snelste Vinger' },
+  HOGER_LAGER: { emoji: '🃏', title: 'Hoger of Lager' },
+  NOOIT: { emoji: '😇', title: 'Ik heb nog nooit' },
 };
 
 export function WiiNavBar({
