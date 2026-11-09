@@ -67,7 +67,7 @@ export const GAME_RULES: Record<SubAppId, GameRuleInfo> = {
     emoji: '📋',
     summary: 'Universeel digitaal scorebord voor elk gezelschapsspel.',
     rules: [
-      'Voeg spelers toe en selecteer eventueel hun persoonlijke Mii-hoofdje.',
+      'Voeg spelers toe en selecteer eventueel hun eigen poppetje.',
       'Gebruik de + en - knoppen om punten bij te houden tijdens het spelen.',
       'In het overzicht zie je precies wie aan de leiding staat en hoe de scores verlopen.',
     ],
@@ -100,7 +100,7 @@ export const GAME_RULES: Record<SubAppId, GameRuleInfo> = {
     emoji: '👥',
     summary: 'Eerlijk, snel en willekeurig teams samenstellen.',
     rules: [
-      'Voer de namen van alle spelers in (of kies uit je Mii-personages).',
+      'Voer de namen van alle spelers in (of kies uit je poppetjes).',
       'Selecteer het gewenste aantal teams of de teamgrootte.',
       'Klik op "Verdeel Teams" of gebruik het lotingsrad voor een spannende onthulling!',
     ],
@@ -171,8 +171,8 @@ export const GAME_RULES: Record<SubAppId, GameRuleInfo> = {
     emoji: '👤',
     summary: 'Maak en beheer je eigen gepersonaliseerde party avatars.',
     rules: [
-      'Ontwerp unieke Mii-poppetjes met kapsels, brillen, gezichtsvormen en kleuren.',
-      'Je opgeslagen Mii-spelers verschijnen direct met hun eigen hoofdje in alle spellen!',
+      'Ontwerp unieke poppetjes met kapsels, brillen, gezichtsvormen en kleuren.',
+      'Je opgeslagen spelers verschijnen direct met hun eigen hoofdje in alle spellen!',
     ],
   },
   THIRTY_SECONDS: {

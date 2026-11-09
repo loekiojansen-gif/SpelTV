@@ -854,7 +854,7 @@ export function WiiChannelGrid({
                 <div className="w-8 h-8 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center">
                   <Mail className="w-4 h-4" />
                 </div>
-                <h3 className="font-black text-slate-800 text-sm">Wii Berichtenbord</h3>
+                <h3 className="font-black text-slate-800 text-sm">Berichtenbord</h3>
               </div>
               <button
                 onClick={() => setShowMessageModal(false)}

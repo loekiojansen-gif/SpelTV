@@ -4,12 +4,17 @@ import path from 'path';
 import {defineConfig} from 'vite';
 import {VitePWA} from 'vite-plugin-pwa';
 
-export default defineConfig(() => {
+export default defineConfig(({mode}) => {
+  // `vite build --mode artifact` maakt een losse versie die vanaf elke map kan draaien
+  // (relatieve paden, zonder service worker), bijvoorbeeld om online te delen.
+  const isArtifact = mode === 'artifact';
   return {
+    base: isArtifact ? './' : '/',
+    build: isArtifact ? {outDir: 'dist-artifact', emptyOutDir: true, copyPublicDir: false} : undefined,
     plugins: [
       react(),
       tailwindcss(),
-      VitePWA({
+      !isArtifact && VitePWA({
         registerType: 'autoUpdate',
         includeAssets: ['apple-touch-icon.png', 'icon.svg'],
         manifest: {
@@ -51,7 +56,7 @@ export default defineConfig(() => {
           type: 'module',
         },
       }),
-    ],
+    ].filter(Boolean),
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

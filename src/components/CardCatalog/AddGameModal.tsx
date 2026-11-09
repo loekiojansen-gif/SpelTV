@@ -22,6 +22,7 @@ const COLOR_OPTIONS: { id: CardGame['coverColor']; label: string; bg: string }[]
 ];
 
 export const AddGameModal: React.FC<AddGameModalProps> = ({ isOpen, onClose, onSave, initialGame }) => {
+  const [formError, setFormError] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [category, setCategory] = useState<CardGame['category']>('kaarten');
@@ -85,9 +86,12 @@ export const AddGameModal: React.FC<AddGameModalProps> = ({ isOpen, onClose, onS
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) {
-      alert('Vul minimaal de titel en spelregels in!');
+      // Melding in het venster zelf: een alert() wordt niet getoond als de app in een frame draait
+      setFormError('Vul minimaal de titel en spelregels in!');
+      sounds.playTick(300);
       return;
     }
+    setFormError(null);
 
     const requiredList = requiredInput
       .split(',')
@@ -364,6 +368,11 @@ export const AddGameModal: React.FC<AddGameModalProps> = ({ isOpen, onClose, onS
             >
               Annuleren
             </button>
+            {formError && (
+              <span role="alert" className="text-[11px] font-bold text-red-600 mr-auto ml-2">
+                {formError}
+              </span>
+            )}
             <button
               type="submit"
               className="px-6 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"

@@ -28,6 +28,14 @@ npm install --legacy-peer-deps
 npm run dev
 ```
 
+Een losse versie om online te zetten (relatieve paden, zonder service worker) maak je met:
+
+```bash
+bun run build:artifact
+```
+
+Die komt in de map `dist-artifact/` en draait vanaf elke webmap.
+
 ## Vijf nieuwe kanalen (pagina 2)
 
 | Kanaal | Wat is het | Bijzonder |
@@ -61,6 +69,9 @@ Op je Kop en Hoger of Lager. Poppetjes van het Spelers Pleintje verschijnen er v
   `slide-in-from-*` stonden op 90 plekken in de code maar hadden geen definitie. Die is toegevoegd,
   waardoor alle bestaande vensters nu vloeiend binnenkomen.
 - **Geluid aan/uit** wordt onthouden na herladen.
+- **Geen pop-ups meer** in de Bibliotheek: `alert()` en `confirm()` zijn vervangen door een melding en
+  een bevestiging in het venster zelf, omdat browsers die in een ingebedde pagina vaak blokkeren.
+- Merknamen van Nintendo (Wii, Mii) zijn uit de zichtbare teksten gehaald.
 - Er zijn geen nieuwe pakketten toegevoegd en `package.json` is niet gewijzigd.
 
 ## Waar staat wat
