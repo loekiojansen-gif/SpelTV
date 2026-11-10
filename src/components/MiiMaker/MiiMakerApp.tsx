@@ -511,14 +511,11 @@ export function MiiMakerApp() {
                 A solid background shield extends above to the top and below with a clean gap,
                 so scrolling options disappear BEHIND the background, leaving a clean empty rim under the head tab! */}
             <div
-              style={{ top: 'calc(env(safe-area-inset-top, 0px) + 3.2rem)' }}
-              className="sticky z-25 w-full md:w-5/12 md:shrink-0 -mx-3 px-3 sm:mx-0 sm:px-0 pt-1 pb-3 sm:pb-0 bg-gradient-to-b from-[#e0f2fe] via-[#e2f3fe] to-[#eaf6ff] sm:bg-transparent"
+              style={{ top: 'calc(env(safe-area-inset-top, 0px) + 3.95rem)' }}
+              className="sticky z-25 w-full md:w-5/12 md:shrink-0 -mx-3 px-3 sm:mx-0 sm:px-0 pt-1 pb-3 sm:pb-0 bg-[#e0f2fe] sm:bg-transparent"
             >
               {/* Top Shield extending upwards to cover space behind WiiNavBar on mobile */}
               <div className="sm:hidden absolute inset-x-0 bottom-full h-32 bg-[#e0f2fe] pointer-events-none" />
-
-              {/* Bottom Soft Fade Edge into the page background on mobile */}
-              <div className="sm:hidden absolute inset-x-0 -bottom-3 h-3 bg-gradient-to-b from-[#eaf6ff] to-transparent pointer-events-none" />
 
               <div className="wii-card rounded-2xl sm:rounded-3xl p-2.5 sm:p-4 border-2 border-white shadow-xl bg-white relative z-10">
                 {/* Mobile View (< sm): Compact horizontal layout with larger 100px head */}

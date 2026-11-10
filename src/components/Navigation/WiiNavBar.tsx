@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Home, Flag, RotateCcw, HelpCircle, X, Sparkles } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Home, Flag, RotateCcw, HelpCircle, X, Sparkles, Volume2, VolumeX } from 'lucide-react';
 import { sounds } from '../../utils/audio';
 import { SubAppId } from '../../types';
 import { GAME_RULES } from './gameRules';
@@ -32,6 +32,7 @@ const APP_HEADER_CONFIG: Record<SubAppId, { emoji: string; title: string }> = {
   MII_MAKER: { emoji: '👤', title: 'Spelers' },
   THIRTY_SECONDS: { emoji: '⏱️', title: '30 Seconds' },
   WIE_IS: { emoji: '❓', title: 'Wie is?' },
+  UNDERCOVER: { emoji: '👽', title: 'Undercover' },
 };
 
 export function WiiNavBar({
@@ -42,6 +43,11 @@ export function WiiNavBar({
   appNameTitle,
 }: WiiNavBarProps) {
   const [showRulesModal, setShowRulesModal] = useState<boolean>(false);
+  const [muted, setMuted] = useState<boolean>(() => sounds.getMuted());
+
+  useEffect(() => {
+    setMuted(sounds.getMuted());
+  }, []);
 
   const handleHomeClick = () => {
     sounds.playWiiBack();
@@ -70,7 +76,7 @@ export function WiiNavBar({
     <>
       <header
         style={{
-          paddingTop: 'max(0.6rem, calc(0.6rem + env(safe-area-inset-top, 0px)))',
+          paddingTop: 'max(1.35rem, calc(1.35rem + env(safe-area-inset-top, 0px)))',
         }}
         className="sticky top-0 z-30 w-full bg-transparent px-3 sm:px-4 pb-2 transition-all select-none"
       >
@@ -79,7 +85,7 @@ export function WiiNavBar({
           <div className="flex items-center shrink-0">
             <button
               onClick={handleHomeClick}
-              className="w-9 h-9 rounded-full bg-slate-900/60 hover:bg-slate-900/80 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-md transition-all active:scale-95 cursor-pointer"
+              className="w-9 h-9 rounded-full bg-slate-900/90 hover:bg-slate-900 border border-white/25 text-white flex items-center justify-center shadow-lg transition-all active:scale-95 cursor-pointer"
               title="Party Menu"
             >
               <Home className="w-4.5 h-4.5 text-sky-200" />
@@ -92,7 +98,7 @@ export function WiiNavBar({
               sounds.playWiiSelect();
               setShowRulesModal(true);
             }}
-            className="flex items-center justify-center gap-1.5 sm:gap-2 min-w-0 px-3.5 py-1 rounded-full bg-slate-900/60 hover:bg-slate-900/85 backdrop-blur-md border border-white/25 hover:border-white/40 shadow-md text-white transition-all cursor-pointer active:scale-95 group"
+            className="flex items-center justify-center gap-1.5 sm:gap-2 min-w-0 px-3.5 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-900 border border-white/25 hover:border-white/40 shadow-lg text-white transition-all cursor-pointer active:scale-95 group"
             title="Klik voor uitleg en spelregels"
           >
             <span className="text-lg sm:text-xl shrink-0 select-none drop-shadow-sm group-hover:scale-110 transition-transform">
@@ -117,6 +123,25 @@ export function WiiNavBar({
               </button>
             )}
 
+            {/* Volume / Mute Toggle */}
+            <button
+              onClick={() => {
+                const next = !muted;
+                sounds.setMuted(next);
+                setMuted(next);
+                if (!next) sounds.playTick(1000);
+              }}
+              aria-label={muted ? 'Geluid aanzetten' : 'Geluid dempen'}
+              title={muted ? 'Geluid aanzetten' : 'Geluid dempen'}
+              className="w-9 h-9 rounded-full bg-slate-900/90 hover:bg-slate-900 border border-white/25 text-sky-300 hover:text-sky-200 flex items-center justify-center shadow-lg active:scale-95 transition-all cursor-pointer"
+            >
+              {muted ? (
+                <VolumeX className="w-4 h-4 text-slate-400" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-sky-400 animate-pulse" />
+              )}
+            </button>
+
             {/* Reset Knop voor alle spellen */}
             <button
               onClick={() => {
@@ -127,7 +152,7 @@ export function WiiNavBar({
               }}
               aria-label="Spel resetten"
               title="Spel resetten"
-              className="w-9 h-9 rounded-full bg-slate-900/60 hover:bg-slate-900/80 backdrop-blur-md border border-white/25 text-rose-300 hover:text-rose-200 flex items-center justify-center shadow-md active:scale-95 transition-all cursor-pointer"
+              className="w-9 h-9 rounded-full bg-slate-900/90 hover:bg-slate-900 border border-white/25 text-rose-300 hover:text-rose-200 flex items-center justify-center shadow-lg active:scale-95 transition-all cursor-pointer"
             >
               <RotateCcw className="w-4 h-4 text-rose-300" />
             </button>

@@ -56,6 +56,16 @@ export function WiiChannelGrid({
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length === 24) {
+          if (!parsed.includes('UNDERCOVER')) {
+            const noiseIndex = parsed.findIndex(id => id.startsWith('NOISE_'));
+            if (noiseIndex !== -1) {
+              parsed[noiseIndex] = 'UNDERCOVER';
+              try {
+                localStorage.setItem('party_channels_custom_order', JSON.stringify(parsed));
+              } catch {}
+              return parsed;
+            }
+          }
           const hasAllGames = DEFAULT_CHANNEL_ORDER.every(
             id => id.startsWith('NOISE_') || parsed.includes(id)
           );
@@ -230,6 +240,9 @@ export function WiiChannelGrid({
   ) => {
     // Only handle primary pointer (left mouse button or single touch)
     if (e.button !== 0 && e.pointerType === 'mouse') return;
+
+    // Lege kanalen (ruis/voorbereiding) kunnen niet worden verplaatst
+    if (channelId.startsWith('NOISE_')) return;
 
     const targetEl = e.currentTarget as HTMLElement;
     const rect = targetEl.getBoundingClientRect();
@@ -436,7 +449,7 @@ export function WiiChannelGrid({
               ? 'ring-4 ring-[#00a0e9] ring-offset-2 ring-offset-white scale-105 shadow-xl'
               : ''
           }`}
-          title={`${title} (Houd ingedrukt om te verplaatsen)`}
+          title={channelId.startsWith('NOISE_') ? title : `${title} (Houd ingedrukt om te verplaatsen)`}
         >
           <ChannelVisual
             channelId={channelId}
@@ -454,7 +467,12 @@ export function WiiChannelGrid({
   };
 
   return (
-    <div className="w-full h-[100dvh] max-h-[100dvh] flex flex-col justify-between select-none party-menu-bg pt-1 sm:pt-2 pb-0 overflow-hidden overscroll-none fixed inset-0">
+    <div
+      style={{
+        paddingTop: 'max(1.35rem, calc(1.35rem + env(safe-area-inset-top, 0px)))',
+      }}
+      className="w-full h-[100dvh] max-h-[100dvh] flex flex-col justify-between select-none party-menu-bg pb-0 overflow-hidden overscroll-none fixed inset-0"
+    >
       {/* Main Channel Area with Side Wii Navigation Arrows */}
       <div className="w-full max-w-4xl mx-auto flex-1 px-0.5 sm:px-2 flex items-center justify-between relative overflow-hidden">
         {/* Left Wii Arrow (Disabled & grey on Page 1, Blue on Page 2) */}

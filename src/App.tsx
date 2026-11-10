@@ -27,7 +27,9 @@ import { BoerZoektVrouwApp } from './components/BoerZoektVrouw/BoerZoektVrouwApp
 import { MiiMakerApp } from './components/MiiMaker/MiiMakerApp';
 import { ThirtySecondsApp } from './components/ThirtySeconds/ThirtySecondsApp';
 import { WieIsApp } from './components/WieIs/WieIsApp';
+import { UndercoverApp } from './components/Undercover/UndercoverApp';
 import { sounds } from './utils/audio';
+import { bgmEngine } from './utils/bgmEngine';
 import wiiGolfBg from './assets/wii_golf_bg.jpg';
 
 export default function App() {
@@ -57,6 +59,64 @@ export default function App() {
       sounds.playReveal();
     }
   }, []);
+
+  // Play background music matching active screen (Homescreen HUB or game channel)
+  useEffect(() => {
+    bgmEngine.play(activeSubApp);
+  }, [activeSubApp]);
+
+  // Unlock audio on first user touch/click/key to satisfy mobile browser autoplay policy
+  useEffect(() => {
+    const unlockAudio = () => {
+      bgmEngine.play(activeSubApp);
+      window.removeEventListener('pointerdown', unlockAudio);
+      window.removeEventListener('keydown', unlockAudio);
+    };
+    window.addEventListener('pointerdown', unlockAudio, { once: true });
+    window.addEventListener('keydown', unlockAudio, { once: true });
+    return () => {
+      window.removeEventListener('pointerdown', unlockAudio);
+      window.removeEventListener('keydown', unlockAudio);
+    };
+  }, [activeSubApp]);
+
+  // Sync iOS Safari / browser theme-color with active screen to prevent Safari status-bar gradient/white haze under Dynamic Island
+  useEffect(() => {
+    const themeColors: Record<SubAppId, string> = {
+      HUB: '#f6f8fa',
+      PUB_GOLF: '#15803d',
+      CHWAZI: '#090d16',
+      DICE: '#062814',
+      RNG: '#062814',
+      SCORE_KEEPER: '#f6f8fa',
+      WHEEL: '#150d24',
+      SLABAKKEN: '#052e16',
+      TEAM_MAKER: '#f6f8fa',
+      TOURNAMENT: '#f6f8fa',
+      CROCODILE: '#0284c7',
+      BOMB: '#090d16',
+      CAMEL_RACE: '#d97706',
+      CARD_CATALOG: '#1c0f08',
+      BOER_ZOEKT_VROUW: '#166534',
+      MII_MAKER: '#e0f2fe',
+      THIRTY_SECONDS: '#fefce8',
+      WIE_IS: '#fff5f5',
+      UNDERCOVER: '#080b14',
+    };
+
+    const targetColor = themeColors[activeSubApp] || '#f6f8fa';
+    let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (!metaThemeColor) {
+      metaThemeColor = document.createElement('meta');
+      metaThemeColor.setAttribute('name', 'theme-color');
+      document.head.appendChild(metaThemeColor);
+    }
+    metaThemeColor.setAttribute('content', targetColor);
+
+    // Sync root html and body background directly to prevent iOS Safari status-bar gradient/white haze fallback
+    document.documentElement.style.backgroundColor = targetColor;
+    document.body.style.backgroundColor = targetColor;
+  }, [activeSubApp]);
 
   // Scroll to top automatically when navigating between screens
   useEffect(() => {
@@ -331,6 +391,7 @@ export default function App() {
     MII_MAKER: 'Spelers',
     THIRTY_SECONDS: '30 Seconds',
     WIE_IS: 'Wie is?',
+    UNDERCOVER: 'Undercover',
   };
 
   const getSubAppBackground = (app: SubAppId) => {
@@ -351,11 +412,13 @@ export default function App() {
       case 'BOER_ZOEKT_VROUW':
         return 'bg-[#fcfbf3] text-slate-800';
       case 'MII_MAKER':
-        return 'bg-gradient-to-b from-[#e0f2fe] via-[#f0f9ff] to-[#ffffff] text-slate-800';
+        return 'bg-[#e0f2fe] text-slate-800';
       case 'THIRTY_SECONDS':
-        return 'bg-gradient-to-b from-[#fefce8] via-[#f8fafc] to-[#eff6ff] text-slate-800';
+        return 'bg-[#fefce8] text-slate-800';
       case 'WIE_IS':
-        return 'bg-gradient-to-b from-[#fef2f2] via-[#fff5f5] to-[#eff6ff] text-slate-800';
+        return 'bg-[#fff5f5] text-slate-800';
+      case 'UNDERCOVER':
+        return 'bg-[#080b14] text-slate-100';
       case 'BOMB':
         return 'bg-[#0b0f19] text-slate-100';
       case 'CARD_CATALOG':
@@ -650,6 +713,27 @@ export default function App() {
         </div>
       )}
 
+      {/* 13. Deep Cosmic Void Background for Undercover */}
+      {activeSubApp === 'UNDERCOVER' && (
+        <div
+          className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+          style={{
+            backgroundColor: '#080b14',
+          }}
+          aria-hidden="true"
+        >
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(circle at 50% 18%, rgba(6, 182, 212, 0.22) 0%, transparent 55%),
+                           radial-gradient(circle at 85% 75%, rgba(168, 85, 247, 0.16) 0%, transparent 50%),
+                           radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
+                           linear-gradient(180deg, #080b14 0%, #0c1222 50%, #060912 100%)`,
+            }}
+          />
+        </div>
+      )}
+
       {/* Header Navigation */}
       {activeSubApp === 'PUB_GOLF' ? (
         <Header onBackToWiiMenu={() => setActiveSubApp('HUB')} />
@@ -748,6 +832,11 @@ export default function App() {
         {/* Wie is? Most Likely To Ticking Bomb Channel */}
         <div className={activeSubApp === 'WIE_IS' ? 'block' : 'hidden'}>
           <WieIsApp isCurrentApp={activeSubApp === 'WIE_IS'} />
+        </div>
+
+        {/* Undercover Secret Alien Word Game Channel */}
+        <div className={activeSubApp === 'UNDERCOVER' ? 'block' : 'hidden'}>
+          <UndercoverApp />
         </div>
 
         {/* Pub Golf Pro (Active SubApp) */}

@@ -199,4 +199,18 @@ export const GAME_RULES: Record<SubAppId, GameRuleInfo> = {
     ],
     tip: 'Wat onderaan bij WIE staat, schuift bij het doorgeven 1-op-1 direct door naar JIJ voor de volgende speler!',
   },
+  UNDERCOVER: {
+    title: 'Undercover',
+    emoji: '🛸',
+    summary: 'Ontmasker de astronauten en de alien zonder woord.',
+    rules: [
+      'De rollen zijn: Burger (Normaal), Undercover (Astronaut) en Alien (Zonder woord).',
+      'Burgers krijgen Woord A, Undercovers krijgen een vergelijkbaar Woord B, en de Alien krijgt helemáál geen woord!',
+      'Undercovers kunnen ook op 0 gezet worden voor een snel potje met 3 spelers.',
+      'In het rondescherm zegt iedereen om de beurt één woord dat subtiel linkt aan hun woord.',
+      'Aan het einde van de ronde stemmen jullie iemand weg. De rol van de weggestemde speler wordt direct onthuld!',
+      'Burgers winnen als de Alien eruit gestemd wordt of alle infiltranten weg zijn!',
+    ],
+    tip: 'Bluf mee als je de Alien (Zonder woord) bent en probeer uit de hints af te leiden wat het woord is!',
+  },
 };

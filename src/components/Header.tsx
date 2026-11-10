@@ -32,9 +32,9 @@ export function Header({ onBackToWiiMenu }: HeaderProps) {
   return (
     <header
       style={{
-        paddingTop: 'max(0.75rem, calc(0.75rem + env(safe-area-inset-top, 0px)))',
+        paddingTop: 'max(1.35rem, calc(1.35rem + env(safe-area-inset-top, 0px)))',
       }}
-      className="sticky top-0 z-30 w-full bg-gradient-to-b from-[#5bbef7]/95 via-[#70c9fa]/85 to-transparent backdrop-blur-xs px-4 pb-2 transition-all"
+      className="sticky top-0 z-30 w-full bg-transparent px-4 pb-2 transition-all"
     >
       <div className="max-w-xl mx-auto flex items-center justify-between gap-2">
         {/* Left: Home Button */}

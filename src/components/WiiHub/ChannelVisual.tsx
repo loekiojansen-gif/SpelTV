@@ -23,7 +23,7 @@ export const DEFAULT_CHANNEL_ORDER: string[] = [
   'MII_MAKER',
   'THIRTY_SECONDS',
   'WIE_IS',
-  'NOISE_17',
+  'UNDERCOVER',
   'NOISE_18',
   'NOISE_19',
   'NOISE_20',
@@ -67,6 +67,8 @@ export function getChannelTitle(channelId: string): string {
       return '30 Seconds';
     case 'WIE_IS':
       return 'Wie is?';
+    case 'UNDERCOVER':
+      return 'Undercover';
     default:
       if (channelId.startsWith('NOISE_')) {
         return 'Binnenkort';
@@ -93,6 +95,7 @@ export function isGameChannel(channelId: string): channelId is SubAppId {
     'MII_MAKER',
     'THIRTY_SECONDS',
     'WIE_IS',
+    'UNDERCOVER',
   ].includes(channelId);
 }
 
@@ -214,20 +217,16 @@ export function ChannelVisual({
             <svg viewBox="0 0 100 80" className="w-full h-full filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.35)]">
               <path d="M 12 36 L 40 36 L 40 76 L 12 76 Z" fill="#94a3b8" stroke="#ffffff" strokeWidth="1.5" />
               <rect x="12" y="36" width="28" height="5" fill="#cbd5e1" />
-              <text x="26" y="58" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="900" fontFamily="sans-serif">2</text>
-              <circle cx="26" cy="25" r="5.5" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1.2" />
-              <text x="26" y="28.5" textAnchor="middle" fill="#64748b" fontSize="7" fontWeight="bold">🥈</text>
+              <text x="26" y="60" textAnchor="middle" fill="#ffffff" fontSize="20" fontWeight="900" fontFamily="sans-serif">2</text>
 
               <path d="M 36 22 L 64 22 L 64 76 L 36 76 Z" fill="#eab308" stroke="#ffffff" strokeWidth="1.5" />
               <rect x="36" y="22" width="28" height="5" fill="#fef08a" />
-              <text x="50" y="50" textAnchor="middle" fill="#ffffff" fontSize="21" fontWeight="900" fontFamily="sans-serif">1</text>
-              <text x="50" y="14" textAnchor="middle" fontSize="13">👑</text>
+              <text x="50" y="52" textAnchor="middle" fill="#ffffff" fontSize="24" fontWeight="900" fontFamily="sans-serif">1</text>
+              <text x="50" y="15" textAnchor="middle" fontSize="14">👑</text>
 
               <path d="M 60 46 L 88 46 L 88 76 L 60 76 Z" fill="#c2410c" stroke="#ffffff" strokeWidth="1.5" />
               <rect x="60" y="46" width="28" height="5" fill="#fed7aa" />
-              <text x="74" y="65" textAnchor="middle" fill="#ffffff" fontSize="16" fontWeight="900" fontFamily="sans-serif">3</text>
-              <circle cx="74" cy="37" r="5" fill="#fed7aa" stroke="#c2410c" strokeWidth="1" />
-              <text x="74" y="40.5" textAnchor="middle" fill="#7c2d12" fontSize="7" fontWeight="bold">🥉</text>
+              <text x="74" y="67" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="900" fontFamily="sans-serif">3</text>
             </svg>
           </div>
         </div>
@@ -276,19 +275,52 @@ export function ChannelVisual({
 
     case 'TEAM_MAKER':
       return (
-        <div className="absolute inset-0 bg-gradient-to-b from-[#6366f1] via-[#8b5cf6] to-[#4338ca] flex items-center justify-center overflow-hidden">
-          <div className="relative w-20 h-16 flex items-center justify-center animate-channel-float">
-            <div className="absolute inset-0 flex items-center justify-center opacity-40 animate-channel-wheel">
-              <svg viewBox="0 0 60 60" className="w-14 h-14">
-                <circle cx="30" cy="30" r="26" fill="none" stroke="#ffffff" strokeWidth="3" strokeDasharray="6 4" />
-              </svg>
-            </div>
-            <div className="relative flex items-center justify-center gap-2 z-10">
-              <div className="w-8 h-8 rounded-full bg-rose-500 border-2 border-white shadow-md flex items-center justify-center text-white text-xs font-black">
-                A
+        <div className="absolute inset-0 bg-gradient-to-b from-[#4f46e5] via-[#4338ca] to-[#312e81] flex items-center justify-center overflow-hidden">
+          {/* Subtle Team Court & Dashed Midline */}
+          <div className="absolute inset-x-2 bottom-2.5 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center pointer-events-none">
+            <div className="h-full border-r border-dashed border-white/20" />
+          </div>
+
+          <div className="relative w-28 h-18 flex items-center justify-center select-none">
+            {/* Team A (Red / Rose Group on Left) */}
+            <div className="absolute left-2.5 bottom-3 flex items-end -space-x-1 z-10">
+              <div className="flex flex-col items-center">
+                <div className="w-3 h-3 rounded-full bg-[#fed7aa] border border-black/30 shadow-xs" />
+                <div className="w-4 h-4.5 rounded-t-md bg-rose-500 border border-black/20 shadow-xs flex items-center justify-center text-[6px] font-black text-white">
+                  A
+                </div>
               </div>
-              <div className="w-8 h-8 rounded-full bg-sky-500 border-2 border-white shadow-md flex items-center justify-center text-white text-xs font-black">
-                B
+              <div className="flex flex-col items-center">
+                <div className="w-3.5 h-3.5 rounded-full bg-[#fde047] border border-black/30 shadow-xs" />
+                <div className="w-4.5 h-5 rounded-t-md bg-rose-600 border border-black/20 shadow-xs flex items-center justify-center text-[7px] font-black text-white">
+                  A
+                </div>
+              </div>
+            </div>
+
+            {/* Team B (Blue / Sky Group on Right) */}
+            <div className="absolute right-2.5 bottom-3 flex items-end -space-x-1 z-10">
+              <div className="flex flex-col items-center">
+                <div className="w-3.5 h-3.5 rounded-full bg-[#fed7aa] border border-black/30 shadow-xs" />
+                <div className="w-4.5 h-5 rounded-t-md bg-sky-600 border border-black/20 shadow-xs flex items-center justify-center text-[7px] font-black text-white">
+                  B
+                </div>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-3 h-3 rounded-full bg-[#fde047] border border-black/30 shadow-xs" />
+                <div className="w-4 h-4.5 rounded-t-md bg-sky-500 border border-black/20 shadow-xs flex items-center justify-center text-[6px] font-black text-white">
+                  B
+                </div>
+              </div>
+            </div>
+
+            {/* Walking Player Moving Between Teams */}
+            <div className="absolute bottom-3 animate-team-walker z-20 pointer-events-none">
+              <div className="flex flex-col items-center filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
+                <div className="w-3.5 h-3.5 rounded-full bg-[#fed7aa] border border-black/40" />
+                <div className="w-4 h-5 rounded-t-md bg-gradient-to-b from-amber-300 to-amber-500 border border-black/30 shadow-sm flex items-center justify-center text-[7px] font-black text-slate-950">
+                  ⚡
+                </div>
               </div>
             </div>
           </div>
@@ -357,7 +389,11 @@ export function ChannelVisual({
     case 'BOMB':
       return (
         <div className="absolute inset-0 bg-gradient-to-b from-[#1e1b4b] via-[#0f172a] to-[#450a0a] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#ef4444_1px,transparent_1px)] [background-size:8px_8px]" />
+          {/* Lege zwarte tape strips op de achtergrond */}
+          <div className="absolute -top-3 -left-6 w-28 h-4.5 bg-black/90 -rotate-25 border-y border-white/15 shadow-md pointer-events-none" />
+          <div className="absolute -bottom-2 -right-4 w-32 h-4.5 bg-black/90 -rotate-15 border-y border-white/15 shadow-md pointer-events-none" />
+          <div className="absolute top-1/2 -right-6 w-24 h-3.5 bg-black/85 rotate-35 border-y border-white/10 shadow-sm pointer-events-none" />
+
           <div className="relative w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center animate-channel-float z-10">
             <svg viewBox="0 0 100 100" className="w-full h-full filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
               <path
@@ -406,10 +442,6 @@ export function ChannelVisual({
               <ellipse cx="49" cy="28" rx="4.5" ry="8" fill="#ef4444" />
               <circle cx="51" cy="20" r="5" fill="#ffffff" stroke="#ef4444" strokeWidth="1.2" />
               <circle cx="53" cy="20" r="1.5" fill="#0f172a" />
-              <path d="M 76 60 L 76 38" stroke="#334155" strokeWidth="2" strokeLinecap="round" />
-              <polygon points="76,38 92,44 76,50" fill="#ffffff" stroke="#0f172a" strokeWidth="1" />
-              <polygon points="76,38 84,41 76,44" fill="#0f172a" />
-              <polygon points="84,41 92,44 84,47" fill="#0f172a" />
             </svg>
           </div>
         </div>
@@ -552,66 +584,201 @@ export function ChannelVisual({
 
     case 'THIRTY_SECONDS':
       return (
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-[#2563eb]" />
-          <div
-            className="absolute inset-0 bg-[#facc15]"
-            style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }}
-          />
-          <div className="relative z-10 flex flex-col items-center justify-center bg-white/95 text-slate-900 rounded-2xl px-3.5 py-2 shadow-lg border border-slate-200/90 group-hover:scale-105 transition-transform">
-            <div className="animate-hourglass-flip mb-0.5">
-              <Hourglass className="w-5 h-5 text-blue-600" />
-            </div>
-            <span className="text-[12px] font-black tracking-tight leading-none text-slate-900">
-              30 <span className="text-blue-600">SEC</span>
-            </span>
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#1d4ed8] via-[#2563eb] to-[#eab308]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(250,204,21,0.45)_0%,transparent_75%)]" />
+          {/* Subtle floating clock sparkle particles */}
+          <div className="absolute top-2 left-3 text-xs opacity-75 pointer-events-none select-none">
+            ✨
+          </div>
+          <div className="absolute bottom-2 right-3 text-xs opacity-75 pointer-events-none select-none">
+            ⭐
+          </div>
+
+          {/* Smooth Continuous Spinning Emoji-Style Hourglass without any text */}
+          <div className="relative z-10 flex items-center justify-center animate-hourglass-spin filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)]">
+            <svg viewBox="0 0 100 100" className="w-16 h-16 sm:w-18 sm:h-18">
+              {/* Top Wooden Base */}
+              <rect x="22" y="10" width="56" height="8" rx="3" fill="#78350f" stroke="#451a03" strokeWidth="1.5" />
+              <rect x="25" y="13" width="50" height="2" rx="1" fill="#f59e0b" opacity="0.6" />
+
+              {/* Bottom Wooden Base */}
+              <rect x="22" y="82" width="56" height="8" rx="3" fill="#78350f" stroke="#451a03" strokeWidth="1.5" />
+              <rect x="25" y="85" width="50" height="2" rx="1" fill="#f59e0b" opacity="0.6" />
+
+              {/* Glass Bulbs Container */}
+              <path
+                d="M 28 18 C 28 40, 44 48, 48 50 C 44 52, 28 60, 28 82 L 72 82 C 72 60, 56 52, 52 50 C 56 48, 72 40, 72 18 Z"
+                fill="url(#hourglassGlassGrad)"
+                stroke="#ffffff"
+                strokeWidth="2.5"
+                opacity="0.95"
+              />
+
+              {/* Top Sand Pile */}
+              <path
+                d="M 32 30 C 35 24, 65 24, 68 30 C 64 42, 54 48, 50 50 C 46 48, 36 42, 32 30 Z"
+                fill="url(#hourglassSandGrad)"
+              />
+
+              {/* Trickling Sand Stream */}
+              <line x1="50" y1="50" x2="50" y2="76" stroke="#fbbf24" strokeWidth="2.5" strokeDasharray="3 1" />
+
+              {/* Bottom Sand Mound */}
+              <ellipse cx="50" cy="78" rx="16" ry="4" fill="url(#hourglassSandGrad)" />
+
+              {/* Glass Highlight Shine Curve */}
+              <path
+                d="M 33 22 C 33 36, 44 44, 46 47"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                opacity="0.75"
+              />
+
+              <defs>
+                <linearGradient id="hourglassGlassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#e0f2fe" stopOpacity="0.4" />
+                  <stop offset="50%" stopColor="#bae6fd" stopOpacity="0.15" />
+                  <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.35" />
+                </linearGradient>
+                <linearGradient id="hourglassSandGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#fef08a" />
+                  <stop offset="60%" stopColor="#f59e0b" />
+                  <stop offset="100%" stopColor="#d97706" />
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
         </div>
       );
 
     case 'WIE_IS':
       return (
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#facc15] via-[#fbbf24] to-[#f97316]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.85)_0%,rgba(250,204,21,0.6)_60%,rgba(249,115,22,0.8)_100%)]" />
-          <div className="absolute top-2 left-2 text-xs opacity-60 pointer-events-none select-none">
-            ⭐
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155]">
+          {/* Subtle Comic Book City Standoff Backdrop */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_65%,rgba(59,130,246,0.3)_0%,transparent_70%)]" />
+          <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none" />
+
+          {/* Three Identical Figures Pointing at Each Other (Spider-Man Meme) */}
+          <div className="relative w-28 h-20 flex items-center justify-center animate-spiderman-bob filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]">
+            <svg viewBox="0 0 120 90" className="w-full h-full">
+              {/* Ground Shadow Ellipses */}
+              <ellipse cx="32" cy="76" rx="16" ry="4.5" fill="#020617" opacity="0.6" />
+              <ellipse cx="88" cy="76" rx="16" ry="4.5" fill="#020617" opacity="0.6" />
+              <ellipse cx="60" cy="56" rx="13" ry="3.5" fill="#020617" opacity="0.5" />
+
+              {/* FIGURE 3 (Center Top / Facing forward pointing down at both) */}
+              <g transform="translate(60, 36)">
+                {/* Body & legs */}
+                <path d="M -7 4 L -6 18 L -3 18 L -2 7 L 2 7 L 3 18 L 6 18 L 7 4 Z" fill="#1e3a8a" />
+                <path d="M -7 4 L 7 4 L 5 -7 L -5 -7 Z" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
+                {/* Mask head */}
+                <ellipse cx="0" cy="-14" rx="6.5" ry="7.5" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
+                {/* White spider eyes */}
+                <polygon points="-5,-14 -1,-15 -2,-12" fill="#ffffff" stroke="#0f172a" strokeWidth="0.6" />
+                <polygon points="5,-14 1,-15 2,-12" fill="#ffffff" stroke="#0f172a" strokeWidth="0.6" />
+                {/* Outstretched pointing arms pointing at Left & Right */}
+                <path d="M -5 -4 L -16 2" stroke="#dc2626" strokeWidth="3" strokeLinecap="round" />
+                <polygon points="-16,2 -20,4 -16,5" fill="#dc2626" />
+                <path d="M 5 -4 L 16 2" stroke="#dc2626" strokeWidth="3" strokeLinecap="round" />
+                <polygon points="16,2 20,4 16,5" fill="#dc2626" />
+              </g>
+
+              {/* FIGURE 1 (Left / Facing Right Pointing 👉) */}
+              <g transform="translate(30, 56)">
+                {/* Legs */}
+                <path d="M -4 8 L -7 22 L -3 22 L -1 10 L 2 22 L 6 22 L 3 8 Z" fill="#1e3a8a" />
+                {/* Torso */}
+                <path d="M -6 -4 L 5 -4 L 3 8 L -5 8 Z" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
+                {/* Mask head facing right */}
+                <ellipse cx="0" cy="-13" rx="7" ry="8" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
+                {/* White eye */}
+                <polygon points="2,-13 6,-14 4,-10" fill="#ffffff" stroke="#0f172a" strokeWidth="0.6" />
+                {/* Left arm bent on hip */}
+                <path d="M -5 -2 L -8 4 L -5 6" fill="none" stroke="#dc2626" strokeWidth="2.5" strokeLinecap="round" />
+                {/* Right arm outstretched pointing right 👉 at Figure 2 */}
+                <path d="M 3 -3 L 20 -2" stroke="#dc2626" strokeWidth="3.2" strokeLinecap="round" />
+                {/* Pointing index finger */}
+                <path d="M 20 -2 L 26 -2" stroke="#dc2626" strokeWidth="2.2" strokeLinecap="round" />
+                <circle cx="20" cy="-1.5" r="2" fill="#dc2626" />
+              </g>
+
+              {/* FIGURE 2 (Right / Facing Left Pointing 👈) */}
+              <g transform="translate(90, 56) scale(-1, 1)">
+                {/* Legs */}
+                <path d="M -4 8 L -7 22 L -3 22 L -1 10 L 2 22 L 6 22 L 3 8 Z" fill="#1e3a8a" />
+                {/* Torso */}
+                <path d="M -6 -4 L 5 -4 L 3 8 L -5 8 Z" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
+                {/* Mask head facing left */}
+                <ellipse cx="0" cy="-13" rx="7" ry="8" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
+                {/* White eye */}
+                <polygon points="2,-13 6,-14 4,-10" fill="#ffffff" stroke="#0f172a" strokeWidth="0.6" />
+                {/* Arm bent on hip */}
+                <path d="M -5 -2 L -8 4 L -5 6" fill="none" stroke="#dc2626" strokeWidth="2.5" strokeLinecap="round" />
+                {/* Outstretched arm pointing left 👈 at Figure 1 */}
+                <path d="M 3 -3 L 20 -2" stroke="#dc2626" strokeWidth="3.2" strokeLinecap="round" />
+                {/* Pointing index finger */}
+                <path d="M 20 -2 L 26 -2" stroke="#dc2626" strokeWidth="2.2" strokeLinecap="round" />
+                <circle cx="20" cy="-1.5" r="2" fill="#dc2626" />
+              </g>
+            </svg>
           </div>
-          <div className="absolute bottom-2 right-2 text-xs opacity-60 pointer-events-none select-none">
-            ✨
-          </div>
-          <div className="absolute top-3 right-3 w-4 h-5 rounded-md bg-blue-600 border border-white shadow-xs rotate-12 opacity-75" />
-          <div className="absolute bottom-3 left-3 w-4 h-5 rounded-md bg-red-600 border border-white shadow-xs -rotate-12 opacity-75" />
-          <div className="relative w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center animate-channel-float z-10">
-            <svg viewBox="0 0 100 100" className="w-full h-full filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.25)]">
-              <text
-                x="52"
-                y="75"
-                textAnchor="middle"
-                fill="#1e3a8a"
-                fontSize="74"
-                fontWeight="900"
-                fontFamily="system-ui, -apple-system, sans-serif"
-              >
-                ?
-              </text>
-              <text
-                x="50"
-                y="72"
-                textAnchor="middle"
-                fill="url(#wieIsQGradVisual)"
-                stroke="#ffffff"
-                strokeWidth="3"
-                fontSize="74"
-                fontWeight="900"
-                fontFamily="system-ui, -apple-system, sans-serif"
-              >
-                ?
-              </text>
+        </div>
+      );
+
+    case 'UNDERCOVER':
+      return (
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#050814] via-[#0b1329] to-[#1e1035]">
+          {/* Deep Cosmic Starfield & Nebula Glow */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(6,182,212,0.3)_0%,rgba(168,85,247,0.18)_50%,transparent_100%)]" />
+          
+          {/* Distant Twinkling Stars */}
+          <div className="absolute top-2 left-3 w-1 h-1 rounded-full bg-cyan-200 animate-ping opacity-75" />
+          <div className="absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-purple-300 opacity-80" />
+          <div className="absolute bottom-3 left-4 w-1 h-1 rounded-full bg-cyan-300 opacity-60" />
+          <div className="absolute bottom-3 right-3 w-1.5 h-1.5 rounded-full bg-sky-200 opacity-70" />
+
+          {/* Luminous Light Blue Tractor Beam Cone directly UNDER the UFO */}
+          <div
+            className="absolute top-8 w-22 h-14 bg-gradient-to-b from-cyan-300/65 via-sky-400/30 to-transparent pointer-events-none"
+            style={{ clipPath: 'polygon(36% 0%, 64% 0%, 100% 100%, 0% 100%)' }}
+          />
+
+          {/* Light Blue Ground Scan Halo */}
+          <div className="absolute bottom-1 w-16 h-3 rounded-[100%] bg-cyan-300/40 blur-xs pointer-events-none" />
+
+          {/* Custom SVG Flying Saucer (Placed Higher, No Yellow Beam!) */}
+          <div className="absolute top-2 z-10 flex flex-col items-center justify-center animate-channel-float filter drop-shadow-[0_0_12px_rgba(6,182,212,0.85)]">
+            <svg viewBox="0 0 80 44" className="w-16 h-10 sm:w-18 sm:h-11">
+              {/* Glass Cockpit Dome */}
+              <ellipse cx="40" cy="18" rx="14" ry="12" fill="url(#ufoDomeGrad)" stroke="#38bdf8" strokeWidth="1.2" />
+              {/* Mysterious alien eyes silhouette inside */}
+              <ellipse cx="37" cy="18" rx="1.8" ry="3" fill="#0284c7" transform="rotate(-15 37 18)" />
+              <ellipse cx="43" cy="18" rx="1.8" ry="3" fill="#0284c7" transform="rotate(15 43 18)" />
+
+              {/* Upper Saucer Rim */}
+              <ellipse cx="40" cy="24" rx="34" ry="9" fill="url(#ufoHullUpper)" stroke="#0284c7" strokeWidth="1" />
+              {/* Glowing Rim Lights (Turquoise / Cyan) */}
+              <circle cx="16" cy="25" r="2.2" fill="#67e8f9" />
+              <circle cx="28" cy="27" r="2.5" fill="#67e8f9" />
+              <circle cx="40" cy="28" r="2.8" fill="#67e8f9" />
+              <circle cx="52" cy="27" r="2.5" fill="#67e8f9" />
+              <circle cx="64" cy="25" r="2.2" fill="#67e8f9" />
+
+              {/* Lower Saucer Base (Direct emitter for the light blue beam) */}
+              <ellipse cx="40" cy="27" rx="18" ry="5.5" fill="#0369a1" stroke="#38bdf8" strokeWidth="1" />
+              <ellipse cx="40" cy="28" rx="10" ry="3" fill="#38bdf8" />
+
               <defs>
-                <linearGradient id="wieIsQGradVisual" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#2563eb" />
-                  <stop offset="50%" stopColor="#1d4ed8" />
-                  <stop offset="100%" stopColor="#1e3a8a" />
+                <linearGradient id="ufoDomeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#bae6fd" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#0284c7" stopOpacity="0.4" />
+                </linearGradient>
+                <linearGradient id="ufoHullUpper" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#e2e8f0" />
+                  <stop offset="45%" stopColor="#94a3b8" />
+                  <stop offset="100%" stopColor="#475569" />
                 </linearGradient>
               </defs>
             </svg>

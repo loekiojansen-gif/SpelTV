@@ -1,3 +1,5 @@
+import { bgmEngine } from './bgmEngine';
+
 /**
  * Web Audio API synthesizer for instant, zero-dependency sound effects.
  * Safe for iOS Safari and mobile Chrome.
@@ -5,6 +7,17 @@
 class SoundManager {
   private ctx: AudioContext | null = null;
   private isMuted: boolean = false;
+
+  constructor() {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('party_channels_sound_muted');
+        if (saved !== null) {
+          this.isMuted = saved === 'true';
+        }
+      } catch {}
+    }
+  }
 
   private initCtx() {
     if (!this.ctx && typeof window !== 'undefined') {
@@ -20,6 +33,10 @@ class SoundManager {
 
   public setMuted(muted: boolean) {
     this.isMuted = muted;
+    try {
+      localStorage.setItem('party_channels_sound_muted', String(muted));
+    } catch {}
+    bgmEngine.setMuted(muted);
   }
 
   public getMuted(): boolean {
@@ -1115,6 +1132,85 @@ class SoundManager {
       gain.connect(this.ctx.destination);
       osc.start(t);
       osc.stop(t + (isFinal ? 0.25 : 0.12));
+    } catch {
+      // ignore
+    }
+  }
+
+  /**
+   * Sci-fi Alien Hologram Scanner hum
+   */
+  public playAlienScan() {
+    if (this.isMuted) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(260, t);
+      osc.frequency.exponentialRampToValueAtTime(840, t + 0.18);
+      osc.frequency.exponentialRampToValueAtTime(520, t + 0.35);
+      gain.gain.setValueAtTime(0.08, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.38);
+    } catch {
+      // ignore
+    }
+  }
+
+  /**
+   * Secret Alien Role reveal chime
+   */
+  public playAlienReveal() {
+    if (this.isMuted) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
+      [392.0, 523.25, 783.99, 1046.5].forEach((freq, idx) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        const start = t + idx * 0.07;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.12, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.35);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.35);
+      });
+    } catch {
+      // ignore
+    }
+  }
+
+  /**
+   * Dramatic UFO tractor beam elimination sound
+   */
+  public playAlienElimination() {
+    if (this.isMuted) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(800, t);
+      osc.frequency.exponentialRampToValueAtTime(90, t + 0.65);
+      gain.gain.setValueAtTime(0.2, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.7);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.7);
     } catch {
       // ignore
     }
