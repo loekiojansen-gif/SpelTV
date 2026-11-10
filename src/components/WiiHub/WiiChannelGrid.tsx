@@ -38,14 +38,6 @@ const SLOTS_PER_PAGE = 12;
 const PAGE_COUNT = DEFAULT_CHANNEL_ORDER.length / SLOTS_PER_PAGE;
 const PREVIEW_PREF_KEY = 'party_channels_show_preview';
 
-const TICKER_LINES = [
-  '✨ 5 nieuwe kanalen op pagina 2',
-  '👆 Houd een kanaal ingedrukt om te verplaatsen',
-  '👥 Maak je eigen poppetje bij Spelers',
-  '📺 Tik op een kanaal voor de spelregels',
-  '👉 Veeg opzij voor meer kanalen',
-];
-
 /** Knipperend stipje boven een pijl: op die pagina staat nog een nieuw kanaal */
 
 export function WiiChannelGrid({
@@ -59,7 +51,6 @@ export function WiiChannelGrid({
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showMessageModal, setShowMessageModal] = useState<boolean>(false);
   const [muted, setMuted] = useState<boolean>(() => sounds.getMuted());
-  const [tickerIndex, setTickerIndex] = useState<number>(0);
   const [slabakkenActive] = useState<boolean>(() => {
     try {
       const raw = localStorage.getItem('party_channels_slabakken_active_game');
@@ -144,14 +135,6 @@ export function WiiChannelGrid({
     };
     updateTime();
     const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Wisselende tips in de balk bovenaan
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTickerIndex(prev => (prev + 1) % TICKER_LINES.length);
-    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -541,26 +524,18 @@ export function WiiChannelGrid({
       }}
       className="w-full h-[100dvh] max-h-[100dvh] flex flex-col select-none party-menu-bg pb-0 overflow-hidden overscroll-none fixed inset-0"
     >
-      {/* Zenderbalk bovenaan: logo + wisselende tips (verborgen op heel lage schermen) */}
+      {/* Compact vast logo boven de kanalen. */}
       <header
-        className="hidden [@media(min-height:600px)]:flex shrink-0 items-center gap-2.5 px-3 sm:px-5 pb-1.5 max-w-5xl w-full mx-auto"
+        className="hidden [@media(min-height:600px)]:flex shrink-0 z-20 justify-center pb-1.5 select-none"
       >
-        <div className="flex items-center gap-1.5 shrink-0 pl-1 pr-2.5 py-1 rounded-full bg-white border-2 border-white shadow-[0_2px_8px_rgba(15,23,42,0.1)]">
-          <span className="w-6 h-6 rounded-full bg-gradient-to-b from-[#38bdf8] to-[#0284c7] text-white flex items-center justify-center shadow-inner">
-            <Tv className="w-3.5 h-3.5 stroke-[2.6]" />
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 border-2 border-white shadow-[0_2px_7px_rgba(15,23,42,0.12)]">
+          <span className="w-7 h-7 rounded-full bg-gradient-to-b from-[#38bdf8] to-[#0284c7] text-white flex items-center justify-center shadow-inner ring-1 ring-sky-300/80">
+            <Tv className="w-4 h-4 stroke-[2.6]" />
           </span>
-          <span className="text-[13px] font-black tracking-tight text-slate-800 leading-none">
+          <span className="text-sm font-black tracking-tight text-slate-800 leading-none">
             SPEL<span className="text-[#00a0e9]">TV</span>
           </span>
-        </div>
-        <div className="flex-1 min-w-0 h-7 flex items-center overflow-hidden">
-          <p
-            key={tickerIndex}
-            className="hub-ticker-line text-[11px] sm:text-xs font-bold text-slate-500 truncate w-full"
-          >
-            {TICKER_LINES[tickerIndex]}
-          </p>
-        </div>
+          </div>
       </header>
 
       {/* Main Channel Area with Side Wii Navigation Arrows */}
@@ -898,3 +873,4 @@ export function WiiChannelGrid({
     </div>
   );
 }
+
