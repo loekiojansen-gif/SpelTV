@@ -25,7 +25,7 @@ import {
   ChannelVisual,
 } from './ChannelVisual';
 import { ChannelPreview, CHANNEL_ART_BASE_WIDTH } from './ChannelPreview';
-import { CHANNEL_META, loadSeenNewChannels, markNewChannelSeen } from './channelMeta';
+import { CHANNEL_META } from './channelMeta';
 
 interface WiiChannelGridProps {
   onSelectApp: (app: SubAppId) => void;
@@ -47,14 +47,6 @@ const TICKER_LINES = [
 ];
 
 /** Knipperend stipje boven een pijl: op die pagina staat nog een nieuw kanaal */
-function NewPageDot() {
-  return (
-    <span className="absolute top-1/2 -mt-10 left-1/2 -translate-x-1/2 flex w-2.5 h-2.5 pointer-events-none">
-      <span className="absolute inline-flex w-full h-full rounded-full bg-amber-400 opacity-75 animate-ping" />
-      <span className="relative inline-flex w-2.5 h-2.5 rounded-full bg-amber-400 border border-white" />
-    </span>
-  );
-}
 
 export function WiiChannelGrid({
   onSelectApp,
@@ -93,7 +85,6 @@ export function WiiChannelGrid({
     }
   });
   const [preview, setPreview] = useState<{ channelId: SubAppId; rect: DOMRect | null } | null>(null);
-  const [seenNewChannels, setSeenNewChannels] = useState<string[]>(() => loadSeenNewChannels());
 
   // Schaalfactor zodat het kanaal-artwork meegroeit op grote schermen
   const firstPageRef = useRef<HTMLDivElement>(null);
@@ -197,9 +188,6 @@ export function WiiChannelGrid({
   };
 
   const launchChannel = (appId: SubAppId) => {
-    if (CHANNEL_META[appId]?.isNew) {
-      setSeenNewChannels(markNewChannelSeen(appId));
-    }
     onSelectApp(appId);
   };
 
@@ -475,16 +463,6 @@ export function WiiChannelGrid({
     }
   };
 
-  const isUnseenNew = (channelId: string) =>
-    isGameChannel(channelId) &&
-    Boolean(CHANNEL_META[channelId]?.isNew) &&
-    !seenNewChannels.includes(channelId);
-
-  // Staat er op een andere pagina nog een kanaal dat nieuw is?
-  const pageHasUnseenNew = (page: number) =>
-    channelOrder
-      .slice(page * SLOTS_PER_PAGE, (page + 1) * SLOTS_PER_PAGE)
-      .some(isUnseenNew);
 
   // Render a specific slot (index 0 - 23)
   const renderSlot = (slotIndex: number) => {
@@ -548,11 +526,6 @@ export function WiiChannelGrid({
             />
           </div>
           <div className="party-channel-sheen" />
-          {isUnseenNew(channelId) && (
-            <span className="hub-new-badge absolute top-1 left-1 z-20 px-1.5 py-px rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider pointer-events-none">
-              Nieuw
-            </span>
-          )}
         </button>
         <span className="shrink-0 text-xs sm:text-sm font-bold text-[#1e293b] mt-1 truncate max-w-full text-center leading-5">
           {title}
@@ -600,7 +573,6 @@ export function WiiChannelGrid({
             onClick={() => handlePageChange(0)}
             onHover={handleChannelHover}
           />
-          {currentPage === 1 && pageHasUnseenNew(0) && <NewPageDot />}
         </div>
 
         {/* Channels Grid Viewport (clipped overflow for smooth slide) */}
@@ -660,27 +632,7 @@ export function WiiChannelGrid({
             onClick={() => handlePageChange(1)}
             onHover={handleChannelHover}
           />
-          {currentPage === 0 && pageHasUnseenNew(1) && <NewPageDot />}
         </div>
-      </div>
-
-      {/* Paginabolletjes */}
-      <div className="shrink-0 flex items-center justify-center gap-2 py-1.5 z-20">
-        {Array.from({ length: PAGE_COUNT }, (_, pageIndex) => (
-          <button
-            key={pageIndex}
-            onClick={() => handlePageChange(pageIndex)}
-            aria-label={`Pagina ${pageIndex + 1}`}
-            aria-current={pageIndex === currentPage}
-            className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-              pageIndex === currentPage
-                ? 'w-6 bg-[#00a0e9] shadow-[0_0_6px_rgba(0,160,233,0.6)]'
-                : pageHasUnseenNew(pageIndex)
-                  ? 'w-2 bg-amber-400'
-                  : 'w-2 bg-slate-300 hover:bg-slate-400'
-            }`}
-          />
-        ))}
       </div>
 
       {/* Floating Dragged Channel Clone (Tracks Finger/Cursor) */}
@@ -825,7 +777,6 @@ export function WiiChannelGrid({
             key={preview.channelId}
             channelId={preview.channelId}
             originRect={preview.rect}
-            showNewBadge={isUnseenNew(preview.channelId)}
             pubGolfActive={pubGolfActive}
             slabakkenActive={slabakkenActive}
             onClose={() => {
@@ -871,7 +822,7 @@ export function WiiChannelGrid({
                   Nieuw op Spel TV
                 </p>
                 <p className="leading-relaxed">
-                  Vijf nieuwe kanalen op pagina 2: <strong>Op je Kop</strong>, <strong>Spion</strong>,{' '}
+                  Nieuwe kanalen op pagina 2: <strong>Undercover</strong>, <strong>Op je Kop</strong>,{' '}
                   <strong>Snelste Vinger</strong>, <strong>Hoger of Lager</strong> en{' '}
                   <strong>Ik heb nog nooit</strong>.
                 </p>

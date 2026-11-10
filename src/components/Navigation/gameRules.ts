@@ -225,19 +225,6 @@ export const GAME_RULES: Record<SubAppId, GameRuleInfo> = {
     ],
     tip: 'Werkt kantelen niet op jouw telefoon? Tik dan op de rechterhelft voor goed en op de linkerhelft voor pas.',
   },
-  SPION: {
-    title: 'Spion',
-    emoji: '🕵️',
-    summary: 'Iedereen kent het geheime woord, behalve de spion. Wie bluft zich erdoorheen?',
-    rules: [
-      'Geef de telefoon rond: iedereen houdt de knop ingedrukt om stiekem zijn rol te bekijken.',
-      'Alle spelers zien hetzelfde geheime woord, alleen de spion ziet niets.',
-      'Stel elkaar om de beurt vragen over het woord. Niet te duidelijk, anders raadt de spion het!',
-      'Is de tijd om of zijn jullie eruit? Wijs samen de verdachte aan.',
-      'Is de spion gepakt, dan mag die nog één keer het woord raden om alsnog te winnen.',
-    ],
-    tip: 'De spion ziet wel de categorie en de lijst met mogelijke woorden. Luister goed en bluf mee!',
-  },
   SNELSTE_VINGER: {
     title: 'Snelste Vinger',
     emoji: '⚡',

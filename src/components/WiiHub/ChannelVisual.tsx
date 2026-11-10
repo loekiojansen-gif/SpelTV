@@ -5,7 +5,6 @@ import { MiiFace } from '../MiiMaker/MiiFace';
 import { NoiseVisual } from './NoiseChannel';
 import {
   OpJeKopVisual,
-  SpionVisual,
   SnelsteVingerVisual,
   HogerLagerVisual,
   NooitVisual,
@@ -32,10 +31,10 @@ export const DEFAULT_CHANNEL_ORDER: string[] = [
   'WIE_IS',
   'UNDERCOVER',
   'OP_JE_KOP',
-  'SPION',
   'SNELSTE_VINGER',
   'HOGER_LAGER',
   'NOOIT',
+  'NOISE_22',
   'NOISE_23',
   'NOISE_24',
 ];
@@ -58,7 +57,9 @@ export function loadChannelOrder(): string[] {
       return DEFAULT_CHANNEL_ORDER;
     }
 
-    const order = parsed as string[];
+    const rawOrder = parsed as string[];
+    // Converteer eventueel bewaarde 'SPION' naar een lege 'NOISE_22' tegel
+    const order = rawOrder.map(id => (id === 'SPION' ? 'NOISE_22' : id));
     const isKnown = (id: unknown) =>
       typeof id === 'string' && (id.startsWith('NOISE_') || GAME_CHANNEL_IDS.includes(id));
     if (!order.every(isKnown) || new Set(order).size !== order.length) {
@@ -132,8 +133,6 @@ export function getChannelTitle(channelId: string): string {
       return 'Undercover';
     case 'OP_JE_KOP':
       return 'Op je Kop';
-    case 'SPION':
-      return 'Spion';
     case 'SNELSTE_VINGER':
       return 'Snelste Vinger';
     case 'HOGER_LAGER':
@@ -709,11 +708,11 @@ export function ChannelVisual({
     case 'WIE_IS':
       return (
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155]">
-          {/* Subtle Comic Book City Standoff Backdrop */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_65%,rgba(59,130,246,0.3)_0%,transparent_70%)]" />
+          {/* Subtle Standoff Spotlight Backdrop */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_65%,rgba(245,158,11,0.22)_0%,transparent_72%)]" />
           <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none" />
 
-          {/* Three Identical Figures Pointing at Each Other (Spider-Man Meme) */}
+          {/* Three Identical Normal People Pointing at Each Other (Iconic Meme Standoff) */}
           <div className="relative w-28 h-20 flex items-center justify-center animate-spiderman-bob filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]">
             <svg viewBox="0 0 120 90" className="w-full h-full">
               {/* Ground Shadow Ellipses */}
@@ -723,57 +722,119 @@ export function ChannelVisual({
 
               {/* FIGURE 3 (Center Top / Facing forward pointing down at both) */}
               <g transform="translate(60, 36)">
-                {/* Body & legs */}
-                <path d="M -7 4 L -6 18 L -3 18 L -2 7 L 2 7 L 3 18 L 6 18 L 7 4 Z" fill="#1e3a8a" />
-                <path d="M -7 4 L 7 4 L 5 -7 L -5 -7 Z" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
-                {/* Mask head */}
-                <ellipse cx="0" cy="-14" rx="6.5" ry="7.5" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
-                {/* White spider eyes */}
-                <polygon points="-5,-14 -1,-15 -2,-12" fill="#ffffff" stroke="#0f172a" strokeWidth="0.6" />
-                <polygon points="5,-14 1,-15 2,-12" fill="#ffffff" stroke="#0f172a" strokeWidth="0.6" />
-                {/* Outstretched pointing arms pointing at Left & Right */}
-                <path d="M -5 -4 L -16 2" stroke="#dc2626" strokeWidth="3" strokeLinecap="round" />
-                <polygon points="-16,2 -20,4 -16,5" fill="#dc2626" />
-                <path d="M 5 -4 L 16 2" stroke="#dc2626" strokeWidth="3" strokeLinecap="round" />
-                <polygon points="16,2 20,4 16,5" fill="#dc2626" />
+                {/* Legs (Blue Jeans) */}
+                <path d="M -6 4 L -5 18 L -2 18 L -1 7 L 1 7 L 2 18 L 5 18 L 6 4 Z" fill="#1e3a8a" />
+                {/* White Sneakers */}
+                <rect x="-6" y="17" width="4.5" height="2.2" rx="0.8" fill="#ffffff" />
+                <rect x="-6" y="18.5" width="4.5" height="0.7" rx="0.3" fill="#334155" />
+                <rect x="1.5" y="17" width="4.5" height="2.2" rx="0.8" fill="#ffffff" />
+                <rect x="1.5" y="18.5" width="4.5" height="0.7" rx="0.3" fill="#334155" />
+                {/* Torso (Casual T-shirt) */}
+                <path d="M -6 4 L 6 4 L 5 -6 L -5 -6 Z" fill="#2563eb" stroke="#1d4ed8" strokeWidth="0.8" />
+                {/* Neck */}
+                <rect x="-2" y="-7.5" width="4" height="2.5" fill="#fed7aa" />
+                {/* Normal Head */}
+                <ellipse cx="0" cy="-13.5" rx="5.8" ry="6.2" fill="#fed7aa" />
+                {/* Hair */}
+                <path d="M -6 -13 C -6 -19 0 -20 6 -19 C 6 -14 5 -13 4 -14 C 2 -18 -3 -18 -5 -13 Z" fill="#3f2314" />
+                {/* Expressive accusatory eyes looking between both */}
+                <circle cx="-2.2" cy="-13.5" r="1.1" fill="#0f172a" />
+                <circle cx="-1.9" cy="-14" r="0.4" fill="#ffffff" />
+                <circle cx="2.2" cy="-13.5" r="1.1" fill="#0f172a" />
+                <circle cx="2.5" cy="-14" r="0.4" fill="#ffffff" />
+                {/* Incredulous eyebrows */}
+                <path d="M -3.8 -15.5 L -1.2 -15.8" stroke="#3f2314" strokeWidth="0.7" strokeLinecap="round" />
+                <path d="M 3.8 -15.5 L 1.2 -15.8" stroke="#3f2314" strokeWidth="0.7" strokeLinecap="round" />
+                {/* Open mouth */}
+                <circle cx="0" cy="-9.8" r="1.1" fill="#991b1b" />
+                {/* Left arm pointing down-left at Figure 1 */}
+                <path d="M -5 -4 L -9 -1" stroke="#2563eb" strokeWidth="2.8" strokeLinecap="round" />
+                <path d="M -9 -1 L -15 3" stroke="#fed7aa" strokeWidth="2.2" strokeLinecap="round" />
+                <circle cx="-15" cy="3" r="1.4" fill="#fed7aa" />
+                <path d="M -15 3 L -19 5" stroke="#fed7aa" strokeWidth="1.6" strokeLinecap="round" />
+                {/* Right arm pointing down-right at Figure 2 */}
+                <path d="M 5 -4 L 9 -1" stroke="#2563eb" strokeWidth="2.8" strokeLinecap="round" />
+                <path d="M 9 -1 L 15 3" stroke="#fed7aa" strokeWidth="2.2" strokeLinecap="round" />
+                <circle cx="15" cy="3" r="1.4" fill="#fed7aa" />
+                <path d="M 15 3 L 19 5" stroke="#fed7aa" strokeWidth="1.6" strokeLinecap="round" />
               </g>
 
               {/* FIGURE 1 (Left / Facing Right Pointing 👉) */}
               <g transform="translate(30, 56)">
-                {/* Legs */}
+                {/* Legs (Blue Jeans) */}
                 <path d="M -4 8 L -7 22 L -3 22 L -1 10 L 2 22 L 6 22 L 3 8 Z" fill="#1e3a8a" />
-                {/* Torso */}
-                <path d="M -6 -4 L 5 -4 L 3 8 L -5 8 Z" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
-                {/* Mask head facing right */}
-                <ellipse cx="0" cy="-13" rx="7" ry="8" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
-                {/* White eye */}
-                <polygon points="2,-13 6,-14 4,-10" fill="#ffffff" stroke="#0f172a" strokeWidth="0.6" />
+                {/* White Sneakers */}
+                <rect x="-8.5" y="21" width="6.5" height="2.5" rx="1" fill="#ffffff" />
+                <rect x="-8.5" y="22.7" width="6.5" height="0.8" rx="0.3" fill="#334155" />
+                <rect x="2" y="21" width="6.5" height="2.5" rx="1" fill="#ffffff" />
+                <rect x="2" y="22.7" width="6.5" height="0.8" rx="0.3" fill="#334155" />
+                {/* Torso (Casual T-shirt) */}
+                <path d="M -6 -4 L 5 -4 L 3 8 L -5 8 Z" fill="#2563eb" stroke="#1d4ed8" strokeWidth="0.8" />
+                {/* Neck */}
+                <rect x="-2" y="-6.5" width="4" height="3" fill="#fed7aa" />
+                {/* Normal Head */}
+                <circle cx="0" cy="-13" r="6.5" fill="#fed7aa" />
+                {/* Hair */}
+                <path d="M -6.5 -13 C -6.5 -19 0 -21 6 -17 C 7 -15 6 -13 4 -13 C 2 -17 -3 -17 -5 -12 Z" fill="#3f2314" />
+                {/* Ear */}
+                <ellipse cx="-2" cy="-13" rx="1.2" ry="1.8" fill="#fed7aa" />
+                {/* Accusing Eye looking right 👉 */}
+                <circle cx="2.8" cy="-13.5" r="1.1" fill="#0f172a" />
+                <circle cx="3.2" cy="-14" r="0.4" fill="#ffffff" />
+                {/* Eyebrow */}
+                <path d="M 1 -15.5 L 4.5 -14.8" stroke="#3f2314" strokeWidth="0.8" strokeLinecap="round" />
+                {/* Nose */}
+                <path d="M 5.5 -13 L 6.8 -12 L 5.5 -11" fill="none" stroke="#fed7aa" strokeWidth="1" strokeLinejoin="round" />
+                {/* Open mouth */}
+                <path d="M 2.5 -10.5 Q 4.5 -10.5 3.5 -9.2" fill="#991b1b" stroke="#7f1d1d" strokeWidth="0.5" />
                 {/* Left arm bent on hip */}
-                <path d="M -5 -2 L -8 4 L -5 6" fill="none" stroke="#dc2626" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M -5 -4 L -7 0" stroke="#2563eb" strokeWidth="2.8" strokeLinecap="round" />
+                <path d="M -7 0 L -8 4 L -5 5" fill="none" stroke="#fed7aa" strokeWidth="2.2" strokeLinecap="round" />
                 {/* Right arm outstretched pointing right 👉 at Figure 2 */}
-                <path d="M 3 -3 L 20 -2" stroke="#dc2626" strokeWidth="3.2" strokeLinecap="round" />
-                {/* Pointing index finger */}
-                <path d="M 20 -2 L 26 -2" stroke="#dc2626" strokeWidth="2.2" strokeLinecap="round" />
-                <circle cx="20" cy="-1.5" r="2" fill="#dc2626" />
+                <path d="M 3 -3 L 8 -2.5" stroke="#2563eb" strokeWidth="3" strokeLinecap="round" />
+                <path d="M 8 -2.5 L 19 -2" stroke="#fed7aa" strokeWidth="2.6" strokeLinecap="round" />
+                <circle cx="19" cy="-2" r="1.8" fill="#fed7aa" />
+                {/* Extended index finger */}
+                <path d="M 19 -2 L 26 -2" stroke="#fed7aa" strokeWidth="1.8" strokeLinecap="round" />
               </g>
 
               {/* FIGURE 2 (Right / Facing Left Pointing 👈) */}
               <g transform="translate(90, 56) scale(-1, 1)">
-                {/* Legs */}
+                {/* Legs (Blue Jeans) */}
                 <path d="M -4 8 L -7 22 L -3 22 L -1 10 L 2 22 L 6 22 L 3 8 Z" fill="#1e3a8a" />
-                {/* Torso */}
-                <path d="M -6 -4 L 5 -4 L 3 8 L -5 8 Z" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
-                {/* Mask head facing left */}
-                <ellipse cx="0" cy="-13" rx="7" ry="8" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
-                {/* White eye */}
-                <polygon points="2,-13 6,-14 4,-10" fill="#ffffff" stroke="#0f172a" strokeWidth="0.6" />
-                {/* Arm bent on hip */}
-                <path d="M -5 -2 L -8 4 L -5 6" fill="none" stroke="#dc2626" strokeWidth="2.5" strokeLinecap="round" />
-                {/* Outstretched arm pointing left 👈 at Figure 1 */}
-                <path d="M 3 -3 L 20 -2" stroke="#dc2626" strokeWidth="3.2" strokeLinecap="round" />
-                {/* Pointing index finger */}
-                <path d="M 20 -2 L 26 -2" stroke="#dc2626" strokeWidth="2.2" strokeLinecap="round" />
-                <circle cx="20" cy="-1.5" r="2" fill="#dc2626" />
+                {/* White Sneakers */}
+                <rect x="-8.5" y="21" width="6.5" height="2.5" rx="1" fill="#ffffff" />
+                <rect x="-8.5" y="22.7" width="6.5" height="0.8" rx="0.3" fill="#334155" />
+                <rect x="2" y="21" width="6.5" height="2.5" rx="1" fill="#ffffff" />
+                <rect x="2" y="22.7" width="6.5" height="0.8" rx="0.3" fill="#334155" />
+                {/* Torso (Casual T-shirt) */}
+                <path d="M -6 -4 L 5 -4 L 3 8 L -5 8 Z" fill="#2563eb" stroke="#1d4ed8" strokeWidth="0.8" />
+                {/* Neck */}
+                <rect x="-2" y="-6.5" width="4" height="3" fill="#fed7aa" />
+                {/* Normal Head */}
+                <circle cx="0" cy="-13" r="6.5" fill="#fed7aa" />
+                {/* Hair */}
+                <path d="M -6.5 -13 C -6.5 -19 0 -21 6 -17 C 7 -15 6 -13 4 -13 C 2 -17 -3 -17 -5 -12 Z" fill="#3f2314" />
+                {/* Ear */}
+                <ellipse cx="-2" cy="-13" rx="1.2" ry="1.8" fill="#fed7aa" />
+                {/* Accusing Eye looking right in local space (so left when flipped) */}
+                <circle cx="2.8" cy="-13.5" r="1.1" fill="#0f172a" />
+                <circle cx="3.2" cy="-14" r="0.4" fill="#ffffff" />
+                {/* Eyebrow */}
+                <path d="M 1 -15.5 L 4.5 -14.8" stroke="#3f2314" strokeWidth="0.8" strokeLinecap="round" />
+                {/* Nose */}
+                <path d="M 5.5 -13 L 6.8 -12 L 5.5 -11" fill="none" stroke="#fed7aa" strokeWidth="1" strokeLinejoin="round" />
+                {/* Open mouth */}
+                <path d="M 2.5 -10.5 Q 4.5 -10.5 3.5 -9.2" fill="#991b1b" stroke="#7f1d1d" strokeWidth="0.5" />
+                {/* Left arm bent on hip */}
+                <path d="M -5 -4 L -7 0" stroke="#2563eb" strokeWidth="2.8" strokeLinecap="round" />
+                <path d="M -7 0 L -8 4 L -5 5" fill="none" stroke="#fed7aa" strokeWidth="2.2" strokeLinecap="round" />
+                {/* Right arm outstretched pointing left (right in flipped coordinates) */}
+                <path d="M 3 -3 L 8 -2.5" stroke="#2563eb" strokeWidth="3" strokeLinecap="round" />
+                <path d="M 8 -2.5 L 19 -2" stroke="#fed7aa" strokeWidth="2.6" strokeLinecap="round" />
+                <circle cx="19" cy="-2" r="1.8" fill="#fed7aa" />
+                {/* Extended index finger */}
+                <path d="M 19 -2 L 26 -2" stroke="#fed7aa" strokeWidth="1.8" strokeLinecap="round" />
               </g>
             </svg>
           </div>
@@ -841,9 +902,6 @@ export function ChannelVisual({
 
     case 'OP_JE_KOP':
       return <OpJeKopVisual />;
-
-    case 'SPION':
-      return <SpionVisual />;
 
     case 'SNELSTE_VINGER':
       return <SnelsteVingerVisual />;

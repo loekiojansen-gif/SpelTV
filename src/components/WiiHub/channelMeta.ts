@@ -11,8 +11,6 @@ export interface ChannelMeta {
   accent: string;
   /** Wat je nodig hebt naast je telefoon */
   needs?: string;
-  /** Nieuwe kanalen krijgen een "NIEUW" lintje tot ze één keer geopend zijn */
-  isNew?: boolean;
 }
 
 export const CHANNEL_META: Partial<Record<SubAppId, ChannelMeta>> = {
@@ -33,33 +31,8 @@ export const CHANNEL_META: Partial<Record<SubAppId, ChannelMeta>> = {
   THIRTY_SECONDS: { kind: 'Teamspel', players: '4+', duration: '20–40 min', accent: '#2563eb' },
   WIE_IS: { kind: 'Doorgeefspel', players: '3+', duration: '5–10 min', accent: '#f59e0b' },
   UNDERCOVER: { kind: 'Bluffspel', players: '3+', duration: '10–20 min', accent: '#0891b2' },
-  OP_JE_KOP: { kind: 'Raadspel', players: '2+', duration: '5–15 min', accent: '#c026d3', isNew: true },
-  SPION: { kind: 'Bluffspel', players: '3–12', duration: '5–10 min', accent: '#4338ca', isNew: true },
-  SNELSTE_VINGER: { kind: 'Reactiespel', players: '2–4', duration: '2–5 min', accent: '#ca8a04', isNew: true },
-  HOGER_LAGER: { kind: 'Kaartspel', players: '2+', duration: '5–15 min', accent: '#be123c', isNew: true },
-  NOOIT: { kind: 'Drankspel', players: '3+', duration: '10–30 min', accent: '#0d9488', isNew: true },
+  OP_JE_KOP: { kind: 'Raadspel', players: '2+', duration: '5–15 min', accent: '#c026d3' },
+  SNELSTE_VINGER: { kind: 'Reactiespel', players: '2–4', duration: '2–5 min', accent: '#ca8a04' },
+  HOGER_LAGER: { kind: 'Kaartspel', players: '2+', duration: '5–15 min', accent: '#be123c' },
+  NOOIT: { kind: 'Drankspel', players: '3+', duration: '10–30 min', accent: '#0d9488' },
 };
-
-const SEEN_KEY = 'party_channels_seen_new_channels';
-
-export function loadSeenNewChannels(): string[] {
-  try {
-    const raw = localStorage.getItem(SEEN_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-export function markNewChannelSeen(channelId: string): string[] {
-  const seen = loadSeenNewChannels();
-  if (seen.includes(channelId)) return seen;
-  const next = [...seen, channelId];
-  try {
-    localStorage.setItem(SEEN_KEY, JSON.stringify(next));
-  } catch {
-    // Niet erg: het lintje blijft dan gewoon staan
-  }
-  return next;
-}

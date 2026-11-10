@@ -1011,24 +1011,6 @@ select:focus {
   animation-delay: calc(var(--tile-index, 0) * 26ms);
 }
 
-/* "NIEUW" lintje op kanalen die nog niet geopend zijn */
-@keyframes newBadgePulse {
-  0%, 100% {
-    transform: rotate(-8deg) scale(1);
-  }
-  50% {
-    transform: rotate(-8deg) scale(1.1);
-  }
-}
-
-.hub-new-badge {
-  background: linear-gradient(180deg, #fde047 0%, #f59e0b 100%);
-  color: #7c2d12;
-  border: 1.5px solid #ffffff;
-  box-shadow: 0 2px 5px rgba(124, 45, 18, 0.35);
-  animation: newBadgePulse 1.8s ease-in-out infinite;
-}
-
 /* Wit flitsje bij het starten van een kanaal */
 @keyframes channelLaunchFlash {
   from {
@@ -1131,35 +1113,6 @@ select:focus {
 
 .animate-opjekop-tilt {
   animation: opJeKopTilt 4.6s ease-in-out infinite;
-}
-
-@keyframes spionSweep {
-  0%, 100% {
-    transform: translateX(-50%) rotate(-26deg);
-  }
-  50% {
-    transform: translateX(-50%) rotate(26deg);
-  }
-}
-
-.animate-spion-sweep {
-  animation: spionSweep 5.5s ease-in-out infinite;
-}
-
-@keyframes spionEyes {
-  0%, 20%, 100% {
-    transform: translateX(0);
-  }
-  30%, 50% {
-    transform: translateX(-3px);
-  }
-  60%, 85% {
-    transform: translateX(3px);
-  }
-}
-
-.animate-spion-eyes {
-  animation: spionEyes 4s ease-in-out infinite;
 }
 
 @keyframes zapBolt {
@@ -1320,13 +1273,10 @@ select:focus {
 /* Wie liever geen beweging ziet, krijgt een rustige versie */
 @media (prefers-reduced-motion: reduce) {
   .hub-tile,
-  .hub-new-badge,
   .animate-in,
   .animate-pop-in,
   .animate-shake-x,
   .animate-opjekop-tilt,
-  .animate-spion-sweep,
-  .animate-spion-eyes,
   .animate-zap-bolt,
   .animate-zap-pad,
   .animate-arrow-up,

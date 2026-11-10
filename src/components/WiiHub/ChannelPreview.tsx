@@ -13,7 +13,6 @@ interface ChannelPreviewProps {
   channelId: SubAppId;
   /** Positie van de aangetikte tegel, zodat de voorvertoning daaruit "opent" */
   originRect: DOMRect | null;
-  showNewBadge?: boolean;
   pubGolfActive?: boolean;
   slabakkenActive?: boolean;
   onClose: () => void;
@@ -23,7 +22,6 @@ interface ChannelPreviewProps {
 export function ChannelPreview({
   channelId,
   originRect,
-  showNewBadge = false,
   pubGolfActive = false,
   slabakkenActive = false,
   onClose,
@@ -121,11 +119,6 @@ export function ChannelPreview({
             </div>
             <div className="absolute inset-0 crt-scanlines opacity-15 z-10" />
             <div className="party-channel-sheen !rounded-t-[1.6rem]" />
-            {showNewBadge && (
-              <span className="hub-new-badge absolute top-3 left-3 z-20 px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider">
-                Nieuw
-              </span>
-            )}
           </motion.div>
         </div>
 
@@ -135,19 +128,16 @@ export function ChannelPreview({
           animate={launching ? { opacity: 0, y: 12 } : { opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <div className="flex items-center gap-2.5">
-            <span className="text-3xl shrink-0 drop-shadow-sm">{rules?.emoji}</span>
-            <div className="min-w-0">
-              <span
-                className="text-[10px] font-black uppercase tracking-widest block"
-                style={{ color: accent }}
-              >
-                {meta?.kind ?? 'Kanaal'}
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 leading-tight truncate">
-                {title}
-              </h2>
-            </div>
+          <div className="min-w-0">
+            <span
+              className="text-[10px] font-black uppercase tracking-widest block"
+              style={{ color: accent }}
+            >
+              {meta?.kind ?? 'Kanaal'}
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 leading-tight truncate">
+              {title}
+            </h2>
           </div>
 
           <p className="text-sm font-bold text-slate-600 mt-2 leading-snug">{rules?.summary}</p>

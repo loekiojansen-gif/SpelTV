@@ -34,7 +34,6 @@ const MiiMakerApp = lazy(() => import('./components/MiiMaker/MiiMakerApp').then(
 const ThirtySecondsApp = lazy(() => import('./components/ThirtySeconds/ThirtySecondsApp').then(m => ({ default: m.ThirtySecondsApp })));
 const WieIsApp = lazy(() => import('./components/WieIs/WieIsApp').then(m => ({ default: m.WieIsApp })));
 const OpJeKopApp = lazy(() => import('./components/OpJeKop/OpJeKopApp').then(m => ({ default: m.OpJeKopApp })));
-const SpionApp = lazy(() => import('./components/Spion/SpionApp').then(m => ({ default: m.SpionApp })));
 const SnelsteVingerApp = lazy(() => import('./components/SnelsteVinger/SnelsteVingerApp').then(m => ({ default: m.SnelsteVingerApp })));
 const HogerLagerApp = lazy(() => import('./components/HogerLager/HogerLagerApp').then(m => ({ default: m.HogerLagerApp })));
 const NooitApp = lazy(() => import('./components/Nooit/NooitApp').then(m => ({ default: m.NooitApp })));
@@ -153,7 +152,6 @@ export default function App() {
       WIE_IS: '#fff5f5',
       UNDERCOVER: '#080b14',
       OP_JE_KOP: '#581c87',
-      SPION: '#0b1026',
       SNELSTE_VINGER: '#0f172a',
       HOGER_LAGER: '#4c0519',
       NOOIT: '#115e59',
@@ -448,7 +446,6 @@ export default function App() {
     WIE_IS: 'Wie is?',
     UNDERCOVER: 'Undercover',
     OP_JE_KOP: 'Op je Kop',
-    SPION: 'Spion',
     SNELSTE_VINGER: 'Snelste Vinger',
     HOGER_LAGER: 'Hoger of Lager',
     NOOIT: 'Ik heb nog nooit',
@@ -487,8 +484,6 @@ export default function App() {
         return 'bg-[#150d24] text-purple-100';
       case 'OP_JE_KOP':
         return 'bg-[#581c87] text-fuchsia-50';
-      case 'SPION':
-        return 'bg-[#0b1026] text-indigo-50';
       case 'SNELSTE_VINGER':
         return 'bg-[#0f172a] text-slate-50';
       case 'HOGER_LAGER':
@@ -797,24 +792,6 @@ export default function App() {
         </div>
       )}
 
-      {/* 14. Donker geheim-agent decor met zoeklicht voor Spion */}
-      {activeSubApp === 'SPION' && (
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ backgroundColor: '#0b1026' }} aria-hidden="true">
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `radial-gradient(ellipse at 50% -10%, rgba(253, 224, 71, 0.2) 0%, transparent 55%),
-                           radial-gradient(circle at 50% 30%, #312e81 0%, #1e1b4b 45%, #0b1026 80%, #020617 100%)`,
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-[0.07]"
-            style={{
-              backgroundImage: `repeating-linear-gradient(135deg, #ffffff 0, #ffffff 1px, transparent 1px, transparent 14px)`,
-            }}
-          />
-        </div>
-      )}
 
       {/* 15. Donkere arena met gele energie voor Snelste Vinger */}
       {activeSubApp === 'SNELSTE_VINGER' && (
@@ -995,10 +972,6 @@ export default function App() {
           <OpJeKopApp isCurrentApp={activeSubApp === 'OP_JE_KOP'} />
         </ChannelSlot>
 
-        {/* Spion (bluffspel: wie kent het geheime woord niet?) */}
-        <ChannelSlot active={activeSubApp === 'SPION'} visited={isVisited('SPION')}>
-          <SpionApp isCurrentApp={activeSubApp === 'SPION'} />
-        </ChannelSlot>
 
         {/* Snelste Vinger (reactieduel voor 2 tot 4 spelers op één scherm) */}
         <ChannelSlot active={activeSubApp === 'SNELSTE_VINGER'} visited={isVisited('SNELSTE_VINGER')}>

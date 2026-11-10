@@ -35,43 +35,6 @@ export function OpJeKopVisual() {
   );
 }
 
-export function SpionVisual() {
-  return (
-    <div className="absolute inset-0 bg-gradient-to-b from-[#4338ca] via-[#1e1b4b] to-[#020617] flex items-center justify-center overflow-hidden">
-      {/* Zoeklicht dat over de tegel zwaait */}
-      <div
-        className="absolute -top-4 left-1/2 w-[160%] h-[200%] animate-spion-sweep pointer-events-none"
-        style={{
-          transformOrigin: '50% 0%',
-          background:
-            'conic-gradient(from 168deg at 50% 0%, transparent 0deg, rgba(253,224,71,0.42) 9deg, rgba(253,224,71,0.42) 15deg, transparent 24deg)',
-        }}
-      />
-      <div className="relative w-16 h-16 flex items-center justify-center animate-channel-float z-10">
-        <svg viewBox="0 0 100 100" className="w-full h-full filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]">
-          {/* Opstaande kraag */}
-          <path d="M 22 96 L 34 64 L 50 82 L 66 64 L 78 96 Z" fill="#475569" stroke="#0f172a" strokeWidth="2" strokeLinejoin="round" />
-          <path d="M 34 64 L 50 82 L 44 96 L 28 96 Z" fill="#64748b" />
-          {/* Gezicht in de schaduw */}
-          <path d="M 30 44 Q 30 76 50 78 Q 70 76 70 44 Z" fill="#1e293b" stroke="#0f172a" strokeWidth="2" />
-          {/* Ogen die heen en weer loeren */}
-          <g className="animate-spion-eyes">
-            <ellipse cx="41" cy="55" rx="6" ry="3.6" fill="#ffffff" />
-            <ellipse cx="59" cy="55" rx="6" ry="3.6" fill="#ffffff" />
-            <circle cx="41" cy="55" r="2.2" fill="#0f172a" />
-            <circle cx="59" cy="55" r="2.2" fill="#0f172a" />
-          </g>
-          {/* Hoed */}
-          <path d="M 30 42 Q 31 14 50 14 Q 69 14 70 42 Z" fill="#0f172a" stroke="#020617" strokeWidth="2" />
-          <rect x="30" y="33" width="40" height="7" fill="#ef4444" />
-          <ellipse cx="50" cy="43" rx="38" ry="7" fill="#0f172a" stroke="#020617" strokeWidth="2" />
-          <ellipse cx="42" cy="41" rx="12" ry="1.6" fill="#ffffff" opacity="0.18" />
-        </svg>
-      </div>
-    </div>
-  );
-}
-
 export function SnelsteVingerVisual() {
   return (
     <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#2563eb]">
