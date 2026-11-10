@@ -65,7 +65,7 @@ export interface HistoricalGame {
 
 export type GameView = 'home' | 'team-setup' | 'active-game' | 'post-game';
 
-export type SubAppId = 'HUB' | 'PUB_GOLF' | 'CHWAZI' | 'DICE' | 'SCORE_KEEPER' | 'RNG' | 'WHEEL' | 'SLABAKKEN' | 'TEAM_MAKER' | 'TOURNAMENT' | 'CROCODILE' | 'BOMB' | 'CAMEL_RACE' | 'CARD_CATALOG' | 'BOER_ZOEKT_VROUW' | 'MII_MAKER' | 'THIRTY_SECONDS' | 'WIE_IS' | 'UNDERCOVER';
+export type SubAppId = 'HUB' | 'PUB_GOLF' | 'CHWAZI' | 'DICE' | 'SCORE_KEEPER' | 'RNG' | 'WHEEL' | 'SLABAKKEN' | 'TEAM_MAKER' | 'TOURNAMENT' | 'CROCODILE' | 'BOMB' | 'CAMEL_RACE' | 'CARD_CATALOG' | 'BOER_ZOEKT_VROUW' | 'MII_MAKER' | 'THIRTY_SECONDS' | 'WIE_IS' | 'UNDERCOVER' | 'OP_JE_KOP' | 'SPION' | 'SNELSTE_VINGER' | 'HOGER_LAGER' | 'NOOIT';
 
 export type MiiHeadShape = 'round' | 'oval' | 'square' | 'triangle' | 'wide' | 'heart';
 export type MiiHairStyle =

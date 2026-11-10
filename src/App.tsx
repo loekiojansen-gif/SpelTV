@@ -1,36 +1,75 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense, type ReactNode } from 'react';
 import { GameState, PubItem, DrinkItem, ChallengeItem, Player, Team, Round, HistoricalGame, CourseTemplate, SubAppId } from './types';
 import { loadGameState, saveGameState, clearGameProgress, saveGameToHistory, saveRememberedPlayers, loadTemplates, saveTemplates } from './utils/storage';
 import { checkForSharedRouteInUrl, clearRouteParamFromUrl } from './utils/routeSharing';
 import { checkForSharedWheelInUrl } from './utils/wheelSharing';
 import { Header } from './components/Header';
-import { HomeScreen } from './components/HomeScreen';
-import { TeamSetupScreen } from './components/TeamSetupScreen';
-import { ActiveGameScreen } from './components/ActiveGameScreen';
-import { PostGameScreen } from './components/PostGameScreen';
 import { IncomingSharedRouteModal } from './components/IncomingSharedRouteModal';
 import { WiiNavBar } from './components/Navigation/WiiNavBar';
 import { WiiChannelGrid } from './components/WiiHub/WiiChannelGrid';
-import { ChwaziApp } from './components/Chwazi/ChwaziApp';
-import { RollingDiceApp } from './components/Dice/RollingDiceApp';
-import { ScoreKeeperApp } from './components/ScoreKeeper/ScoreKeeperApp';
-import { RandomNumberApp } from './components/RNG/RandomNumberApp';
-import { SpinningWheelApp } from './components/Wheel/SpinningWheelApp';
-import { SlabakkenApp } from './components/Slabakken/SlabakkenApp';
-import { TeamMakerApp } from './components/TeamMaker/TeamMakerApp';
-import { TournamentApp } from './components/Tournament/TournamentApp';
-import { CrocodileApp } from './components/Crocodile/CrocodileApp';
-import { BombApp } from './components/Bomb/BombApp';
-import { CamelRaceApp } from './components/CamelRace/CamelRaceApp';
-import { CardCatalogApp } from './components/CardCatalog/CardCatalogApp';
-import { BoerZoektVrouwApp } from './components/BoerZoektVrouw/BoerZoektVrouwApp';
-import { MiiMakerApp } from './components/MiiMaker/MiiMakerApp';
-import { ThirtySecondsApp } from './components/ThirtySeconds/ThirtySecondsApp';
-import { WieIsApp } from './components/WieIs/WieIsApp';
-import { UndercoverApp } from './components/Undercover/UndercoverApp';
+import { BootSplash } from './components/WiiHub/BootSplash';
 import { sounds } from './utils/audio';
 import { bgmEngine } from './utils/bgmEngine';
 import wiiGolfBg from './assets/wii_golf_bg.jpg';
+
+// Elk kanaal wordt pas gedownload op het moment dat je het voor het eerst opent.
+// Zo start het menu snel en draaien er geen spellen onzichtbaar op de achtergrond.
+const HomeScreen = lazy(() => import('./components/HomeScreen').then(m => ({ default: m.HomeScreen })));
+const TeamSetupScreen = lazy(() => import('./components/TeamSetupScreen').then(m => ({ default: m.TeamSetupScreen })));
+const ActiveGameScreen = lazy(() => import('./components/ActiveGameScreen').then(m => ({ default: m.ActiveGameScreen })));
+const PostGameScreen = lazy(() => import('./components/PostGameScreen').then(m => ({ default: m.PostGameScreen })));
+const ChwaziApp = lazy(() => import('./components/Chwazi/ChwaziApp').then(m => ({ default: m.ChwaziApp })));
+const RollingDiceApp = lazy(() => import('./components/Dice/RollingDiceApp').then(m => ({ default: m.RollingDiceApp })));
+const ScoreKeeperApp = lazy(() => import('./components/ScoreKeeper/ScoreKeeperApp').then(m => ({ default: m.ScoreKeeperApp })));
+const SpinningWheelApp = lazy(() => import('./components/Wheel/SpinningWheelApp').then(m => ({ default: m.SpinningWheelApp })));
+const SlabakkenApp = lazy(() => import('./components/Slabakken/SlabakkenApp').then(m => ({ default: m.SlabakkenApp })));
+const TeamMakerApp = lazy(() => import('./components/TeamMaker/TeamMakerApp').then(m => ({ default: m.TeamMakerApp })));
+const TournamentApp = lazy(() => import('./components/Tournament/TournamentApp').then(m => ({ default: m.TournamentApp })));
+const CrocodileApp = lazy(() => import('./components/Crocodile/CrocodileApp').then(m => ({ default: m.CrocodileApp })));
+const BombApp = lazy(() => import('./components/Bomb/BombApp').then(m => ({ default: m.BombApp })));
+const CamelRaceApp = lazy(() => import('./components/CamelRace/CamelRaceApp').then(m => ({ default: m.CamelRaceApp })));
+const CardCatalogApp = lazy(() => import('./components/CardCatalog/CardCatalogApp').then(m => ({ default: m.CardCatalogApp })));
+const BoerZoektVrouwApp = lazy(() => import('./components/BoerZoektVrouw/BoerZoektVrouwApp').then(m => ({ default: m.BoerZoektVrouwApp })));
+const MiiMakerApp = lazy(() => import('./components/MiiMaker/MiiMakerApp').then(m => ({ default: m.MiiMakerApp })));
+const ThirtySecondsApp = lazy(() => import('./components/ThirtySeconds/ThirtySecondsApp').then(m => ({ default: m.ThirtySecondsApp })));
+const WieIsApp = lazy(() => import('./components/WieIs/WieIsApp').then(m => ({ default: m.WieIsApp })));
+const OpJeKopApp = lazy(() => import('./components/OpJeKop/OpJeKopApp').then(m => ({ default: m.OpJeKopApp })));
+const SpionApp = lazy(() => import('./components/Spion/SpionApp').then(m => ({ default: m.SpionApp })));
+const SnelsteVingerApp = lazy(() => import('./components/SnelsteVinger/SnelsteVingerApp').then(m => ({ default: m.SnelsteVingerApp })));
+const HogerLagerApp = lazy(() => import('./components/HogerLager/HogerLagerApp').then(m => ({ default: m.HogerLagerApp })));
+const NooitApp = lazy(() => import('./components/Nooit/NooitApp').then(m => ({ default: m.NooitApp })));
+const UndercoverApp = lazy(() => import('./components/Undercover/UndercoverApp').then(m => ({ default: m.UndercoverApp })));
+
+/** Kort laadscherm terwijl een kanaal wordt opgehaald (verschijnt pas na een kwart seconde). */
+function ChannelLoading() {
+  return (
+    <div className="channel-loading flex flex-col items-center justify-center gap-3 py-24 text-center select-none">
+      <div className="w-12 h-12 rounded-full border-4 border-white/40 border-t-white animate-spin" />
+      <span className="text-xs font-black uppercase tracking-widest opacity-80">Kanaal laden…</span>
+    </div>
+  );
+}
+
+interface ChannelSlotProps {
+  /** Is dit kanaal nu in beeld? */
+  active: boolean;
+  /** Is dit kanaal al eens geopend? Zo ja, dan blijft het bewaard op de achtergrond. */
+  visited: boolean;
+  children: ReactNode;
+}
+
+/**
+ * Laadt een kanaal bij het eerste bezoek en houdt het daarna gemount,
+ * zodat een lopend potje bewaard blijft als je even terug gaat naar het menu.
+ */
+function ChannelSlot({ active, visited, children }: ChannelSlotProps) {
+  if (!visited) return null;
+  return (
+    <div className={active ? 'block' : 'hidden'}>
+      <Suspense fallback={active ? <ChannelLoading /> : null}>{children}</Suspense>
+    </div>
+  );
+}
 
 export default function App() {
   const [activeSubApp, setActiveSubApp] = useState<SubAppId>('HUB');
@@ -38,7 +77,18 @@ export default function App() {
   const [jumpToHole, setJumpToHole] = useState<number | null>(null);
   const [incomingSharedRoute, setIncomingSharedRoute] = useState<CourseTemplate | null>(null);
   const [showCourseChecklist, setShowCourseChecklist] = useState(false);
+  const [launchFlashId, setLaunchFlashId] = useState(0);
 
+  // Onthoud welke kanalen al geopend zijn, zodat ze daarna gemount blijven
+  const visitedAppsRef = useRef<Set<SubAppId>>(new Set());
+  visitedAppsRef.current.add(activeSubApp);
+  const isVisited = (...apps: SubAppId[]) => apps.some(app => visitedAppsRef.current.has(app));
+
+  // Een kanaal starten vanuit het menu geeft een korte witte flits als overgang
+  const handleLaunchFromHub = (app: SubAppId) => {
+    setLaunchFlashId(prev => prev + 1);
+    setActiveSubApp(app);
+  };
 
   // Auto-save to localStorage on every state mutation
   useEffect(() => {
@@ -102,6 +152,11 @@ export default function App() {
       THIRTY_SECONDS: '#fefce8',
       WIE_IS: '#fff5f5',
       UNDERCOVER: '#080b14',
+      OP_JE_KOP: '#581c87',
+      SPION: '#0b1026',
+      SNELSTE_VINGER: '#0f172a',
+      HOGER_LAGER: '#4c0519',
+      NOOIT: '#115e59',
     };
 
     const targetColor = themeColors[activeSubApp] || '#f6f8fa';
@@ -392,6 +447,11 @@ export default function App() {
     THIRTY_SECONDS: '30 Seconds',
     WIE_IS: 'Wie is?',
     UNDERCOVER: 'Undercover',
+    OP_JE_KOP: 'Op je Kop',
+    SPION: 'Spion',
+    SNELSTE_VINGER: 'Snelste Vinger',
+    HOGER_LAGER: 'Hoger of Lager',
+    NOOIT: 'Ik heb nog nooit',
   };
 
   const getSubAppBackground = (app: SubAppId) => {
@@ -425,6 +485,16 @@ export default function App() {
         return 'bg-[#180a04] text-amber-100';
       case 'WHEEL':
         return 'bg-[#150d24] text-purple-100';
+      case 'OP_JE_KOP':
+        return 'bg-[#581c87] text-fuchsia-50';
+      case 'SPION':
+        return 'bg-[#0b1026] text-indigo-50';
+      case 'SNELSTE_VINGER':
+        return 'bg-[#0f172a] text-slate-50';
+      case 'HOGER_LAGER':
+        return 'bg-[#4c0519] text-rose-50';
+      case 'NOOIT':
+        return 'bg-[#115e59] text-teal-50';
       default:
         return 'party-menu-bg text-slate-800';
     }
@@ -713,7 +783,90 @@ export default function App() {
         </div>
       )}
 
-      {/* 13. Deep Cosmic Void Background for Undercover */}
+      {/* 13. Feestelijke paarse gloed voor Op je Kop */}
+      {activeSubApp === 'OP_JE_KOP' && (
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ backgroundColor: '#581c87' }} aria-hidden="true">
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(circle at 15% 12%, rgba(240, 171, 252, 0.55) 0%, transparent 42%),
+                           radial-gradient(circle at 88% 82%, rgba(129, 140, 248, 0.5) 0%, transparent 48%),
+                           linear-gradient(180deg, #a21caf 0%, #6b21a8 55%, #3b0764 100%)`,
+            }}
+          />
+        </div>
+      )}
+
+      {/* 14. Donker geheim-agent decor met zoeklicht voor Spion */}
+      {activeSubApp === 'SPION' && (
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ backgroundColor: '#0b1026' }} aria-hidden="true">
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(ellipse at 50% -10%, rgba(253, 224, 71, 0.2) 0%, transparent 55%),
+                           radial-gradient(circle at 50% 30%, #312e81 0%, #1e1b4b 45%, #0b1026 80%, #020617 100%)`,
+            }}
+          />
+          <div
+            className="absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage: `repeating-linear-gradient(135deg, #ffffff 0, #ffffff 1px, transparent 1px, transparent 14px)`,
+            }}
+          />
+        </div>
+      )}
+
+      {/* 15. Donkere arena met gele energie voor Snelste Vinger */}
+      {activeSubApp === 'SNELSTE_VINGER' && (
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ backgroundColor: '#0f172a' }} aria-hidden="true">
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(circle at 50% 0%, rgba(250, 204, 21, 0.28) 0%, transparent 50%),
+                           radial-gradient(circle at 0% 100%, rgba(239, 68, 68, 0.22) 0%, transparent 45%),
+                           radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.22) 0%, transparent 45%),
+                           linear-gradient(180deg, #1e293b 0%, #0f172a 60%, #020617 100%)`,
+            }}
+          />
+        </div>
+      )}
+
+      {/* 16. Bordeauxrode speeltafel voor Hoger of Lager */}
+      {activeSubApp === 'HOGER_LAGER' && (
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ backgroundColor: '#4c0519' }} aria-hidden="true">
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(circle at 50% 28%, #be123c 0%, #9f1239 30%, #6b0f2b 62%, #3b0414 100%)`,
+            }}
+          />
+          <div
+            className="absolute inset-0 opacity-[0.08]"
+            style={{
+              backgroundImage: `radial-gradient(#ffffff 1px, transparent 1px)`,
+              backgroundSize: '18px 18px',
+            }}
+          />
+        </div>
+      )}
+
+      {/* 17. Frisse zeegroene gloed voor Ik heb nog nooit */}
+      {activeSubApp === 'NOOIT' && (
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ backgroundColor: '#115e59' }} aria-hidden="true">
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(circle at 50% 12%, #5eead4 0%, #14b8a6 28%, #0f766e 62%, #134e4a 100%)`,
+            }}
+          />
+          <div className="absolute top-16 left-6 text-6xl opacity-10 -rotate-12 select-none">🍻</div>
+          <div className="absolute top-44 right-8 text-7xl opacity-10 rotate-12 select-none">😇</div>
+          <div className="absolute bottom-28 left-12 text-6xl opacity-10 rotate-12 select-none">🤫</div>
+          <div className="absolute bottom-40 right-14 text-6xl opacity-10 -rotate-12 select-none">🥂</div>
+        </div>
+      )}
+
+      {/* 18. Deep Cosmic Void Background for Undercover */}
       {activeSubApp === 'UNDERCOVER' && (
         <div
           className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
@@ -752,7 +905,7 @@ export default function App() {
         {/* Hub / Main Channel Selection Screen */}
         {activeSubApp === 'HUB' && (
           <WiiChannelGrid
-            onSelectApp={setActiveSubApp}
+            onSelectApp={handleLaunchFromHub}
             pubGolfActive={gameState.isGameActive}
             pubGolfHole={gameState.currentRoundNumber}
             pubGolfTeamsCount={gameState.teams.length}
@@ -760,88 +913,116 @@ export default function App() {
         )}
 
         {/* Chwazi Finger Chooser */}
-        <div className={activeSubApp === 'CHWAZI' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'CHWAZI'} visited={isVisited('CHWAZI')}>
           <ChwaziApp />
-        </div>
+        </ChannelSlot>
 
         {/* Rolling Dice & Getal Generator */}
-        <div className={(activeSubApp === 'DICE' || activeSubApp === 'RNG') ? 'block' : 'hidden'}>
+        <ChannelSlot
+          active={activeSubApp === 'DICE' || activeSubApp === 'RNG'}
+          visited={isVisited('DICE', 'RNG')}
+        >
           <RollingDiceApp />
-        </div>
+        </ChannelSlot>
 
         {/* General Party Score Keeper */}
-        <div className={activeSubApp === 'SCORE_KEEPER' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'SCORE_KEEPER'} visited={isVisited('SCORE_KEEPER')}>
           <ScoreKeeperApp />
-        </div>
+        </ChannelSlot>
 
         {/* Custom Spinning Wheel */}
-        <div className={activeSubApp === 'WHEEL' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'WHEEL'} visited={isVisited('WHEEL')}>
           <SpinningWheelApp />
-        </div>
+        </ChannelSlot>
 
         {/* Het Slabakken Spel (Pannenspel / Times Up) */}
-        <div className={activeSubApp === 'SLABAKKEN' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'SLABAKKEN'} visited={isVisited('SLABAKKEN')}>
           <SlabakkenApp />
-        </div>
+        </ChannelSlot>
 
         {/* Team Maker (Random teams direct of via radje) */}
-        <div className={activeSubApp === 'TEAM_MAKER' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'TEAM_MAKER'} visited={isVisited('TEAM_MAKER')}>
           <TeamMakerApp />
-        </div>
+        </ChannelSlot>
 
         {/* Toernooi Manager (Knockout schema & wedstrijden) */}
-        <div className={activeSubApp === 'TOURNAMENT' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'TOURNAMENT'} visited={isVisited('TOURNAMENT')}>
           <TournamentApp />
-        </div>
+        </ChannelSlot>
 
         {/* Bijtende Krokodil (Crocodile Dentist party roulette) */}
-        <div className={activeSubApp === 'CROCODILE' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'CROCODILE'} visited={isVisited('CROCODILE')}>
           <CrocodileApp />
-        </div>
+        </ChannelSlot>
 
         {/* Tikkende Bom (Bomb Defusal Hot Potato) */}
-        <div className={activeSubApp === 'BOMB' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'BOMB'} visited={isVisited('BOMB')}>
           <BombApp />
-        </div>
+        </ChannelSlot>
 
         {/* Woestijn Kamelenrace (Camel Derby Race & Betting) */}
-        <div className={activeSubApp === 'CAMEL_RACE' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'CAMEL_RACE'} visited={isVisited('CAMEL_RACE')}>
           <CamelRaceApp />
-        </div>
+        </ChannelSlot>
 
         {/* De Kaartspel Catalogus (Bookshelf & Rules Archive) */}
-        <div className={activeSubApp === 'CARD_CATALOG' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'CARD_CATALOG'} visited={isVisited('CARD_CATALOG')}>
           <CardCatalogApp />
-        </div>
+        </ChannelSlot>
 
         {/* Boer zoekt Vrouw Drankspel */}
-        <div className={activeSubApp === 'BOER_ZOEKT_VROUW' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'BOER_ZOEKT_VROUW'} visited={isVisited('BOER_ZOEKT_VROUW')}>
           <BoerZoektVrouwApp />
-        </div>
+        </ChannelSlot>
 
         {/* Mii Maker Channel */}
-        <div className={activeSubApp === 'MII_MAKER' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'MII_MAKER'} visited={isVisited('MII_MAKER')}>
           <MiiMakerApp />
-        </div>
+        </ChannelSlot>
 
         {/* 30 Seconds Channel */}
-        <div className={activeSubApp === 'THIRTY_SECONDS' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'THIRTY_SECONDS'} visited={isVisited('THIRTY_SECONDS')}>
           <ThirtySecondsApp isCurrentApp={activeSubApp === 'THIRTY_SECONDS'} />
-        </div>
+        </ChannelSlot>
 
         {/* Wie is? Most Likely To Ticking Bomb Channel */}
-        <div className={activeSubApp === 'WIE_IS' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'WIE_IS'} visited={isVisited('WIE_IS')}>
           <WieIsApp isCurrentApp={activeSubApp === 'WIE_IS'} />
-        </div>
+        </ChannelSlot>
+
+        {/* Op je Kop (woord op je voorhoofd, kantelen voor goed of pas) */}
+        <ChannelSlot active={activeSubApp === 'OP_JE_KOP'} visited={isVisited('OP_JE_KOP')}>
+          <OpJeKopApp isCurrentApp={activeSubApp === 'OP_JE_KOP'} />
+        </ChannelSlot>
+
+        {/* Spion (bluffspel: wie kent het geheime woord niet?) */}
+        <ChannelSlot active={activeSubApp === 'SPION'} visited={isVisited('SPION')}>
+          <SpionApp isCurrentApp={activeSubApp === 'SPION'} />
+        </ChannelSlot>
+
+        {/* Snelste Vinger (reactieduel voor 2 tot 4 spelers op één scherm) */}
+        <ChannelSlot active={activeSubApp === 'SNELSTE_VINGER'} visited={isVisited('SNELSTE_VINGER')}>
+          <SnelsteVingerApp isCurrentApp={activeSubApp === 'SNELSTE_VINGER'} />
+        </ChannelSlot>
+
+        {/* Hoger of Lager (kaartspel met een pot die steeds verder oploopt) */}
+        <ChannelSlot active={activeSubApp === 'HOGER_LAGER'} visited={isVisited('HOGER_LAGER')}>
+          <HogerLagerApp />
+        </ChannelSlot>
+
+        {/* Ik heb nog nooit (stellingen van gezellig tot pittig) */}
+        <ChannelSlot active={activeSubApp === 'NOOIT'} visited={isVisited('NOOIT')}>
+          <NooitApp />
+        </ChannelSlot>
 
         {/* Undercover Secret Alien Word Game Channel */}
-        <div className={activeSubApp === 'UNDERCOVER' ? 'block' : 'hidden'}>
+        <ChannelSlot active={activeSubApp === 'UNDERCOVER'} visited={isVisited('UNDERCOVER')}>
           <UndercoverApp />
-        </div>
+        </ChannelSlot>
 
         {/* Pub Golf Pro (Active SubApp) */}
         {activeSubApp === 'PUB_GOLF' && (
-          <>
+          <Suspense fallback={<ChannelLoading />}>
             {gameState.view === 'home' && (
               <HomeScreen
                 pubs={gameState.pubs}
@@ -911,9 +1092,15 @@ export default function App() {
                 onEditHole={handleEditHoleFromPostGame}
               />
             )}
-          </>
+          </Suspense>
         )}
       </main>
+
+      {/* Korte witte flits als overgang bij het starten van een kanaal */}
+      {launchFlashId > 0 && <div key={launchFlashId} className="channel-launch-flash" aria-hidden="true" />}
+
+      {/* Opstartanimatie (één keer per sessie) */}
+      <BootSplash />
 
       {/* Incoming Shared Route Detected Modal */}
       {incomingSharedRoute && (

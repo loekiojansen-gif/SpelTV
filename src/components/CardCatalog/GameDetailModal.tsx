@@ -36,6 +36,7 @@ type TabType = 'rules' | 'required' | 'cards' | 'music' | 'share';
 export const GameDetailModal: React.FC<GameDetailModalProps> = ({ game, onClose, onDeleteCustom, onEdit }) => {
   const [activeTab, setActiveTab] = useState<TabType>('rules');
   const [copied, setCopied] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
 
   // Interactive Music Simulator Timer
@@ -720,15 +721,23 @@ export const GameDetailModal: React.FC<GameDetailModalProps> = ({ game, onClose,
           {game.isCustom && onDeleteCustom ? (
             <button
               onClick={() => {
-                if (window.confirm(`Weet je zeker dat je "${game.title}" wilt verwijderen?`)) {
+                // Bevestigen met een tweede tik: window.confirm() werkt niet als de app in een frame draait
+                if (confirmDelete) {
                   onDeleteCustom(game.id);
                   onClose();
+                } else {
+                  setConfirmDelete(true);
                 }
               }}
-              className="text-xs font-bold text-red-600 hover:text-red-800 flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+              onBlur={() => setConfirmDelete(false)}
+              className={`text-xs font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                confirmDelete
+                  ? 'bg-red-600 text-white hover:bg-red-700'
+                  : 'text-red-600 hover:text-red-800 hover:bg-red-50'
+              }`}
             >
               <Trash2 className="w-3.5 h-3.5" />
-              Spel Verwijderen
+              {confirmDelete ? 'Zeker weten? Tik nog eens' : 'Spel Verwijderen'}
             </button>
           ) : (
             <div className="text-[11px] text-slate-500 font-medium">

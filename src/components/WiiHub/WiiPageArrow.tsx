@@ -21,7 +21,7 @@ export const WiiPageArrow: React.FC<WiiPageArrowProps> = ({
       disabled={disabled}
       onClick={disabled ? undefined : onClick}
       onMouseEnter={disabled ? undefined : onHover}
-      className={`p-0.5 sm:p-1 transition-all duration-200 select-none flex items-center justify-center focus:outline-none ${
+      className={`relative p-1 sm:p-1.5 transition-all duration-200 select-none flex items-center justify-center focus:outline-none before:absolute before:-inset-y-4 before:-inset-x-1 before:content-[''] ${
         disabled
           ? 'cursor-default opacity-35 grayscale pointer-events-none'
           : 'cursor-pointer hover:scale-110 active:scale-95 filter drop-shadow-[0_2px_6px_rgba(0,168,232,0.3)]'
@@ -29,7 +29,7 @@ export const WiiPageArrow: React.FC<WiiPageArrowProps> = ({
       aria-label={isLeft ? 'Vorige pagina' : 'Volgende pagina'}
       title={disabled ? undefined : isLeft ? 'Vorige pagina' : 'Volgende pagina'}
     >
-      <div className={`w-3.5 h-6 sm:w-4.5 sm:h-8 transition-transform ${isLeft ? 'scale-x-[-1]' : ''}`}>
+      <div className={`w-4.5 h-9 sm:w-7 sm:h-14 transition-transform ${isLeft ? 'scale-x-[-1]' : ''}`}>
         <svg
           viewBox="0 0 32 64"
           className="w-full h-full overflow-visible"

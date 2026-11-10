@@ -871,3 +871,481 @@ select:focus {
 
 
 
+
+/* ==========================================================================
+   SPEL TV UPGRADE
+   ========================================================================== */
+
+/* --- Binnenkomst-animaties -------------------------------------------------
+   De klassen animate-in / fade-in / zoom-in-95 / slide-in-from-* stonden al
+   overal in de code, maar hadden geen definitie. Hiermee komen alle vensters
+   en schermen ook echt vloeiend binnen. */
+@property --tw-enter-fade {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --tw-enter-move {
+  syntax: '*';
+  inherits: false;
+}
+
+@keyframes enterFade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes enterMove {
+  from {
+    transform: translate3d(var(--tw-enter-x, 0), var(--tw-enter-y, 0), 0) scale(var(--tw-enter-scale, 1));
+  }
+}
+
+.animate-in {
+  animation:
+    var(--tw-enter-fade, none) var(--tw-duration, 200ms) ease-out backwards,
+    var(--tw-enter-move, none) var(--tw-duration, 200ms) cubic-bezier(0.2, 0.9, 0.3, 1.15) backwards;
+}
+
+.fade-in {
+  --tw-enter-fade: enterFade;
+}
+
+.zoom-in-95 {
+  --tw-enter-move: enterMove;
+  --tw-enter-scale: 0.95;
+}
+
+.zoom-in-75 {
+  --tw-enter-move: enterMove;
+  --tw-enter-scale: 0.75;
+}
+
+.slide-in-from-bottom-2 {
+  --tw-enter-move: enterMove;
+  --tw-enter-y: 0.5rem;
+}
+
+.slide-in-from-bottom-6 {
+  --tw-enter-move: enterMove;
+  --tw-enter-y: 1.5rem;
+}
+
+.slide-in-from-top-2 {
+  --tw-enter-move: enterMove;
+  --tw-enter-y: -0.5rem;
+}
+
+/* --- Hoofdmenu: kanalenrooster dat het scherm netjes vult ------------------ */
+.hub-page {
+  container-type: size;
+}
+
+.hub-grid {
+  display: grid;
+  margin: auto;
+  width: 100%;
+  /* Niet breder dan de hoogte toelaat: tegels worden hooguit 4:3 plat */
+  width: min(100%, calc(100cqh * 0.8));
+  max-height: 100%;
+  /* Voorkeur: vierkante tegels met wat lucht ertussen op hoge telefoons */
+  aspect-ratio: 3 / 5.3;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  column-gap: 0.7rem;
+  row-gap: 0.5rem;
+}
+
+/* Liggend scherm (tablet, laptop, tv): 4 x 3, net als een echt kanalenmenu */
+@media (min-aspect-ratio: 1/1) {
+  .hub-grid {
+    width: min(100%, calc(100cqh * 2));
+    aspect-ratio: 4 / 2.6;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    column-gap: 1.1rem;
+    row-gap: 0.7rem;
+  }
+}
+
+/* Liggende telefoon: 6 x 2 */
+@media (min-aspect-ratio: 1/1) and (max-height: 520px) {
+  .hub-grid {
+    width: min(100%, calc(100cqh * 4.2));
+    aspect-ratio: 6 / 1.9;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    column-gap: 0.7rem;
+    row-gap: 0.4rem;
+  }
+}
+
+/* Een tegel is hooguit vierkant (staand) of 4:3 (liggend) en krimpt mee op lage schermen */
+.hub-tile {
+  justify-content: center;
+}
+
+.hub-tile-frame {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  flex: 0 1 auto;
+  min-height: 0;
+}
+
+@media (min-aspect-ratio: 1/1) {
+  .hub-tile-frame {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@keyframes hubTileIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.86);
+  }
+}
+
+.hub-tile {
+  animation: hubTileIn 340ms cubic-bezier(0.2, 0.9, 0.3, 1.25) backwards;
+  animation-delay: calc(var(--tile-index, 0) * 26ms);
+}
+
+/* "NIEUW" lintje op kanalen die nog niet geopend zijn */
+@keyframes newBadgePulse {
+  0%, 100% {
+    transform: rotate(-8deg) scale(1);
+  }
+  50% {
+    transform: rotate(-8deg) scale(1.1);
+  }
+}
+
+.hub-new-badge {
+  background: linear-gradient(180deg, #fde047 0%, #f59e0b 100%);
+  color: #7c2d12;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 2px 5px rgba(124, 45, 18, 0.35);
+  animation: newBadgePulse 1.8s ease-in-out infinite;
+}
+
+/* Wit flitsje bij het starten van een kanaal */
+@keyframes channelLaunchFlash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.channel-launch-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #ffffff;
+  pointer-events: none;
+  animation: channelLaunchFlash 460ms ease-out forwards;
+}
+
+/* Lopende tekstbalk bovenaan het menu */
+@keyframes tickerSwap {
+  0% {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  12%, 88% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-7px);
+  }
+}
+
+.hub-ticker-line {
+  animation: tickerSwap 5s ease-in-out both;
+}
+
+/* --- Opstartscherm: een beeldbuis die aanspringt --------------------------- */
+@keyframes crtLine {
+  0% {
+    transform: scale(0, 0.004);
+    opacity: 1;
+  }
+  35% {
+    transform: scale(1, 0.004);
+    opacity: 1;
+  }
+  70%, 100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+
+@keyframes crtLogoIn {
+  0%, 45% {
+    opacity: 0;
+    transform: scale(0.82);
+    filter: blur(6px);
+  }
+  75%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes crtOut {
+  to {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+.boot-splash {
+  animation: crtOut 380ms ease-in 1250ms forwards;
+}
+
+.boot-splash-screen {
+  animation: crtLine 620ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.boot-splash-logo {
+  animation: crtLogoIn 900ms ease-out both;
+}
+
+/* --- Bewegende plaatjes op de nieuwe kanalen ------------------------------- */
+@keyframes opJeKopTilt {
+  0%, 18%, 100% {
+    transform: rotate(0deg);
+  }
+  30%, 48% {
+    transform: rotate(-11deg) translateY(2px);
+  }
+  62%, 80% {
+    transform: rotate(9deg) translateY(-1px);
+  }
+}
+
+.animate-opjekop-tilt {
+  animation: opJeKopTilt 4.6s ease-in-out infinite;
+}
+
+@keyframes spionSweep {
+  0%, 100% {
+    transform: translateX(-50%) rotate(-26deg);
+  }
+  50% {
+    transform: translateX(-50%) rotate(26deg);
+  }
+}
+
+.animate-spion-sweep {
+  animation: spionSweep 5.5s ease-in-out infinite;
+}
+
+@keyframes spionEyes {
+  0%, 20%, 100% {
+    transform: translateX(0);
+  }
+  30%, 50% {
+    transform: translateX(-3px);
+  }
+  60%, 85% {
+    transform: translateX(3px);
+  }
+}
+
+.animate-spion-eyes {
+  animation: spionEyes 4s ease-in-out infinite;
+}
+
+@keyframes zapBolt {
+  0%, 62%, 100% {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+  68% {
+    transform: scale(1.18) rotate(-4deg);
+    filter: brightness(1.5);
+  }
+  76% {
+    transform: scale(0.96) rotate(3deg);
+    filter: brightness(1);
+  }
+}
+
+.animate-zap-bolt {
+  animation: zapBolt 2.6s ease-in-out infinite;
+}
+
+@keyframes zapPad {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+  50% {
+    transform: scale(0.82);
+    box-shadow: 0 0 0 7px rgba(255, 255, 255, 0);
+  }
+}
+
+.animate-zap-pad {
+  animation: zapPad 1.8s ease-out infinite;
+}
+
+@keyframes arrowUp {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+@keyframes arrowDown {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
+}
+
+.animate-arrow-up {
+  animation: arrowUp 1.6s ease-in-out infinite;
+}
+
+.animate-arrow-down {
+  animation: arrowDown 1.6s ease-in-out infinite 0.8s;
+}
+
+@keyframes typingDot {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  30% {
+    transform: translateY(-2.5px);
+    opacity: 1;
+  }
+}
+
+.animate-typing-dot {
+  animation: typingDot 1.3s ease-in-out infinite;
+}
+
+/* --- Gedeelde effecten voor de nieuwe spellen ------------------------------ */
+@keyframes popIn {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-pop-in {
+  animation: popIn 380ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+@keyframes shakeX {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-7px);
+  }
+  40%, 80% {
+    transform: translateX(7px);
+  }
+}
+
+.animate-shake-x {
+  animation: shakeX 380ms ease-in-out both;
+}
+
+@keyframes holdFill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Speelkaart die omdraait (Hoger of Lager) */
+.playing-card-scene {
+  perspective: 900px;
+}
+
+.playing-card-flip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 520ms cubic-bezier(0.3, 0.9, 0.3, 1.1);
+}
+
+.playing-card-flip.is-face-down {
+  transform: rotateY(180deg);
+}
+
+.playing-card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.playing-card-back {
+  transform: rotateY(180deg);
+  background-color: #1d4ed8;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.16) 0 6px, transparent 6px 12px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.16) 0 6px, transparent 6px 12px);
+}
+
+/* Wie liever geen beweging ziet, krijgt een rustige versie */
+@media (prefers-reduced-motion: reduce) {
+  .hub-tile,
+  .hub-new-badge,
+  .animate-in,
+  .animate-pop-in,
+  .animate-shake-x,
+  .animate-opjekop-tilt,
+  .animate-spion-sweep,
+  .animate-spion-eyes,
+  .animate-zap-bolt,
+  .animate-zap-pad,
+  .animate-arrow-up,
+  .animate-arrow-down,
+  .animate-typing-dot {
+    animation: none;
+  }
+
+  .boot-splash {
+    animation-delay: 300ms;
+  }
+
+  .boot-splash-screen,
+  .boot-splash-logo {
+    animation: none;
+  }
+}
+
+/* Laadscherm van een kanaal: pas zichtbaar als het laden langer dan een kwart seconde duurt */
+.channel-loading {
+  animation: enterFade 300ms ease-out 250ms backwards;
+}
