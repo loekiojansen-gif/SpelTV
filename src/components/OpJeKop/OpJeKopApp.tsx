@@ -356,30 +356,6 @@ export function OpJeKopApp({ isCurrentApp = true }: OpJeKopAppProps) {
           ========================================================================= */}
       {phase === 'setup' && (
         <div className="space-y-4 animate-in fade-in">
-          <div className="flex items-center justify-between gap-3 bg-white border-4 border-slate-200 rounded-3xl p-3.5 sm:p-4 shadow-md text-slate-950">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-11 h-11 rounded-2xl bg-fuchsia-600 border-2 border-fuchsia-700 flex items-center justify-center text-2xl shadow-sm shrink-0">
-                🤯
-              </div>
-              <div className="min-w-0">
-                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-tight">
-                  OP JE KOP
-                </h1>
-                <p className="text-[11px] font-bold text-slate-500 truncate">
-                  Telefoon op je voorhoofd en raden maar
-                </p>
-              </div>
-            </div>
-            {bestScore > 0 && (
-              <div className="shrink-0 px-3 py-1.5 rounded-2xl bg-amber-50 border-2 border-amber-200 text-center">
-                <span className="block text-[9px] font-black uppercase tracking-wider text-amber-700">
-                  Record
-                </span>
-                <span className="block text-base font-black text-amber-900 leading-none">{bestScore}</span>
-              </div>
-            )}
-          </div>
-
           {/* Categorie */}
           <div className="bg-white border-4 border-slate-200 rounded-3xl p-4 shadow-lg text-slate-950">
             <span className="text-xs font-black uppercase tracking-wider text-slate-600 block mb-2.5">
@@ -714,3 +690,4 @@ export function OpJeKopApp({ isCurrentApp = true }: OpJeKopAppProps) {
     </div>
   );
 }
+
