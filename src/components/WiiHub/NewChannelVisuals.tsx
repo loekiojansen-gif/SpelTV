@@ -8,6 +8,7 @@ export function OpJeKopVisual() {
   return (
     <div className="absolute inset-0 bg-gradient-to-b from-[#f0abfc] via-[#c026d3] to-[#701a75] flex items-center justify-center overflow-hidden">
       <div className="absolute -top-6 -left-6 w-20 h-20 rounded-full bg-white/20 blur-md" />
+      <div className="absolute bottom-1 right-2 text-[10px] opacity-70 select-none">✨</div>
       <div className="relative w-18 h-16 flex items-center justify-center z-10">
         <svg viewBox="0 0 100 88" className="w-full h-full filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.35)] overflow-visible">
           {/* Hoofd */}
@@ -69,27 +70,26 @@ export function SnelsteVingerVisual() {
 
 export function HogerLagerVisual() {
   return (
-    <div className="absolute inset-0 bg-gradient-to-b from-[#065f46] via-[#047857] to-[#022c22] border border-amber-400/20 flex items-center justify-center overflow-hidden">
-      {/* Subtle Casino Felt Golden Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(250,204,21,0.22)_0%,transparent_70%)] pointer-events-none" />
+    <div className="absolute inset-0 bg-gradient-to-b from-[#fb7185] via-[#be123c] to-[#4c0519] flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:9px_9px]" />
       <div className="relative w-20 h-16 flex items-center justify-center z-10">
-        {/* Linker speelkaart */}
-        <div className="absolute left-2.5 top-2.5 w-8 h-11 rounded-md bg-white border-1.5 border-amber-300 shadow-lg -rotate-12 flex flex-col items-center justify-center leading-none">
+        {/* Linker kaart */}
+        <div className="absolute left-2.5 top-2 w-8 h-11 rounded-md bg-white border border-slate-300 shadow-lg -rotate-12 flex flex-col items-center justify-center leading-none">
           <span className="text-[13px] font-black text-slate-900">7</span>
           <span className="text-[13px] text-slate-900 -mt-0.5">♠</span>
         </div>
-        {/* Rechter speelkaart */}
-        <div className="absolute right-2.5 top-2.5 w-8 h-11 rounded-md bg-white border-1.5 border-amber-300 shadow-lg rotate-12 flex flex-col items-center justify-center leading-none animate-channel-float">
+        {/* Rechter kaart */}
+        <div className="absolute right-2.5 top-2 w-8 h-11 rounded-md bg-white border border-slate-300 shadow-lg rotate-12 flex flex-col items-center justify-center leading-none animate-channel-float">
           <span className="text-[13px] font-black text-red-600">K</span>
           <span className="text-[13px] text-red-600 -mt-0.5">♥</span>
         </div>
-        {/* Pijlen omhoog en omlaag (lager geplaatst) */}
-        <div className="absolute left-1/2 -translate-x-1/2 top-3.5 flex flex-col items-center gap-4.5 z-10">
+        {/* Pijlen omhoog en omlaag */}
+        <div className="absolute left-1/2 -translate-x-1/2 -top-2 flex flex-col items-center gap-8 z-10">
           <div className="animate-arrow-up">
-            <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[11px] border-b-lime-400 drop-shadow-[0_2px_3px_rgba(0,0,0,0.6)]" />
+            <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[11px] border-b-lime-300 drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]" />
           </div>
           <div className="animate-arrow-down">
-            <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[11px] border-t-amber-400 drop-shadow-[0_2px_3px_rgba(0,0,0,0.6)]" />
+            <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[11px] border-t-amber-300 drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]" />
           </div>
         </div>
       </div>
@@ -118,3 +118,4 @@ export function NooitVisual() {
     </div>
   );
 }
+
