@@ -19,7 +19,6 @@ import {
   Sparkles,
   ChevronRight,
   Flame,
-  HelpCircle,
   AlertCircle,
   UserPlus,
   CheckCircle2,
@@ -678,17 +677,6 @@ export function SlabakkenApp() {
          ========================================================================= */}
       {phase === 'setup' && (
         <div className="w-full space-y-3.5">
-          {/* Spelregels Bar */}
-          <div className="flex items-center justify-end">
-            <button
-              onClick={() => setShowRulesModal(true)}
-              className="text-xs font-black text-emerald-700 bg-white/90 hover:bg-white border border-emerald-200 px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
-            >
-              <HelpCircle className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Bekijk de spelregels</span>
-            </button>
-          </div>
-
           {/* Teams & Players Configuration */}
           <div className="w-full bg-emerald-950/85 backdrop-blur-md rounded-3xl p-3.5 sm:p-4 border-2 border-emerald-500/40 shadow-xl text-emerald-100">
             <div className="flex items-center justify-between mb-3">
@@ -1755,3 +1743,4 @@ export function SlabakkenApp() {
     </div>
   );
 }
+
