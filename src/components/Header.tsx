@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Home } from 'lucide-react';
+import { Home } from 'lucide-react';
 import { sounds } from '../utils/audio';
 
 interface HeaderProps {
@@ -7,21 +6,6 @@ interface HeaderProps {
 }
 
 export function Header({ onBackToWiiMenu }: HeaderProps) {
-  const [muted, setMuted] = useState(false);
-
-  useEffect(() => {
-    setMuted(sounds.getMuted());
-  }, []);
-
-  const toggleSound = () => {
-    const next = !muted;
-    sounds.setMuted(next);
-    setMuted(next);
-    if (!next) {
-      sounds.playTick(1000);
-    }
-  };
-
   const handleHomeClick = () => {
     sounds.playWiiBack();
     if (onBackToWiiMenu) {
@@ -60,24 +44,10 @@ export function Header({ onBackToWiiMenu }: HeaderProps) {
           </span>
         </div>
 
-        {/* Right: Audio Toggle */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Sound Toggle (Glossy Wii Button) */}
-          <button
-            onClick={toggleSound}
-            aria-label={muted ? 'Geluid aanzetten' : 'Geluid dempen'}
-            title={muted ? 'Geluid aanzetten' : 'Geluid dempen'}
-            className="w-10 h-10 rounded-2xl wii-btn-blue flex items-center justify-center active:scale-95 transition-transform shrink-0"
-          >
-            {muted ? (
-              <VolumeX className="w-5 h-5 text-white/70" />
-            ) : (
-              <Volume2 className="w-5 h-5 text-white" />
-            )}
-          </button>
-        </div>
+        <div className="w-9 h-9 shrink-0" aria-hidden="true" />
       </div>
     </header>
   );
 }
+
 
