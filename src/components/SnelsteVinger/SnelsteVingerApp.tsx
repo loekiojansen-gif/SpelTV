@@ -280,26 +280,6 @@ export function SnelsteVingerApp({ isCurrentApp = true }: SnelsteVingerAppProps)
           ========================================================================= */}
       {phase === 'setup' && (
         <div className="space-y-4 animate-in fade-in">
-          <div className="flex items-center justify-between gap-3 bg-white border-4 border-slate-200 rounded-3xl p-3.5 sm:p-4 shadow-md text-slate-950">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-11 h-11 rounded-2xl bg-yellow-400 border-2 border-yellow-600 flex items-center justify-center shadow-sm shrink-0">
-                <Zap className="w-6 h-6 text-slate-900 fill-slate-900" />
-              </div>
-              <div className="min-w-0">
-                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-tight">
-                  SNELSTE VINGER
-                </h1>
-                <p className="text-[11px] font-bold text-slate-500 truncate">Wie tikt het eerst bij groen?</p>
-              </div>
-            </div>
-            {bestMs > 0 && (
-              <div className="shrink-0 px-3 py-1.5 rounded-2xl bg-amber-50 border-2 border-amber-200 text-center">
-                <span className="block text-[9px] font-black uppercase tracking-wider text-amber-700">Record</span>
-                <span className="block text-base font-black text-amber-900 leading-none">{bestMs} ms</span>
-              </div>
-            )}
-          </div>
-
           {/* Aantal spelers met een mini-plattegrond van het scherm */}
           <div className="bg-white border-4 border-slate-200 rounded-3xl p-4 shadow-lg text-slate-950">
             <span className="text-xs font-black uppercase tracking-wider text-slate-600 block mb-2.5">
@@ -585,3 +565,4 @@ export function SnelsteVingerApp({ isCurrentApp = true }: SnelsteVingerAppProps)
     </div>
   );
 }
+
