@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Play,
   RotateCcw,
-  BookOpen,
   Plus,
   Trash2,
   X,
@@ -233,35 +232,6 @@ export function WieIsApp({ isCurrentApp = true }: WieIsAppProps) {
           ========================================================================= */}
       {phase === 'setup' && (
         <div className="space-y-4 animate-in fade-in duration-200">
-          {/* Header Bar with Logo and Stellingen Button */}
-          <div className="flex items-center justify-between gap-3 bg-white border-4 border-slate-200 rounded-3xl p-3.5 sm:p-4 shadow-md">
-            <div className="flex items-center gap-2.5">
-              <div className="w-11 h-11 rounded-2xl bg-blue-600 border-2 border-blue-700 flex items-center justify-center text-white text-2xl font-black shadow-sm">
-                ?
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-tight">
-                  WIE IS?
-                </h1>
-                <p className="text-[11px] font-bold text-slate-500">
-                  Tikkende tijdbom most likely to
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => {
-                setShowPromptsModal(true);
-                sounds.playTick(600);
-              }}
-              className="px-3.5 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-900 border-2 border-slate-300 text-xs font-black shadow-xs transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 shrink-0"
-              title="Bekijk alle stellingen"
-            >
-              <BookOpen className="w-4 h-4 text-blue-600" />
-              <span>Stellingen ({allPrompts.length})</span>
-            </button>
-          </div>
-
           {/* Timer Settings Card: Exact time indication like the Bomb */}
           <div className="bg-white border-4 border-slate-200 rounded-3xl p-4 sm:p-5 shadow-lg text-slate-950">
             <span className="text-xs font-black uppercase tracking-wider text-slate-600 block mb-2 text-center">
@@ -578,3 +548,4 @@ export function WieIsApp({ isCurrentApp = true }: WieIsAppProps) {
     </div>
   );
 }
+
