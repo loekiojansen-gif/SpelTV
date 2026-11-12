@@ -143,18 +143,6 @@ export function NooitApp() {
           ========================================================================= */}
       {phase === 'setup' && (
         <div className="space-y-4 animate-in fade-in">
-          <div className="flex items-center gap-2.5 bg-white border-4 border-slate-200 rounded-3xl p-3.5 sm:p-4 shadow-md text-slate-950">
-            <div className="w-11 h-11 rounded-2xl bg-teal-600 border-2 border-teal-800 flex items-center justify-center text-2xl shadow-sm shrink-0">
-              😇
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-tight">
-                IK HEB NOG NOOIT
-              </h1>
-              <p className="text-[11px] font-bold text-slate-500 truncate">Wel gedaan? Dan neem je een slok!</p>
-            </div>
-          </div>
-
           {/* Niveaus */}
           <div className="bg-white border-4 border-slate-200 rounded-3xl p-4 shadow-lg text-slate-950">
             <span className="text-xs font-black uppercase tracking-wider text-slate-600 block mb-2.5">
@@ -489,3 +477,4 @@ export function NooitApp() {
     </div>
   );
 }
+
