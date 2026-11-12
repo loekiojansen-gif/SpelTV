@@ -519,23 +519,79 @@ export function WiiChannelGrid({
 
   return (
     <div
-      style={{
-        paddingTop: 'max(1.35rem, calc(1.35rem + env(safe-area-inset-top, 0px)))',
-      }}
-      className="w-full h-[100dvh] max-h-[100dvh] flex flex-col select-none party-menu-bg pb-0 overflow-hidden overscroll-none fixed inset-0"
+      className="w-full h-[100dvh] max-h-[100dvh] flex flex-col select-none party-menu-bg pb-0 pt-0 overflow-hidden overscroll-none fixed inset-0"
     >
-      {/* Compact vast logo boven de kanalen. */}
-      <header
-        className="hidden [@media(min-height:600px)]:flex shrink-0 z-20 justify-center pb-1.5 select-none"
-      >
-        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 border-2 border-white shadow-[0_2px_7px_rgba(15,23,42,0.12)]">
-          <span className="w-7 h-7 rounded-full bg-gradient-to-b from-[#38bdf8] to-[#0284c7] text-white flex items-center justify-center shadow-inner ring-1 ring-sky-300/80">
-            <Tv className="w-4 h-4 stroke-[2.6]" />
-          </span>
-          <span className="text-sm font-black tracking-tight text-slate-800 leading-none">
-            SPEL<span className="text-[#00a0e9]">TV</span>
-          </span>
+      {/*
+        Curved Top Display Shelf:
+        - In de stijl van de onderste plank met zilver/witte overgang en een cyaan gloeiende curve.
+        - Sluit direct aan op de bovenrand en houdt rekening met safe-area-inset-top.
+        - Centraal het iconische SPEL TV embleem zonder wisselende tekst.
+      */}
+      <header className="w-full relative shrink-0 z-20 select-none pt-0 mt-0">
+        <div className="w-full relative overflow-hidden bg-transparent">
+          {/* Safe-area opvulling voor de bovenrand */}
+          <div
+            className="w-full bg-[#f8fafc]"
+            style={{ height: 'max(0px, env(safe-area-inset-top, 0px))' }}
+          />
+
+          <div className="relative w-full overflow-hidden">
+            <svg
+              viewBox="0 0 400 65"
+              preserveAspectRatio="none"
+              className="w-full h-14 sm:h-16 block filter drop-shadow-[0_3px_10px_rgba(0,0,0,0.06)]"
+            >
+              <defs>
+                <linearGradient id="topShelfGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#f8fafc" />
+                  <stop offset="30%" stopColor="#f1f5f9" />
+                  <stop offset="70%" stopColor="#ffffff" stopOpacity="0.98" />
+                  <stop offset="100%" stopColor="#ffffff" />
+                </linearGradient>
+                <filter id="cyanGlowTop" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#00a0e9" floodOpacity="0.38" />
+                </filter>
+              </defs>
+
+              <path
+                d="M 0,0
+                   L 400,0
+                   L 400,22
+                   C 335,22 305,24 275,38
+                   C 250,48 230,54 200,54
+                   C 170,54 150,48 125,38
+                   C 95,24 65,22 0,22
+                   Z"
+                fill="url(#topShelfGrad)"
+              />
+
+              <path
+                d="M 0,22
+                   C 65,22 95,24 125,38
+                   C 150,48 170,54 200,54
+                   C 230,56 250,48 275,38
+                   C 305,24 335,22 400,22"
+                fill="none"
+                stroke="#00a0e9"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                filter="url(#cyanGlowTop)"
+              />
+            </svg>
+
+            {/* Centraal SPEL TV logo direct op de plank (ietsje hoger geplaatst) */}
+            <div className="absolute inset-0 px-5 sm:px-8 max-w-lg mx-auto flex items-center justify-center pointer-events-none">
+              <div className="flex items-center gap-2 translate-y-[-8px] sm:translate-y-[-10px]">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-b from-[#38bdf8] to-[#0284c7] text-white flex items-center justify-center shadow-md">
+                  <Tv className="w-4 h-4 stroke-[2.6]" />
+                </span>
+                <span className="text-base sm:text-lg font-black tracking-tight text-slate-800 leading-none drop-shadow-xs">
+                  SPEL<span className="text-[#00a0e9]">TV</span>
+                </span>
+              </div>
+            </div>
           </div>
+        </div>
       </header>
 
       {/* Main Channel Area with Side Wii Navigation Arrows */}

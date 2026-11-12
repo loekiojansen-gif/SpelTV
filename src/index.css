@@ -607,26 +607,116 @@ select:focus {
   animation: teamMakerWalker 5.5s ease-in-out infinite;
 }
 
-@keyframes hourglassSpinSmooth {
-  0% {
-    transform: rotate(0deg) scale(1);
-  }
-  38% {
-    transform: rotate(180deg) scale(1.08);
+/* Camel Race Galloping Legs Animation */
+@keyframes camelFrontGallopA {
+  0%, 100% {
+    transform: rotate(-22deg);
   }
   50% {
+    transform: rotate(25deg);
+  }
+}
+
+@keyframes camelFrontGallopB {
+  0%, 100% {
+    transform: rotate(22deg);
+  }
+  50% {
+    transform: rotate(-20deg);
+  }
+}
+
+@keyframes camelBackGallopA {
+  0%, 100% {
+    transform: rotate(25deg);
+  }
+  50% {
+    transform: rotate(-22deg);
+  }
+}
+
+@keyframes camelBackGallopB {
+  0%, 100% {
+    transform: rotate(-18deg);
+  }
+  50% {
+    transform: rotate(24deg);
+  }
+}
+
+.animate-camel-front-a {
+  animation: camelFrontGallopA 0.55s ease-in-out infinite;
+  transform-origin: 64px 54px;
+}
+
+.animate-camel-front-b {
+  animation: camelFrontGallopB 0.55s ease-in-out infinite;
+  transform-origin: 64px 54px;
+}
+
+.animate-camel-back-a {
+  animation: camelBackGallopA 0.55s ease-in-out infinite;
+  transform-origin: 32px 54px;
+}
+
+.animate-camel-back-b {
+  animation: camelBackGallopB 0.55s ease-in-out infinite;
+  transform-origin: 32px 54px;
+}
+
+/* Boer zoekt vrouw tractor engine rumble */
+@keyframes tractorRumble {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-1px);
+  }
+}
+
+.animate-tractor-rumble {
+  animation: tractorRumble 0.22s ease-in-out infinite;
+}
+
+/* Crocodile periodic chomp / bite animation */
+@keyframes crocChompJaw {
+  0%, 72%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  76% {
+    transform: translateY(-8px) rotate(-3deg);
+  }
+  84% {
+    transform: translateY(-8px) rotate(-3deg);
+  }
+  92% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+.animate-croc-chomp {
+  animation: crocChompJaw 4.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform-origin: 85px 45px;
+}
+
+@keyframes hourglassSpinSmooth {
+  0%, 65% {
+    transform: rotate(0deg) scale(1);
+  }
+  75% {
+    transform: rotate(180deg) scale(1.06);
+  }
+  78%, 90% {
     transform: rotate(180deg) scale(1);
   }
-  88% {
-    transform: rotate(360deg) scale(1.08);
-  }
-  100% {
+  98%, 100% {
     transform: rotate(360deg) scale(1);
   }
 }
 
 .animate-hourglass-spin {
-  animation: hourglassSpinSmooth 3.2s ease-in-out infinite;
+  animation: hourglassSpinSmooth 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform-origin: center center;
 }
 
 @keyframes spidermanPointBob {

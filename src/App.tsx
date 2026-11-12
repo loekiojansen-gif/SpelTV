@@ -9,7 +9,6 @@ import { WiiNavBar } from './components/Navigation/WiiNavBar';
 import { WiiChannelGrid } from './components/WiiHub/WiiChannelGrid';
 import { BootSplash } from './components/WiiHub/BootSplash';
 import { sounds } from './utils/audio';
-import { bgmEngine } from './utils/bgmEngine';
 import wiiGolfBg from './assets/wii_golf_bg.jpg';
 
 // Elk kanaal wordt pas gedownload op het moment dat je het voor het eerst opent.
@@ -109,25 +108,7 @@ export default function App() {
     }
   }, []);
 
-  // Play background music matching active screen (Homescreen HUB or game channel)
-  useEffect(() => {
-    bgmEngine.play(activeSubApp);
-  }, [activeSubApp]);
 
-  // Unlock audio on first user touch/click/key to satisfy mobile browser autoplay policy
-  useEffect(() => {
-    const unlockAudio = () => {
-      bgmEngine.play(activeSubApp);
-      window.removeEventListener('pointerdown', unlockAudio);
-      window.removeEventListener('keydown', unlockAudio);
-    };
-    window.addEventListener('pointerdown', unlockAudio, { once: true });
-    window.addEventListener('keydown', unlockAudio, { once: true });
-    return () => {
-      window.removeEventListener('pointerdown', unlockAudio);
-      window.removeEventListener('keydown', unlockAudio);
-    };
-  }, [activeSubApp]);
 
   // Sync iOS Safari / browser theme-color with active screen to prevent Safari status-bar gradient/white haze under Dynamic Island
   useEffect(() => {
@@ -153,7 +134,7 @@ export default function App() {
       UNDERCOVER: '#080b14',
       OP_JE_KOP: '#581c87',
       SNELSTE_VINGER: '#0f172a',
-      HOGER_LAGER: '#4c0519',
+      HOGER_LAGER: '#062814',
       NOOIT: '#115e59',
     };
 
@@ -487,7 +468,7 @@ export default function App() {
       case 'SNELSTE_VINGER':
         return 'bg-[#0f172a] text-slate-50';
       case 'HOGER_LAGER':
-        return 'bg-[#4c0519] text-rose-50';
+        return 'bg-[#062814] text-amber-50';
       case 'NOOIT':
         return 'bg-[#115e59] text-teal-50';
       default:
@@ -526,8 +507,8 @@ export default function App() {
         </div>
       )}
 
-      {/* 2. Casino Felt Pattern for Dice & RNG (clean felt, no dots) */}
-      {(activeSubApp === 'DICE' || activeSubApp === 'RNG') && (
+      {/* 2. Casino Felt Pattern for Dice, RNG & Hoger Lager (clean felt, no dots) */}
+      {(activeSubApp === 'DICE' || activeSubApp === 'RNG' || activeSubApp === 'HOGER_LAGER') && (
         <div
           className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
           style={{
@@ -808,24 +789,6 @@ export default function App() {
         </div>
       )}
 
-      {/* 16. Bordeauxrode speeltafel voor Hoger of Lager */}
-      {activeSubApp === 'HOGER_LAGER' && (
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ backgroundColor: '#4c0519' }} aria-hidden="true">
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `radial-gradient(circle at 50% 28%, #be123c 0%, #9f1239 30%, #6b0f2b 62%, #3b0414 100%)`,
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-[0.08]"
-            style={{
-              backgroundImage: `radial-gradient(#ffffff 1px, transparent 1px)`,
-              backgroundSize: '18px 18px',
-            }}
-          />
-        </div>
-      )}
 
       {/* 17. Frisse zeegroene gloed voor Ik heb nog nooit */}
       {activeSubApp === 'NOOIT' && (

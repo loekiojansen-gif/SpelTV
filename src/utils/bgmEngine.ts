@@ -84,17 +84,11 @@ class BgmEngine {
 
   /**
    * Play the background music tailored for the specified channel/app
+   * All background music has been removed per user request.
    */
-  public play(trackId: BgmTrackId) {
-    this.currentTrack = trackId;
-    this.initCtx();
-
-    if (!this.ctx || !this.masterGain) return;
-
+  public play(_trackId?: BgmTrackId) {
+    this.isPlaying = false;
     this.stopCurrentLoop();
-    this.isPlaying = true;
-
-    this.scheduleNextLoop();
   }
 
   public stop() {

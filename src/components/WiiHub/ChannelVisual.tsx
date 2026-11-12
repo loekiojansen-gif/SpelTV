@@ -11,36 +11,36 @@ import {
 } from './NewChannelVisuals';
 
 export const DEFAULT_CHANNEL_ORDER: string[] = [
-  // Page 1 (0 - 11)
-  'PUB_GOLF',
-  'CHWAZI',
-  'DICE',
+  // Page 1 (0 - 11): Spelers, tools, rad, dobbel/vingeren, krokodil en gok/kaartspellen
+  'MII_MAKER',
   'SCORE_KEEPER',
-  'WHEEL',
-  'SLABAKKEN',
+  'CARD_CATALOG',
   'TEAM_MAKER',
   'TOURNAMENT',
+  'WHEEL',
+  'CHWAZI',
+  'DICE',
   'CROCODILE',
-  'BOMB',
-  'CAMEL_RACE',
-  'CARD_CATALOG',
-  // Page 2 (12 - 23)
-  'BOER_ZOEKT_VROUW',
-  'MII_MAKER',
-  'THIRTY_SECONDS',
-  'WIE_IS',
-  'UNDERCOVER',
-  'OP_JE_KOP',
-  'SNELSTE_VINGER',
   'HOGER_LAGER',
+  'BOER_ZOEKT_VROUW',
+  'CAMEL_RACE',
+  // Page 2 (12 - 23): Reactie-, woord- & uitgebreide gezelschapsspellen, met Pub Golf als afsluiter
+  'SNELSTE_VINGER',
+  'BOMB',
   'NOOIT',
+  'OP_JE_KOP',
+  'UNDERCOVER',
+  'WIE_IS',
+  'THIRTY_SECONDS',
+  'SLABAKKEN',
+  'PUB_GOLF',
   'NOISE_22',
   'NOISE_23',
   'NOISE_24',
 ];
 
 const GAME_CHANNEL_IDS = DEFAULT_CHANNEL_ORDER.filter(id => !id.startsWith('NOISE_'));
-const CHANNEL_ORDER_KEY = 'party_channels_custom_order';
+const CHANNEL_ORDER_KEY = 'party_channels_custom_order_v4';
 
 /**
  * Laadt de zelf ingedeelde kanaalvolgorde.
@@ -287,21 +287,29 @@ export function ChannelVisual({
     case 'WHEEL':
       return (
         <div className="absolute inset-0 bg-gradient-to-b from-[#3b82f6] via-[#1d4ed8] to-[#1e3a8a] flex items-center justify-center overflow-hidden">
-          <div className="absolute top-1.5 z-10 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[10px] border-t-yellow-300 drop-shadow-md" />
-          <div className="w-13 h-13 sm:w-16 sm:h-16 relative flex items-center justify-center animate-channel-wheel">
-            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md">
-              <path d="M 50,50 L 50,0 A 50,50 0 0,1 85.35,14.65 Z" fill="#ef4444" stroke="#ffffff" strokeWidth="1.5" />
-              <path d="M 50,50 L 85.35,14.65 A 50,50 0 0,1 100,50 Z" fill="#f59e0b" stroke="#ffffff" strokeWidth="1.5" />
-              <path d="M 50,50 L 100,50 A 50,50 0 0,1 85.35,85.35 Z" fill="#84cc16" stroke="#ffffff" strokeWidth="1.5" />
-              <path d="M 50,50 L 85.35,85.35 A 50,50 0 0,1 50,100 Z" fill="#06b6d4" stroke="#ffffff" strokeWidth="1.5" />
-              <path d="M 50,50 L 50,100 A 50,50 0 0,1 14.65,85.35 Z" fill="#3b82f6" stroke="#ffffff" strokeWidth="1.5" />
-              <path d="M 50,50 L 14.65,85.35 A 50,50 0 0,1 0,50 Z" fill="#8b5cf6" stroke="#ffffff" strokeWidth="1.5" />
-              <path d="M 50,50 L 0,50 A 50,50 0 0,1 14.65,14.65 Z" fill="#ec4899" stroke="#ffffff" strokeWidth="1.5" />
-              <path d="M 50,50 L 14.65,14.65 A 50,50 0 0,1 50,0 Z" fill="#f97316" stroke="#ffffff" strokeWidth="1.5" />
-              <circle cx="50" cy="50" r="48" fill="none" stroke="#fef08a" strokeWidth="3" />
-              <circle cx="50" cy="50" r="12" fill="#ffffff" stroke="#cbd5e1" strokeWidth="2" />
-              <circle cx="50" cy="50" r="5" fill="#f59e0b" />
-            </svg>
+          <div className="relative w-13 h-13 sm:w-16 sm:h-16 flex items-center justify-center">
+            {/* Spinning Wheel */}
+            <div className="w-full h-full animate-channel-wheel">
+              <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md">
+                <path d="M 50,50 L 50,0 A 50,50 0 0,1 85.35,14.65 Z" fill="#ef4444" stroke="#ffffff" strokeWidth="1.5" />
+                <path d="M 50,50 L 85.35,14.65 A 50,50 0 0,1 100,50 Z" fill="#f59e0b" stroke="#ffffff" strokeWidth="1.5" />
+                <path d="M 50,50 L 100,50 A 50,50 0 0,1 85.35,85.35 Z" fill="#84cc16" stroke="#ffffff" strokeWidth="1.5" />
+                <path d="M 50,50 L 85.35,85.35 A 50,50 0 0,1 50,100 Z" fill="#06b6d4" stroke="#ffffff" strokeWidth="1.5" />
+                <path d="M 50,50 L 50,100 A 50,50 0 0,1 14.65,85.35 Z" fill="#3b82f6" stroke="#ffffff" strokeWidth="1.5" />
+                <path d="M 50,50 L 14.65,85.35 A 50,50 0 0,1 0,50 Z" fill="#8b5cf6" stroke="#ffffff" strokeWidth="1.5" />
+                <path d="M 50,50 L 0,50 A 50,50 0 0,1 14.65,14.65 Z" fill="#ec4899" stroke="#ffffff" strokeWidth="1.5" />
+                <path d="M 50,50 L 14.65,14.65 A 50,50 0 0,1 50,0 Z" fill="#f97316" stroke="#ffffff" strokeWidth="1.5" />
+                <circle cx="50" cy="50" r="48" fill="none" stroke="#fef08a" strokeWidth="3" />
+                <circle cx="50" cy="50" r="12" fill="#ffffff" stroke="#cbd5e1" strokeWidth="2" />
+                <circle cx="50" cy="50" r="5" fill="#f59e0b" />
+              </svg>
+            </div>
+            {/* Vast wijzertje dat exact aansluit op de buitenrand van het rad op elk schermformaat */}
+            <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 z-20 pointer-events-none filter drop-shadow-md">
+              <svg width="14" height="13" viewBox="0 0 14 13">
+                <polygon points="7,12 1,1 13,1" fill="#fde047" stroke="#ca8a04" strokeWidth="1.5" strokeLinejoin="round" />
+              </svg>
+            </div>
           </div>
         </div>
       );
@@ -343,7 +351,7 @@ export function ChannelVisual({
                 </div>
               </div>
               <div className="flex flex-col items-center">
-                <div className="w-3.5 h-3.5 rounded-full bg-[#fde047] border border-black/30 shadow-xs" />
+                <div className="w-3.5 h-3.5 rounded-full bg-[#fed7aa] border border-black/30 shadow-xs" />
                 <div className="w-4.5 h-5 rounded-t-md bg-rose-600 border border-black/20 shadow-xs flex items-center justify-center text-[7px] font-black text-white">
                   A
                 </div>
@@ -359,7 +367,7 @@ export function ChannelVisual({
                 </div>
               </div>
               <div className="flex flex-col items-center">
-                <div className="w-3 h-3 rounded-full bg-[#fde047] border border-black/30 shadow-xs" />
+                <div className="w-3 h-3 rounded-full bg-[#fed7aa] border border-black/30 shadow-xs" />
                 <div className="w-4 h-4.5 rounded-t-md bg-sky-500 border border-black/20 shadow-xs flex items-center justify-center text-[6px] font-black text-white">
                   B
                 </div>
@@ -371,7 +379,7 @@ export function ChannelVisual({
               <div className="flex flex-col items-center filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
                 <div className="w-3.5 h-3.5 rounded-full bg-[#fed7aa] border border-black/40" />
                 <div className="w-4 h-5 rounded-t-md bg-gradient-to-b from-amber-300 to-amber-500 border border-black/30 shadow-sm flex items-center justify-center text-[7px] font-black text-slate-950">
-                  ⚡
+                  {/* Bliksemschichtje verwijderd per gebruikersinstructie */}
                 </div>
               </div>
             </div>
@@ -404,6 +412,7 @@ export function ChannelVisual({
         <div className="absolute inset-0 bg-gradient-to-b from-[#15803d] via-[#16a34a] to-[#14532d] flex items-center justify-center overflow-hidden">
           <div className="relative w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center animate-channel-float z-10">
             <svg viewBox="0 0 100 100" className="w-full h-full filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.35)]">
+              {/* Ogen van de krokodil */}
               <circle cx="36" cy="18" r="13" fill="#22c55e" stroke="#15803d" strokeWidth="2" />
               <circle cx="36" cy="18" r="9" fill="#ffffff" />
               <ellipse cx="37" cy="19" rx="5" ry="6" fill="#0f172a" />
@@ -414,25 +423,37 @@ export function ChannelVisual({
               <ellipse cx="63" cy="19" rx="5" ry="6" fill="#0f172a" />
               <circle cx="64" cy="17" r="1.5" fill="#ffffff" />
 
-              <path d="M 22 28 Q 50 16 78 28 Q 80 40 76 45 Q 50 48 24 45 Z" fill="#22c55e" stroke="#15803d" strokeWidth="2" />
-
+              {/* Binnenkant bek */}
               <ellipse cx="50" cy="54" rx="33" ry="24" fill="#991b1b" stroke="#15803d" strokeWidth="2.5" />
               <ellipse cx="50" cy="58" rx="22" ry="14" fill="#ef4444" />
 
-              <polygon points="30,38 34,44 38,38" fill="#ffffff" />
-              <polygon points="38,39 42,46 46,39" fill="#ffffff" />
-              <polygon points="46,40 50,47 54,40" fill="#ffffff" />
-              <polygon points="54,39 58,46 62,39" fill="#ffffff" />
-              <polygon points="62,38 66,44 70,38" fill="#ffffff" />
+              {/* Bovenkaak & snuit met sippe boog (omlaag aflopend naar de hoeken) */}
+              <path
+                d="M 22 28 Q 50 16 78 28 Q 82 38 76 46 Q 50 36 24 46 Q 18 38 22 28 Z"
+                fill="#22c55e"
+                stroke="#15803d"
+                strokeWidth="2"
+              />
 
-              <path d="M 20 58 Q 50 94 80 58 Q 84 80 50 88 Q 16 80 20 58 Z" fill="#16a34a" stroke="#15803d" strokeWidth="2" />
+              {/* Bovenste tanden: afgeronde blokjes die perfect aansluiten in een sippe boog ⌒ */}
+              <rect x="27" y="41" width="6" height="7.5" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+              <rect x="34" y="38" width="6" height="7.5" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+              <rect x="42" y="36" width="6" height="7.5" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+              <rect x="52" y="36" width="6" height="7.5" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+              <rect x="60" y="38" width="6" height="7.5" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+              <rect x="67" y="41" width="6" height="7.5" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
 
-              <rect x="25" y="60" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
-              <rect x="33" y="65" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
-              <rect x="41" y="68" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
-              <rect x="49" y="68" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
-              <rect x="57" y="66" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
-              <rect x="65" y="61" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+              {/* Onderkaak & onderste tanden met periodieke bijt-animatie */}
+              <g className="animate-croc-chomp">
+                <path d="M 20 58 Q 50 94 80 58 Q 84 80 50 88 Q 16 80 20 58 Z" fill="#16a34a" stroke="#15803d" strokeWidth="2" />
+
+                <rect x="25" y="58" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+                <rect x="33" y="62" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+                <rect x="41" y="64" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+                <rect x="49" y="64" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+                <rect x="57" y="62" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+                <rect x="65" y="58" width="6" height="8" rx="2" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+              </g>
             </svg>
           </div>
         </div>
@@ -441,10 +462,19 @@ export function ChannelVisual({
     case 'BOMB':
       return (
         <div className="absolute inset-0 bg-gradient-to-b from-[#1e1b4b] via-[#0f172a] to-[#450a0a] flex items-center justify-center overflow-hidden">
-          {/* Lege zwarte tape strips op de achtergrond */}
-          <div className="absolute -top-3 -left-6 w-28 h-4.5 bg-black/90 -rotate-25 border-y border-white/15 shadow-md pointer-events-none" />
-          <div className="absolute -bottom-2 -right-4 w-32 h-4.5 bg-black/90 -rotate-15 border-y border-white/15 shadow-md pointer-events-none" />
-          <div className="absolute top-1/2 -right-6 w-24 h-3.5 bg-black/85 rotate-35 border-y border-white/10 shadow-sm pointer-events-none" />
+          {/* Geel-zwarte afzettingstape op de achtergrond */}
+          <div
+            className="absolute -top-3 -left-6 w-32 h-4.5 -rotate-25 border-y border-black/40 shadow-md pointer-events-none opacity-90"
+            style={{ background: 'repeating-linear-gradient(45deg, #eab308, #eab308 10px, #0f172a 10px, #0f172a 20px)' }}
+          />
+          <div
+            className="absolute -bottom-2 -right-4 w-36 h-4.5 -rotate-15 border-y border-black/40 shadow-md pointer-events-none opacity-90"
+            style={{ background: 'repeating-linear-gradient(45deg, #eab308, #eab308 10px, #0f172a 10px, #0f172a 20px)' }}
+          />
+          <div
+            className="absolute top-1/2 -right-6 w-28 h-3.5 rotate-35 border-y border-black/40 shadow-sm pointer-events-none opacity-85"
+            style={{ background: 'repeating-linear-gradient(45deg, #eab308, #eab308 8px, #0f172a 8px, #0f172a 16px)' }}
+          />
 
           <div className="relative w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center animate-channel-float z-10">
             <svg viewBox="0 0 100 100" className="w-full h-full filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
@@ -478,22 +508,45 @@ export function ChannelVisual({
       return (
         <div className="absolute inset-0 bg-gradient-to-b from-[#fef08a] via-[#f59e0b] to-[#b45309] flex items-center justify-center overflow-hidden">
           <div className="absolute top-2 right-4 w-9 h-9 rounded-full bg-white/40 blur-xs pointer-events-none" />
-          <div className="absolute bottom-0 inset-x-0 h-7 bg-gradient-to-t from-[#78350f]/60 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-[#78350f]/50 to-transparent pointer-events-none" />
+
+          {/* Kameel met galopperende beentjes (zonder racebaan) */}
           <div className="relative w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center animate-channel-float z-10">
             <svg viewBox="0 0 100 80" className="w-full h-full filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.35)]">
-              <path d="M 64 54 L 74 74 L 78 74" stroke="#92400e" strokeWidth="4.5" strokeLinecap="round" />
-              <path d="M 32 54 L 22 74 L 18 74" stroke="#92400e" strokeWidth="4.5" strokeLinecap="round" />
+              {/* Achterste beentjes (achtergrond laag) */}
+              <g className="animate-camel-back-b" style={{ transformOrigin: '32px 54px' }}>
+                <path d="M 32 54 L 20 74 L 16 74" stroke="#78350f" strokeWidth="3.8" strokeLinecap="round" />
+              </g>
+              <g className="animate-camel-front-b" style={{ transformOrigin: '64px 54px' }}>
+                <path d="M 64 54 L 76 74 L 80 74" stroke="#78350f" strokeWidth="3.8" strokeLinecap="round" />
+              </g>
+
+              {/* Lichaam & Bult */}
               <ellipse cx="48" cy="45" rx="23" ry="15" fill="#b45309" stroke="#78350f" strokeWidth="1.5" />
               <path d="M 38 40 Q 48 16 58 40 Z" fill="#b45309" stroke="#78350f" strokeWidth="1.5" />
+
+              {/* Zadel & Nummer */}
               <path d="M 38 38 Q 48 28 58 38 L 56 50 Q 48 53 40 50 Z" fill="#ef4444" stroke="#ffffff" strokeWidth="1.2" />
               <text x="48" y="47" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="bold">1</text>
+
+              {/* Hals, Kop & Oortje */}
               <path d="M 58 45 Q 74 34 72 18 Q 79 14 85 20 Q 81 27 68 45 Z" fill="#b45309" stroke="#78350f" strokeWidth="1.5" />
               <circle cx="77" cy="20" r="1.8" fill="#0f172a" />
               <ellipse cx="72" cy="16" rx="1.5" ry="3" fill="#92400e" transform="rotate(-20 72 16)" />
               <path d="M 25 44 Q 18 54 20 62" stroke="#92400e" strokeWidth="3" strokeLinecap="round" />
+
+              {/* Jockey poppetje */}
               <ellipse cx="49" cy="28" rx="4.5" ry="8" fill="#ef4444" />
               <circle cx="51" cy="20" r="5" fill="#ffffff" stroke="#ef4444" strokeWidth="1.2" />
               <circle cx="53" cy="20" r="1.5" fill="#0f172a" />
+
+              {/* Voorste beentjes (voorgrond laag, beweegt dynamisch mee) */}
+              <g className="animate-camel-back-a" style={{ transformOrigin: '32px 54px' }}>
+                <path d="M 32 54 L 24 74 L 20 74" stroke="#92400e" strokeWidth="4.5" strokeLinecap="round" />
+              </g>
+              <g className="animate-camel-front-a" style={{ transformOrigin: '64px 54px' }}>
+                <path d="M 64 54 L 72 74 L 76 74" stroke="#92400e" strokeWidth="4.5" strokeLinecap="round" />
+              </g>
             </svg>
           </div>
         </div>
@@ -501,60 +554,126 @@ export function ChannelVisual({
 
     case 'CARD_CATALOG':
       return (
-        <div className="absolute inset-0 bg-gradient-to-b from-[#5c2e17] via-[#3d1e0f] to-[#241108] flex items-center justify-center overflow-hidden p-2">
-          <div className="relative w-full h-full rounded-md border-2 border-[#854d0e] bg-gradient-to-b from-[#291309] to-[#1a0a04] flex flex-col justify-between p-1 shadow-inner">
-            <div className="w-full flex-1 flex items-end justify-center gap-1 pb-0.5 px-1 overflow-hidden">
-              <div className="w-2.5 h-8 bg-red-700 rounded-t-xs border border-red-400 shadow-xs flex flex-col justify-center items-center">
-                <div className="w-1.5 h-0.5 bg-yellow-300" />
-              </div>
-              <div className="w-3 h-9 bg-amber-600 rounded-t-xs border border-amber-300 shadow-xs flex flex-col justify-center items-center">
-                <div className="w-2 h-0.5 bg-yellow-200" />
-              </div>
-              <div className="w-2.5 h-7.5 bg-emerald-700 rounded-t-xs border border-emerald-400 shadow-xs" />
-              <div className="w-3 h-8.5 bg-blue-700 rounded-t-xs border border-blue-400 shadow-xs flex flex-col justify-center items-center">
-                <div className="w-2 h-0.5 bg-white" />
-              </div>
-              <div className="w-2 h-7 bg-purple-700 rounded-t-xs border border-purple-400 shadow-xs" />
-              <div className="w-2.5 h-8 bg-amber-500 rounded-t-xs border border-yellow-200 shadow-xs rotate-6 origin-bottom-left" />
-            </div>
-            <div className="w-full h-1.5 bg-gradient-to-r from-[#854d0e] via-[#a16207] to-[#854d0e] rounded-xs shadow-md border-t border-[#ca8a04]/60" />
-            <div className="w-full flex-1 flex items-end justify-center gap-1 pb-0.5 px-1 overflow-hidden">
-              <div className="w-3 h-8.5 bg-indigo-700 rounded-t-xs border border-indigo-400 shadow-xs flex flex-col justify-center items-center">
-                <div className="w-2 h-0.5 bg-amber-300" />
-              </div>
-              <div className="w-2.5 h-7 bg-rose-600 rounded-t-xs border border-rose-300 shadow-xs" />
-              <div className="w-3.5 h-9 bg-emerald-800 rounded-t-xs border border-emerald-300 shadow-xs flex flex-col justify-center items-center">
-                <div className="w-2.5 h-0.5 bg-yellow-300" />
-              </div>
-              <div className="w-2.5 h-7.5 bg-amber-700 rounded-t-xs border border-amber-400 shadow-xs" />
-              <div className="w-3 h-8 bg-sky-600 rounded-t-xs border border-sky-300 shadow-xs flex flex-col justify-center items-center">
-                <div className="w-2 h-0.5 bg-white" />
-              </div>
-            </div>
-            <div className="w-full h-1.5 bg-gradient-to-r from-[#713f12] via-[#854d0e] to-[#713f12] rounded-xs border-t border-[#ca8a04]/60" />
-          </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#451a03] via-[#291309] to-[#1a0a04] flex items-center justify-center overflow-hidden p-1.5">
+          <svg viewBox="0 0 100 80" className="w-full h-full filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
+            {/* Kast omlijsting / Buitenkader */}
+            <rect x="2" y="2" width="96" height="76" rx="4" fill="#3e1b07" stroke="#78350f" strokeWidth="2.5" />
+            <rect x="5" y="5" width="90" height="70" rx="2" fill="#1c0b03" />
+
+            {/* BOVENSTE PLANK BOEKEN (bodem exact op y=38) */}
+            {/* Boek 1: Rood */}
+            <rect x="10" y="12" width="10" height="26" rx="1.5" fill="#dc2626" stroke="#991b1b" strokeWidth="0.8" />
+            <rect x="12" y="15" width="6" height="2" fill="#fef08a" />
+            <rect x="12" y="32" width="6" height="2" fill="#fef08a" />
+            {/* Boek 2: Goud / Oker */}
+            <rect x="22" y="10" width="11" height="28" rx="1.5" fill="#d97706" stroke="#b45309" strokeWidth="0.8" />
+            <line x1="27.5" y1="14" x2="27.5" y2="34" stroke="#fef08a" strokeWidth="1" strokeDasharray="2 2" />
+            {/* Boek 3: Smaragdgroen */}
+            <rect x="35" y="15" width="10" height="23" rx="1.5" fill="#15803d" stroke="#166534" strokeWidth="0.8" />
+            <rect x="37" y="24" width="6" height="5" fill="#facc15" rx="0.5" />
+            {/* Boek 4: Kobaltblauw */}
+            <rect x="47" y="11" width="11" height="27" rx="1.5" fill="#2563eb" stroke="#1d4ed8" strokeWidth="0.8" />
+            <rect x="49" y="14" width="7" height="1.5" fill="#ffffff" />
+            <rect x="49" y="33" width="7" height="1.5" fill="#ffffff" />
+            {/* Boek 5: Paars */}
+            <rect x="60" y="16" width="9" height="22" rx="1.5" fill="#7e22ce" stroke="#6b21a8" strokeWidth="0.8" />
+            {/* Boek 6 & 7: Leunend naar rechts tegen zijwand */}
+            <g transform="rotate(14 74 38)">
+              <rect x="71" y="14" width="9" height="24" rx="1.5" fill="#0284c7" stroke="#0369a1" strokeWidth="0.8" />
+              <rect x="73" y="18" width="5" height="1.5" fill="#ffffff" />
+            </g>
+
+            {/* MIDDENPLANK (bodem voor bovenste boeken, rustend op y=38) */}
+            <rect x="4" y="38" width="92" height="4.5" rx="1" fill="#78350f" stroke="#92400e" strokeWidth="1" />
+            <line x1="4" y1="38.5" x2="96" y2="38.5" stroke="#f59e0b" strokeWidth="1" opacity="0.6" />
+
+            {/* ONDERSTE PLANK BOEKEN (bodem exact op y=70) */}
+            {/* Boek 8: Indigo */}
+            <rect x="11" y="46" width="12" height="24" rx="1.5" fill="#4338ca" stroke="#3730a3" strokeWidth="0.8" />
+            <rect x="13" y="50" width="8" height="2" fill="#fef08a" />
+            {/* Boek 9: Donkerrood / Karmijn */}
+            <rect x="25" y="44" width="9" height="26" rx="1.5" fill="#b91c1c" stroke="#991b1b" strokeWidth="0.8" />
+            <line x1="29.5" y1="48" x2="29.5" y2="66" stroke="#fca5a5" strokeWidth="1" strokeDasharray="3 1.5" />
+            {/* Boek 10: Diep teal */}
+            <rect x="36" y="48" width="12" height="22" rx="1.5" fill="#0f766e" stroke="#115e59" strokeWidth="0.8" />
+            <rect x="39" y="56" width="6" height="6" fill="#fde047" rx="0.5" />
+            {/* Boek 11: Zonnig geel-bruin */}
+            <rect x="50" y="45" width="10" height="25" rx="1.5" fill="#b45309" stroke="#92400e" strokeWidth="0.8" />
+            <rect x="52" y="48" width="6" height="1.5" fill="#ffffff" />
+            <rect x="52" y="66" width="6" height="1.5" fill="#ffffff" />
+            {/* Boek 12: Hemelsblauw */}
+            <rect x="62" y="47" width="11" height="23" rx="1.5" fill="#0284c7" stroke="#0369a1" strokeWidth="0.8" />
+            <circle cx="67.5" cy="58" r="2.5" fill="#fef08a" />
+            {/* Boek 13: Zwart/Goud leer */}
+            <rect x="75" y="43" width="12" height="27" rx="1.5" fill="#1e293b" stroke="#0f172a" strokeWidth="0.8" />
+            <rect x="78" y="47" width="6" height="2" fill="#fbbf24" />
+            <rect x="78" y="64" width="6" height="2" fill="#fbbf24" />
+
+            {/* ONDERSTE PLANK (bodem voor onderste boeken, rustend op y=70) */}
+            <rect x="4" y="70" width="92" height="4.5" rx="1" fill="#78350f" stroke="#92400e" strokeWidth="1" />
+            <line x1="4" y1="70.5" x2="96" y2="70.5" stroke="#f59e0b" strokeWidth="1" opacity="0.6" />
+          </svg>
         </div>
       );
 
     case 'BOER_ZOEKT_VROUW':
       return (
         <div className="absolute inset-0 bg-gradient-to-b from-[#38bdf8] via-[#86efac] to-[#15803d] flex items-center justify-center overflow-hidden">
-          <div className="absolute top-1 right-2 w-7 h-7 rounded-full bg-yellow-300/80 blur-xs" />
-          <div className="absolute top-2 left-2 text-xs opacity-75">☁️</div>
-          <div className="absolute bottom-0 inset-x-0 h-7 bg-gradient-to-t from-[#14532d] to-[#16a34a] rounded-t-[100%]" />
-          <div className="relative w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center animate-channel-float z-10">
-            <div className="relative flex items-center justify-center">
-              <svg width="58" height="40" viewBox="0 0 68 48" className="filter drop-shadow-md">
-                <rect x="8" y="6" width="22" height="24" rx="3" fill="#15803d" stroke="#052e16" strokeWidth="1.5" />
-                <rect x="11" y="9" width="16" height="12" rx="2" fill="#7dd3fc" />
-                <rect x="30" y="16" width="28" height="15" rx="3" fill="#16a34a" stroke="#052e16" strokeWidth="1.5" />
-                <rect x="33" y="4" width="3" height="12" fill="#334155" />
-                <circle cx="18" cy="33" r="12" fill="#1e293b" stroke="#facc15" strokeWidth="2" />
-                <circle cx="18" cy="33" r="4.5" fill="#facc15" />
-                <circle cx="48" cy="37" r="8" fill="#1e293b" stroke="#facc15" strokeWidth="2" />
-                <circle cx="48" cy="37" r="3" fill="#facc15" />
-              </svg>
-            </div>
+          <div className="absolute top-1.5 right-2 w-7 h-7 rounded-full bg-yellow-300/85 blur-xs pointer-events-none" />
+          <div className="absolute top-2 left-2 text-xs opacity-80 pointer-events-none select-none">☁️</div>
+
+          {/* Vloer en tractor in één vector: sluit naadloos aan op elk schermformaat */}
+          <div className="w-full h-full relative flex items-center justify-center">
+            <svg viewBox="0 0 100 80" className="w-full h-full filter drop-shadow-md">
+              <defs>
+                <linearGradient id="farmHillGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#22c55e" />
+                  <stop offset="35%" stopColor="#16a34a" />
+                  <stop offset="100%" stopColor="#14532d" />
+                </linearGradient>
+              </defs>
+
+              {/* Weide vloer waar de tractor wielen exact op staan (kruintje op y=55) */}
+              <path
+                d="M 0 55 Q 50 48 100 55 L 100 80 L 0 80 Z"
+                fill="url(#farmHillGrad)"
+                stroke="#14532d"
+                strokeWidth="1.5"
+              />
+              <path
+                d="M 0 63 Q 50 58 100 63 L 100 80 L 0 80 Z"
+                fill="#14532d"
+                opacity="0.35"
+              />
+
+              {/* Tractor trilt levendig met ronkende motor en staat 100% op de vloer */}
+              <g className="animate-tractor-rumble">
+                {/* Uitlaat met uitlaatgas wolkje */}
+                <rect x="68" y="24" width="2.5" height="10" fill="#334155" rx="1" />
+                <circle cx="70" cy="20" r="2.2" fill="#ffffff" opacity="0.75" />
+
+                {/* Motorkap & Grill */}
+                <rect x="50" y="32" width="25" height="15" rx="2" fill="#16a34a" stroke="#052e16" strokeWidth="1.5" />
+                <rect x="71" y="34" width="3" height="9" rx="1" fill="#facc15" />
+                <line x1="56" y1="36" x2="68" y2="36" stroke="#15803d" strokeWidth="1.2" />
+                <line x1="56" y1="40" x2="68" y2="40" stroke="#15803d" strokeWidth="1.2" />
+
+                {/* Cabine met glas */}
+                <rect x="28" y="22" width="22" height="25" rx="3" fill="#15803d" stroke="#052e16" strokeWidth="1.5" />
+                <rect x="31" y="25" width="16" height="13" rx="2" fill="#7dd3fc" stroke="#052e16" strokeWidth="1" />
+                <rect x="26" y="20" width="26" height="3" rx="1.5" fill="#166534" />
+
+                {/* Achterwiel: rust precies op vloer y=55 */}
+                <circle cx="38" cy="44" r="11" fill="#1e293b" stroke="#0f172a" strokeWidth="1.5" />
+                <circle cx="38" cy="44" r="5" fill="#facc15" stroke="#ca8a04" strokeWidth="1" />
+                <circle cx="38" cy="44" r="1.8" fill="#1e293b" />
+
+                {/* Voorwiel: rust precies op vloer y=55 */}
+                <circle cx="68" cy="47.5" r="7.5" fill="#1e293b" stroke="#0f172a" strokeWidth="1.5" />
+                <circle cx="68" cy="47.5" r="3.5" fill="#facc15" stroke="#ca8a04" strokeWidth="1" />
+                <circle cx="68" cy="47.5" r="1.2" fill="#1e293b" />
+              </g>
+            </svg>
           </div>
         </div>
       );
@@ -638,15 +757,8 @@ export function ChannelVisual({
       return (
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#1d4ed8] via-[#2563eb] to-[#eab308]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(250,204,21,0.45)_0%,transparent_75%)]" />
-          {/* Subtle floating clock sparkle particles */}
-          <div className="absolute top-2 left-3 text-xs opacity-75 pointer-events-none select-none">
-            ✨
-          </div>
-          <div className="absolute bottom-2 right-3 text-xs opacity-75 pointer-events-none select-none">
-            ⭐
-          </div>
 
-          {/* Smooth Continuous Spinning Emoji-Style Hourglass without any text */}
+          {/* Smooth Occasional Flipping Emoji-Style Hourglass without any text */}
           <div className="relative z-10 flex items-center justify-center animate-hourglass-spin filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)]">
             <svg viewBox="0 0 100 100" className="w-16 h-16 sm:w-18 sm:h-18">
               {/* Top Wooden Base */}
@@ -707,18 +819,18 @@ export function ChannelVisual({
 
     case 'WIE_IS':
       return (
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155]">
-          {/* Subtle Standoff Spotlight Backdrop */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_65%,rgba(245,158,11,0.22)_0%,transparent_72%)]" />
-          <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#f8fafc] via-[#e2e8f0] to-[#cbd5e1]">
+          {/* Subtle Light Studio Spotlight Backdrop */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_65%,rgba(59,130,246,0.18)_0%,transparent_72%)]" />
+          <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-slate-400/25 to-transparent pointer-events-none" />
 
           {/* Three Identical Normal People Pointing at Each Other (Iconic Meme Standoff) */}
-          <div className="relative w-28 h-20 flex items-center justify-center animate-spiderman-bob filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]">
+          <div className="relative w-28 h-20 flex items-center justify-center animate-spiderman-bob filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.25)]">
             <svg viewBox="0 0 120 90" className="w-full h-full">
               {/* Ground Shadow Ellipses */}
-              <ellipse cx="32" cy="76" rx="16" ry="4.5" fill="#020617" opacity="0.6" />
-              <ellipse cx="88" cy="76" rx="16" ry="4.5" fill="#020617" opacity="0.6" />
-              <ellipse cx="60" cy="56" rx="13" ry="3.5" fill="#020617" opacity="0.5" />
+              <ellipse cx="32" cy="76" rx="16" ry="4.5" fill="#64748b" opacity="0.35" />
+              <ellipse cx="88" cy="76" rx="16" ry="4.5" fill="#64748b" opacity="0.35" />
+              <ellipse cx="60" cy="56" rx="13" ry="3.5" fill="#64748b" opacity="0.3" />
 
               {/* FIGURE 3 (Center Top / Facing forward pointing down at both) */}
               <g transform="translate(60, 36)">
