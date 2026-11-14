@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
-import { Check, Play, RotateCcw, Smartphone, Trophy, X } from 'lucide-react';
+import { BookOpen, Check, Play, Plus, RotateCcw, Search, Smartphone, Trash2, Trophy, X } from 'lucide-react';
 import { sounds } from '../../utils/audio';
 import {
   shuffle,
@@ -12,7 +12,17 @@ import {
 } from '../Shared/hooks';
 import { PlayerBadge, PlayerRoster, useAvatarLookup } from '../Shared/PlayerRoster';
 import { ResetConfirmModal } from '../Shared/ResetConfirmModal';
-import { OP_JE_KOP_DECKS, getDeckSize, getDeckWords } from './opJeKopData';
+import {
+  CONCRETE_OP_JE_KOP_DECKS,
+  CustomOpJeKopWord,
+  OP_JE_KOP_DECKS,
+  addCustomOpJeKopWord,
+  getDeckSize,
+  getDeckWords,
+  getWordEntriesForDeck,
+  loadCustomOpJeKopWords,
+  removeCustomOpJeKopWord,
+} from './opJeKopData';
 
 type Phase = 'setup' | 'ready' | 'countdown' | 'playing' | 'results';
 type Pose = 'down' | 'up' | 'neutral';
@@ -73,6 +83,12 @@ export function OpJeKopApp({ isCurrentApp = true }: OpJeKopAppProps) {
   const [tiltAvailable, setTiltAvailable] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [isNewRecord, setIsNewRecord] = useState(false);
+  const [customWords, setCustomWords] = useState<CustomOpJeKopWord[]>(() => loadCustomOpJeKopWords());
+  const [showWordsModal, setShowWordsModal] = useState(false);
+  const [modalDeckFilter, setModalDeckFilter] = useState<string>('mix');
+  const [wordSearch, setWordSearch] = useState('');
+  const [newWordInput, setNewWordInput] = useState('');
+  const [newWordDeck, setNewWordDeck] = useState<string>('algemeen');
   const [viewport, setViewport] = useState(() => ({
     width: typeof window !== 'undefined' ? window.innerWidth : 390,
     height: typeof window !== 'undefined' ? window.innerHeight : 844,
@@ -342,6 +358,36 @@ export function OpJeKopApp({ isCurrentApp = true }: OpJeKopAppProps) {
     .sort((a, b) => b.score - a.score);
   const hasScores = Object.keys(scores).length > 0;
 
+  const totalMixWords = useMemo(() => getDeckWords('mix').length, [customWords]);
+
+  const handleAddCustomWord = (e: React.FormEvent) => {
+    e.preventDefault();
+    const clean = newWordInput.trim();
+    if (!clean) return;
+    const updated = addCustomOpJeKopWord(clean, newWordDeck);
+    setCustomWords(updated);
+    setNewWordInput('');
+    sounds.playTick(850);
+  };
+
+  const handleRemoveCustomWord = (id: string) => {
+    const updated = removeCustomOpJeKopWord(id);
+    setCustomWords(updated);
+    sounds.playTick(500);
+  };
+
+  const modalWordsList = useMemo(() => {
+    void customWords;
+    const q = wordSearch.trim().toLowerCase();
+    const entries = getWordEntriesForDeck(modalDeckFilter);
+    if (!q) return entries;
+    return entries.filter(
+      entry =>
+        entry.word.toLowerCase().includes(q) ||
+        entry.categoryName.toLowerCase().includes(q)
+    );
+  }, [customWords, modalDeckFilter, wordSearch]);
+
   const stageBackground =
     flash === 'correct'
       ? 'linear-gradient(160deg, #22c55e 0%, #15803d 100%)'
@@ -389,6 +435,32 @@ export function OpJeKopApp({ isCurrentApp = true }: OpJeKopAppProps) {
                 );
               })}
             </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                sounds.playTick(750);
+                setModalDeckFilter(deckId);
+                setNewWordDeck(deckId === 'mix' || deckId === 'eigen' ? 'algemeen' : deckId);
+                setShowWordsModal(true);
+              }}
+              className="mt-3 w-full py-2.5 px-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 border-2 border-slate-200 text-slate-800 font-black text-xs sm:text-sm flex items-center justify-between gap-2 cursor-pointer active:scale-[0.98] transition-all"
+            >
+              <span className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-fuchsia-600" />
+                <span>Woorden bekijken &amp; toevoegen</span>
+              </span>
+              <span className="flex items-center gap-1.5 text-[11px]">
+                {customWords.length > 0 && (
+                  <span className="px-2 py-0.5 rounded-lg bg-fuchsia-100 text-fuchsia-700 font-black">
+                    {customWords.length} eigen
+                  </span>
+                )}
+                <span className="px-2 py-0.5 rounded-lg bg-slate-200 text-slate-700 font-black tabular-nums">
+                  {totalMixWords}×
+                </span>
+              </span>
+            </button>
           </div>
 
           {/* Tijd */}
@@ -676,6 +748,185 @@ export function OpJeKopApp({ isCurrentApp = true }: OpJeKopAppProps) {
             >
               <RotateCcw className="w-4 h-4" />
               <span>Andere categorie</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          VENSTER: WOORDEN BEKIJKEN & TOEVOEGEN
+          ========================================================================= */}
+      {showWordsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white border-4 border-slate-300 rounded-3xl p-4 sm:p-5 w-full max-w-lg shadow-2xl max-h-[88dvh] flex flex-col text-slate-950 animate-in zoom-in-95">
+            <div className="flex items-center justify-between pb-3 border-b-2 border-slate-200">
+              <div>
+                <h3 className="text-base sm:text-lg font-black flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-fuchsia-600" />
+                  <span>Woordenboek ({modalWordsList.length})</span>
+                </h3>
+                <p className="text-[11px] font-bold text-slate-500">
+                  Bekijk alle woorden of voeg eigen woorden toe
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowWordsModal(false)}
+                aria-label="Sluiten"
+                className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Eigen woord toevoegen */}
+            <form onSubmit={handleAddCustomWord} className="my-3 p-3 rounded-2xl bg-fuchsia-50/70 border border-fuchsia-200 space-y-2">
+              <span className="text-[10px] font-black uppercase tracking-wider text-fuchsia-700 block">
+                Eigen woord toevoegen
+              </span>
+              <div className="flex items-center gap-1.5">
+                <input
+                  type="text"
+                  value={newWordInput}
+                  onChange={e => setNewWordInput(e.target.value)}
+                  placeholder="Typ een nieuw woord..."
+                  maxLength={48}
+                  className="flex-1 min-w-0 px-3 py-2 text-xs font-bold rounded-xl outline-none"
+                />
+                <select
+                  value={newWordDeck}
+                  onChange={e => setNewWordDeck(e.target.value)}
+                  aria-label="Categorie kiezen"
+                  className="px-2 py-2 text-xs font-bold rounded-xl outline-none max-w-[145px]"
+                >
+                  {CONCRETE_OP_JE_KOP_DECKS.map(d => (
+                    <option key={d.id} value={d.id}>
+                      {d.emoji} {d.name}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="submit"
+                  disabled={!newWordInput.trim()}
+                  className="px-3 py-2 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-black text-xs flex items-center gap-1 cursor-pointer shrink-0 active:scale-95 border-2 border-fuchsia-800 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Voeg toe</span>
+                </button>
+              </div>
+            </form>
+
+            {/* Categorie tabs & zoekbalk */}
+            <div className="space-y-2 mb-2.5">
+              <div className="flex flex-wrap gap-1">
+                <button
+                  type="button"
+                  onClick={() => setModalDeckFilter('mix')}
+                  className={`px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer transition-colors ${
+                    modalDeckFilter === 'mix'
+                      ? 'bg-fuchsia-600 text-white'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  Alle ({totalMixWords})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModalDeckFilter('eigen')}
+                  className={`px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer transition-colors ${
+                    modalDeckFilter === 'eigen'
+                      ? 'bg-amber-500 text-white'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  Eigen ({customWords.length})
+                </button>
+                {CONCRETE_OP_JE_KOP_DECKS.map(d => (
+                  <button
+                    key={d.id}
+                    type="button"
+                    onClick={() => setModalDeckFilter(d.id)}
+                    className={`px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer transition-colors ${
+                      modalDeckFilter === d.id
+                        ? 'bg-slate-800 text-white'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {d.emoji} {d.name} ({getDeckSize(d.id)})
+                  </button>
+                ))}
+              </div>
+
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={wordSearch}
+                  onChange={e => setWordSearch(e.target.value)}
+                  placeholder="Zoek een woord..."
+                  className="w-full pl-8 pr-3 py-1.5 text-xs font-bold rounded-xl outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Woordenlijst */}
+            <div className="flex-1 min-h-0 overflow-y-auto space-y-1 pr-1">
+              {modalWordsList.length === 0 ? (
+                <p className="text-xs font-bold text-slate-400 text-center py-6">
+                  {modalDeckFilter === 'eigen' && customWords.length === 0
+                    ? 'Nog geen eigen woorden toegevoegd. Voeg er hierboven een toe!'
+                    : 'Geen woorden gevonden.'}
+                </p>
+              ) : (
+                modalWordsList.map((entry, idx) => (
+                  <div
+                    key={`${entry.categoryId}-${entry.word}-${idx}`}
+                    className={`flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl border text-xs ${
+                      entry.customId
+                        ? 'bg-fuchsia-50 border-fuchsia-200'
+                        : 'bg-slate-50 border-slate-200'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <span className="text-[10px] font-black text-slate-400 tabular-nums w-7 shrink-0">
+                        {idx + 1}.
+                      </span>
+                      <span className="font-bold text-slate-800 truncate">{entry.word}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span
+                        className={`px-2 py-0.5 rounded-lg border text-[10px] font-black inline-flex items-center gap-1 whitespace-nowrap ${entry.badgeClass}`}
+                      >
+                        <span>{entry.categoryEmoji}</span>
+                        <span>{entry.categoryName}</span>
+                      </span>
+                      {entry.customId && (
+                        <>
+                          <span className="px-1.5 py-0.5 rounded bg-fuchsia-100 text-fuchsia-700 text-[10px] font-black">
+                            Eigen
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveCustomWord(entry.customId!)}
+                            aria-label={`Verwijder ${entry.word}`}
+                            className="text-slate-400 hover:text-red-600 p-1 cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowWordsModal(false)}
+              className="mt-3 w-full py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-sm cursor-pointer"
+            >
+              Klaar
             </button>
           </div>
         </div>

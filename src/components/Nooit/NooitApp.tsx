@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { ChevronLeft, ChevronRight, PenLine, Play, Plus, RotateCcw, Trash2, X } from 'lucide-react';
+import { BookOpen, ChevronLeft, ChevronRight, PenLine, Play, Plus, RotateCcw, Search, Trash2, X } from 'lucide-react';
 import { sounds } from '../../utils/audio';
 import { shuffle, useGameReset, usePersistentState, vibrate } from '../Shared/hooks';
 import { ResetConfirmModal } from '../Shared/ResetConfirmModal';
@@ -57,6 +57,8 @@ export function NooitApp() {
   const [direction, setDirection] = useState<1 | -1>(1);
   const [customInput, setCustomInput] = useState('');
   const [showCustomModal, setShowCustomModal] = useState(false);
+  const [modalTab, setModalTab] = useState<'all' | NooitLevelId>('all');
+  const [modalSearch, setModalSearch] = useState('');
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   // Voorkomt dat loslaten na een veeg ook nog als tik telt
@@ -73,6 +75,13 @@ export function NooitApp() {
     const fromLevels = DEFAULT_STATEMENTS.filter(statement => selectedLevels.includes(statement.level));
     return selectedLevels.includes('eigen') ? [...fromLevels, ...customStatements] : fromLevels;
   }, [selectedLevels, customStatements]);
+
+  const allModalStatements = useMemo(() => {
+    const combined = [...customStatements, ...DEFAULT_STATEMENTS];
+    const byTab = modalTab === 'all' ? combined : combined.filter(s => s.level === modalTab);
+    const q = modalSearch.trim().toLowerCase();
+    return q ? byTab.filter(s => s.text.toLowerCase().includes(q)) : byTab;
+  }, [customStatements, modalSearch, modalTab]);
 
   const toggleLevel = (levelId: NooitLevelId) => {
     const isOn = selectedLevels.includes(levelId);
@@ -208,6 +217,7 @@ export function NooitApp() {
                 <button
                   onClick={() => {
                     sounds.playTick(650);
+                    setModalTab('eigen');
                     setShowCustomModal(true);
                   }}
                   aria-label="Eigen stellingen beheren"
@@ -217,6 +227,24 @@ export function NooitApp() {
                 </button>
               </div>
             </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                sounds.playTick(650);
+                setModalTab('all');
+                setShowCustomModal(true);
+              }}
+              className="mt-3 w-full py-2.5 px-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 border-2 border-slate-200 text-slate-800 font-black text-xs sm:text-sm flex items-center justify-between gap-2 cursor-pointer active:scale-[0.98] transition-all"
+            >
+              <span className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-teal-600" />
+                <span>Alle stellingen bekijken &amp; toevoegen</span>
+              </span>
+              <span className="px-2 py-0.5 rounded-lg bg-slate-200 text-slate-700 text-[11px] font-black tabular-nums">
+                {DEFAULT_STATEMENTS.length + customStatements.length}×
+              </span>
+            </button>
           </div>
 
           <button
@@ -384,15 +412,20 @@ export function NooitApp() {
       )}
 
       {/* =========================================================================
-          VENSTER: EIGEN STELLINGEN
+          VENSTER: ALLE & EIGEN STELLINGEN
           ========================================================================= */}
       {showCustomModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white border-4 border-slate-300 rounded-3xl p-4 sm:p-5 w-full max-w-lg shadow-2xl max-h-[85dvh] flex flex-col text-slate-950 animate-in zoom-in-95">
+          <div className="bg-white border-4 border-slate-300 rounded-3xl p-4 sm:p-5 w-full max-w-lg shadow-2xl max-h-[88dvh] flex flex-col text-slate-950 animate-in zoom-in-95">
             <div className="flex items-center justify-between pb-3 border-b-2 border-slate-200">
               <div>
-                <h3 className="text-base sm:text-lg font-black">✍️ Eigen stellingen ({customTexts.length})</h3>
-                <p className="text-[11px] font-bold text-slate-500">Maak het spel persoonlijk voor jullie groep</p>
+                <h3 className="text-base sm:text-lg font-black flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-teal-600" />
+                  <span>Stellingen ({DEFAULT_STATEMENTS.length + customTexts.length})</span>
+                </h3>
+                <p className="text-[11px] font-bold text-slate-500">
+                  Bekijk alle kaarten of voeg zelf stellingen toe
+                </p>
               </div>
               <button
                 onClick={() => setShowCustomModal(false)}
@@ -408,7 +441,7 @@ export function NooitApp() {
                 htmlFor="nooit-custom-input"
                 className="text-[10px] font-black uppercase tracking-wider text-teal-700 block mb-1"
               >
-                Ik heb nog nooit...
+                Eigen stelling: Ik heb nog nooit...
               </label>
               <div className="flex items-center gap-1.5">
                 <input
@@ -418,12 +451,12 @@ export function NooitApp() {
                   onChange={e => setCustomInput(e.target.value)}
                   placeholder="bijv. de afstandsbediening verstopt"
                   maxLength={120}
-                  className="flex-1 min-w-0 px-3 py-2.5 text-sm font-bold rounded-xl outline-none"
+                  className="flex-1 min-w-0 px-3 py-2 text-sm font-bold rounded-xl outline-none"
                 />
                 <button
                   type="submit"
                   disabled={!cleanCustomStatement(customInput)}
-                  className="px-3.5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-black text-xs flex items-center gap-1 cursor-pointer shrink-0 active:scale-95 border-2 border-teal-800 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-black text-xs flex items-center gap-1 cursor-pointer shrink-0 active:scale-95 border-2 border-teal-800 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Voeg toe</span>
@@ -431,30 +464,100 @@ export function NooitApp() {
               </div>
             </form>
 
+            {/* Filter tabs & zoekbalk */}
+            <div className="space-y-2 mb-2.5">
+              <div className="flex flex-wrap gap-1">
+                <button
+                  type="button"
+                  onClick={() => setModalTab('all')}
+                  className={`px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer transition-colors ${
+                    modalTab === 'all'
+                      ? 'bg-teal-600 text-white'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  Alle ({DEFAULT_STATEMENTS.length + customTexts.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModalTab('eigen')}
+                  className={`px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer transition-colors ${
+                    modalTab === 'eigen'
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  ✍️ Eigen ({customTexts.length})
+                </button>
+                {NOOIT_LEVELS.map(lvl => (
+                  <button
+                    key={lvl.id}
+                    type="button"
+                    onClick={() => setModalTab(lvl.id)}
+                    className={`px-2.5 py-1 rounded-xl text-[11px] font-black cursor-pointer transition-colors ${
+                      modalTab === lvl.id
+                        ? 'bg-slate-800 text-white'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {lvl.emoji} {lvl.name} ({countStatements(lvl.id)})
+                  </button>
+                ))}
+              </div>
+
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={modalSearch}
+                  onChange={e => setModalSearch(e.target.value)}
+                  placeholder="Zoek in stellingen..."
+                  className="w-full pl-8 pr-3 py-1.5 text-xs font-bold rounded-xl outline-none"
+                />
+              </div>
+            </div>
+
             <div className="flex-1 min-h-0 overflow-y-auto space-y-1.5 pr-1">
-              {customTexts.length === 0 ? (
+              {allModalStatements.length === 0 ? (
                 <p className="text-xs font-bold text-slate-400 text-center py-6">
-                  Nog geen eigen stellingen. Typ hierboven je eerste!
+                  {modalTab === 'eigen' && customTexts.length === 0
+                    ? 'Nog geen eigen stellingen. Typ hierboven je eerste!'
+                    : 'Geen stellingen gevonden.'}
                 </p>
               ) : (
-                customTexts.map(text => (
-                  <div
-                    key={text}
-                    className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs"
-                  >
-                    <span className="min-w-0">
-                      <span className="font-black text-teal-700 mr-1">Ik heb nog nooit</span>
-                      <span className="font-bold text-slate-800">{text}</span>
-                    </span>
-                    <button
-                      onClick={() => handleRemoveCustom(text)}
-                      aria-label="Verwijderen"
-                      className="text-slate-400 hover:text-red-600 p-1 cursor-pointer shrink-0"
+                allModalStatements.map(st => {
+                  const lvl = getLevel(st.level);
+                  const isCustom = st.level === 'eigen';
+                  return (
+                    <div
+                      key={st.id}
+                      className={`flex items-center justify-between gap-2 px-3 py-2 rounded-xl border text-xs ${
+                        isCustom
+                          ? 'bg-indigo-50/70 border-indigo-200'
+                          : 'bg-slate-50 border-slate-200'
+                      }`}
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ))
+                      <span className="min-w-0 flex-1">
+                        <span
+                          className={`inline-block mr-1.5 px-1.5 py-0.5 rounded-md border text-[10px] font-black ${lvl.chipClass}`}
+                        >
+                          {lvl.emoji} {lvl.name}
+                        </span>
+                        <span className="font-black text-teal-700 mr-1">Ik heb nog nooit</span>
+                        <span className="font-bold text-slate-800">{st.text}</span>
+                      </span>
+                      {isCustom && (
+                        <button
+                          onClick={() => handleRemoveCustom(st.text)}
+                          aria-label="Verwijderen"
+                          className="text-slate-400 hover:text-red-600 p-1 cursor-pointer shrink-0"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  );
+                })
               )}
             </div>
 

@@ -37,6 +37,8 @@ const SnelsteVingerApp = lazy(() => import('./components/SnelsteVinger/SnelsteVi
 const HogerLagerApp = lazy(() => import('./components/HogerLager/HogerLagerApp').then(m => ({ default: m.HogerLagerApp })));
 const NooitApp = lazy(() => import('./components/Nooit/NooitApp').then(m => ({ default: m.NooitApp })));
 const UndercoverApp = lazy(() => import('./components/Undercover/UndercoverApp').then(m => ({ default: m.UndercoverApp })));
+const GoudmijnenApp = lazy(() => import('./components/Goudmijnen/GoudmijnenApp').then(m => ({ default: m.GoudmijnenApp })));
+const SpectrumApp = lazy(() => import('./components/Spectrum/SpectrumApp').then(m => ({ default: m.SpectrumApp })));
 
 /** Kort laadscherm terwijl een kanaal wordt opgehaald (verschijnt pas na een kwart seconde). */
 function ChannelLoading() {
@@ -136,6 +138,8 @@ export default function App() {
       SNELSTE_VINGER: '#0f172a',
       HOGER_LAGER: '#062814',
       NOOIT: '#115e59',
+      GOUDMIJNEN: '#181512',
+      SPECTRUM: '#0f172a',
     };
 
     const targetColor = themeColors[activeSubApp] || '#f6f8fa';
@@ -430,6 +434,8 @@ export default function App() {
     SNELSTE_VINGER: 'Snelste Vinger',
     HOGER_LAGER: 'Hoger of Lager',
     NOOIT: 'Ik heb nog nooit',
+    GOUDMIJNEN: 'Goudmijnen',
+    SPECTRUM: 'Spectrum',
   };
 
   const getSubAppBackground = (app: SubAppId) => {
@@ -471,6 +477,10 @@ export default function App() {
         return 'bg-[#062814] text-amber-50';
       case 'NOOIT':
         return 'bg-[#115e59] text-teal-50';
+      case 'GOUDMIJNEN':
+        return 'bg-[#1a1008] text-amber-50';
+      case 'SPECTRUM':
+        return 'bg-[#0f172a] text-slate-100';
       default:
         return 'party-menu-bg text-slate-800';
     }
@@ -827,6 +837,117 @@ export default function App() {
         </div>
       )}
 
+      {/* 19. Subterranean Stone Rock Wall Background for Goudmijnen */}
+      {activeSubApp === 'GOUDMIJNEN' && (
+        <div
+          className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+          style={{
+            backgroundColor: '#181512',
+          }}
+          aria-hidden="true"
+        >
+          {/* Gelaagde rotswand SVG */}
+          <svg
+            viewBox="0 0 1200 1200"
+            preserveAspectRatio="xMidYMid slice"
+            className="absolute inset-0 w-full h-full opacity-95"
+          >
+            <defs>
+              <linearGradient id="rockWallBase" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#2c2825" />
+                <stop offset="45%" stopColor="#1c1917" />
+                <stop offset="100%" stopColor="#0f0d0c" />
+              </linearGradient>
+              <radialGradient id="lanternWash" cx="50%" cy="14%" r="55%">
+                <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.32" />
+                <stop offset="42%" stopColor="#b45309" stopOpacity="0.14" />
+                <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+
+            <rect width="1200" height="1200" fill="url(#rockWallBase)" />
+
+            {/* Grote hoekige rotsblokken & breuklijnen over de hele wand */}
+            <g stroke="#0b0908" strokeWidth="4" strokeLinejoin="round">
+              <polygon points="-20,-20 340,-20 280,220 90,260 -20,170" fill="#2f2b28" />
+              <polygon points="340,-20 710,-20 650,190 430,240 280,220" fill="#272421" />
+              <polygon points="710,-20 1220,-20 1220,210 920,250 650,190" fill="#2e2a27" />
+
+              <polygon points="-20,170 90,260 220,440 40,510 -20,430" fill="#23201d" />
+              <polygon points="90,260 280,220 430,240 480,430 220,440" fill="#332e2a" />
+              <polygon points="430,240 650,190 790,370 610,470 480,430" fill="#292522" />
+              <polygon points="650,190 920,250 1040,420 790,370" fill="#312d29" />
+              <polygon points="920,250 1220,210 1220,490 1040,420" fill="#211e1c" />
+
+              <polygon points="-20,430 40,510 170,710 -20,760" fill="#2a2623" />
+              <polygon points="40,510 220,440 480,430 420,660 170,710" fill="#211e1c" />
+              <polygon points="480,430 610,470 790,370 840,630 580,720 420,660" fill="#2c2825" />
+              <polygon points="790,370 1040,420 1220,490 1220,730 980,700 840,630" fill="#25221f" />
+
+              <polygon points="-20,760 170,710 310,940 80,1010 -20,960" fill="#1e1b18" />
+              <polygon points="170,710 420,660 580,720 510,950 310,940" fill="#26221f" />
+              <polygon points="580,720 840,630 980,700 890,980 510,950" fill="#1f1c19" />
+              <polygon points="980,700 1220,730 1220,1030 890,980" fill="#272320" />
+
+              <polygon points="-20,960 80,1010 310,940 420,1220 -20,1220" fill="#161412" />
+              <polygon points="310,940 510,950 890,980 830,1220 420,1220" fill="#1b1816" />
+              <polygon points="890,980 1220,1030 1220,1220 830,1220" fill="#151311" />
+            </g>
+
+            {/* Subtiele steen-highlights langs bovenranden van rotslagen */}
+            <g stroke="#78716c" strokeWidth="1.8" strokeOpacity="0.24" fill="none">
+              <polyline points="90,260 280,220 430,240" />
+              <polyline points="650,190 920,250 1220,210" />
+              <polyline points="40,510 220,440 480,430" />
+              <polyline points="610,470 790,370 1040,420" />
+              <polyline points="170,710 420,660 580,720" />
+              <polyline points="840,630 980,700 1220,730" />
+            </g>
+
+            {/* Kleine goudspikkels & steenaderen in de rots */}
+            <g fill="#fbbf24" fillOpacity="0.22">
+              <circle cx="245" cy="310" r="2.5" />
+              <circle cx="520" cy="295" r="3" />
+              <circle cx="715" cy="410" r="2.2" />
+              <circle cx="885" cy="310" r="2.6" />
+              <circle cx="355" cy="545" r="2.2" />
+              <circle cx="670" cy="590" r="2.8" />
+            </g>
+
+            {/* Warme mijnlantaarn lichtkegel over de rotswand */}
+            <rect width="1200" height="1200" fill="url(#lanternWash)" />
+          </svg>
+          {/* Diepte vignet */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(circle at 50% 25%, transparent 35%, rgba(8, 7, 6, 0.72) 100%)',
+            }}
+          />
+        </div>
+      )}
+
+      {/* 20. Deep Indigo & Cyan Wavelength Background for Spectrum */}
+      {activeSubApp === 'SPECTRUM' && (
+        <div
+          className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+          style={{
+            backgroundColor: '#0f172a',
+          }}
+          aria-hidden="true"
+        >
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.24) 0%, transparent 48%),
+                           radial-gradient(circle at 80% 75%, rgba(244, 63, 94, 0.2) 0%, transparent 50%),
+                           linear-gradient(180deg, #0f172a 0%, #17153b 55%, #020617 100%)`,
+            }}
+          />
+        </div>
+      )}
+
       {/* Header Navigation */}
       {activeSubApp === 'PUB_GOLF' ? (
         <Header onBackToWiiMenu={() => setActiveSubApp('HUB')} />
@@ -954,6 +1075,16 @@ export default function App() {
         {/* Undercover Secret Alien Word Game Channel */}
         <ChannelSlot active={activeSubApp === 'UNDERCOVER'} visited={isVisited('UNDERCOVER')}>
           <UndercoverApp />
+        </ChannelSlot>
+
+        {/* Goudmijnen (6x6 XY mijnveld met dynamiet, dobbelstenen en hakken naar goud of kool) */}
+        <ChannelSlot active={activeSubApp === 'GOUDMIJNEN'} visited={isVisited('GOUDMIJNEN')}>
+          <GoudmijnenApp />
+        </ChannelSlot>
+
+        {/* Spectrum (halve cirkel schaal, geheime doelzone, hintgever en wijzer draaien) */}
+        <ChannelSlot active={activeSubApp === 'SPECTRUM'} visited={isVisited('SPECTRUM')}>
+          <SpectrumApp />
         </ChannelSlot>
 
         {/* Pub Golf Pro (Active SubApp) */}

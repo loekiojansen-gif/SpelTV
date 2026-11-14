@@ -8,6 +8,8 @@ import {
   SnelsteVingerVisual,
   HogerLagerVisual,
   NooitVisual,
+  GoudmijnenVisual,
+  SpectrumVisual,
 } from './NewChannelVisuals';
 
 export const DEFAULT_CHANNEL_ORDER: string[] = [
@@ -33,9 +35,9 @@ export const DEFAULT_CHANNEL_ORDER: string[] = [
   'WIE_IS',
   'THIRTY_SECONDS',
   'SLABAKKEN',
+  'GOUDMIJNEN',
+  'SPECTRUM',
   'PUB_GOLF',
-  'NOISE_22',
-  'NOISE_23',
   'NOISE_24',
 ];
 
@@ -139,6 +141,10 @@ export function getChannelTitle(channelId: string): string {
       return 'Hoger of Lager';
     case 'NOOIT':
       return 'Ik heb nog nooit';
+    case 'GOUDMIJNEN':
+      return 'Goudmijnen';
+    case 'SPECTRUM':
+      return 'Spectrum';
     default:
       if (channelId.startsWith('NOISE_')) {
         return 'Binnenkort';
@@ -1023,6 +1029,12 @@ export function ChannelVisual({
 
     case 'NOOIT':
       return <NooitVisual />;
+
+    case 'GOUDMIJNEN':
+      return <GoudmijnenVisual />;
+
+    case 'SPECTRUM':
+      return <SpectrumVisual />;
 
     default:
       return null;

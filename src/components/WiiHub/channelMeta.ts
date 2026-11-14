@@ -35,4 +35,6 @@ export const CHANNEL_META: Partial<Record<SubAppId, ChannelMeta>> = {
   SNELSTE_VINGER: { kind: 'Reactiespel', players: '2–4', duration: '2–5 min', accent: '#ca8a04' },
   HOGER_LAGER: { kind: 'Kaartspel', players: '2+', duration: '5–15 min', accent: '#be123c' },
   NOOIT: { kind: 'Drankspel', players: '3+', duration: '10–30 min', accent: '#0d9488' },
+  GOUDMIJNEN: { kind: 'Drankspel', players: '2+', duration: '10–20 min', accent: '#d97706' },
+  SPECTRUM: { kind: 'Teamspel', players: '2+', duration: '15–25 min', accent: '#0284c7' },
 };

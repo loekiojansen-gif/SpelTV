@@ -1215,6 +1215,55 @@ class SoundManager {
       // ignore
     }
   }
+
+  /**
+   * Pickaxe hitting stone / rock in Goudmijnen
+   */
+  public playPickaxeHit(isBreak = false) {
+    if (this.isMuted) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
+
+      // Metallic clink
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(isBreak ? 1450 : 1150 + Math.random() * 250, t);
+      osc.frequency.exponentialRampToValueAtTime(320, t + 0.08);
+      gain.gain.setValueAtTime(isBreak ? 0.28 : 0.2, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.09);
+
+      // Rock crunch burst
+      const dur = isBreak ? 0.2 : 0.07;
+      const bufferSize = Math.floor(this.ctx.sampleRate * dur);
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(isBreak ? 950 : 1400, t);
+      const noiseGain = this.ctx.createGain();
+      noiseGain.gain.setValueAtTime(isBreak ? 0.28 : 0.16, t);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(this.ctx.destination);
+      noise.start(t);
+      noise.stop(t + dur);
+    } catch {
+      // ignore
+    }
+  }
 }
 
 export const sounds = new SoundManager();

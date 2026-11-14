@@ -82,6 +82,12 @@ export function UndercoverApp() {
   const [activeSpeakerIndex, setActiveSpeakerIndex] = useState<number>(0);
   const [selectedSuspectId, setSelectedSuspectId] = useState<string | null>(null);
   const [lastEliminatedPlayer, setLastEliminatedPlayer] = useState<UndercoverPlayer | null>(null);
+  const [alienGuessPending, setAlienGuessPending] = useState<boolean>(false);
+  const [alienGuessInput, setAlienGuessInput] = useState<string>('');
+  const [alienGuessOutcome, setAlienGuessOutcome] = useState<{
+    guessed: string;
+    correct: boolean;
+  } | null>(null);
   const [winningFaction, setWinningFaction] = useState<'CIVILIANS' | 'UNDERCOVERS' | 'MR_WHITE' | null>(null);
   const [winReason, setWinReason] = useState<string>('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -222,6 +228,9 @@ export function UndercoverApp() {
     setActiveSpeakerIndex(0);
     setSelectedSuspectId(null);
     setLastEliminatedPlayer(null);
+    setAlienGuessPending(false);
+    setAlienGuessInput('');
+    setAlienGuessOutcome(null);
     setWinningFaction(null);
     setWinReason('');
     setPhase('CARD_PICK');
@@ -263,44 +272,21 @@ export function UndercoverApp() {
     setPhase('VOTING');
   };
 
-  // Eliminate player & evaluate game win conditions
-  const handleConfirmElimination = (suspectId: string) => {
-    const eliminated = players.find(p => p.id === suspectId);
-    if (!eliminated) return;
-
-    sounds.playAlienElimination();
-
-    const updatedPlayers = players.map(p =>
-      p.id === suspectId ? { ...p, isEliminated: true } : p
-    );
-    setPlayers(updatedPlayers);
-    setLastEliminatedPlayer(eliminated);
-    setPhase('ELIMINATION_REVEAL');
-
-    // Evaluate Win Condition:
-    // 1. Speler zonder woord (Alien) eruit gestemd -> Burgers winnen direct!
-    // 2. Alle infiltranten (Undercovers + Alien) geëlimineerd -> Burgers winnen!
-    // 3. Slechts 2 spelers over: als Alien nog leeft -> Alien wint!
-    // 4. Undercovers >= Burgers (mits Undercovers meedoen) -> Undercovers winnen!
-    // 5. Geen Burgers meer over -> Infiltranten winnen!
-
-    const remaining = updatedPlayers.filter(p => !p.isEliminated);
+  const evaluateRemainingWinCondition = (
+    currentPlayersList: UndercoverPlayer[],
+    mrWhiteGuessedWrong = false
+  ) => {
+    const remaining = currentPlayersList.filter(p => !p.isEliminated);
     const remainingCivilians = remaining.filter(p => p.role === 'CIVILIAN');
     const remainingUndercovers = remaining.filter(p => p.role === 'UNDERCOVER');
     const mrWhiteAlive = remaining.some(p => p.role === 'MR_WHITE');
 
-    if (eliminated.role === 'MR_WHITE') {
-      // Alien Zonder Woord eliminated!
+    if (remainingUndercovers.length === 0 && !mrWhiteAlive) {
       setWinningFaction('CIVILIANS');
       setWinReason(
-        'De Alien (Zonder woord) is ontmaskerd en weggestemd! De Burgers (Normaal) hebben gewonnen!'
-      );
-      confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
-    } else if (remainingUndercovers.length === 0 && !mrWhiteAlive) {
-      // All infiltrators eliminated
-      setWinningFaction('CIVILIANS');
-      setWinReason(
-        'Alle infiltranten zijn uitgeschakeld! De Burgers (Normaal) hebben gewonnen!'
+        mrWhiteGuessedWrong
+          ? 'De Alien (Zonder woord) raadde het woord fout en is uitgeschakeld! De Burgers hebben gewonnen!'
+          : 'Alle infiltranten zijn uitgeschakeld! De Burgers (Normaal) hebben gewonnen!'
       );
       confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
     } else if (remaining.length <= 2) {
@@ -339,7 +325,72 @@ export function UndercoverApp() {
     }
   };
 
+  // Eliminate player & evaluate game win conditions
+  const handleConfirmElimination = (suspectId: string) => {
+    const eliminated = players.find(p => p.id === suspectId);
+    if (!eliminated) return;
+
+    sounds.playAlienElimination();
+
+    const updatedPlayers = players.map(p =>
+      p.id === suspectId ? { ...p, isEliminated: true } : p
+    );
+    setPlayers(updatedPlayers);
+    setLastEliminatedPlayer(eliminated);
+    setAlienGuessInput('');
+    setAlienGuessOutcome(null);
+    setPhase('ELIMINATION_REVEAL');
+
+    // Als de Alien (Zonder woord) eruit gestemd is, krijgt hij nog een laatste kans om het burgerwoord te raden!
+    if (eliminated.role === 'MR_WHITE') {
+      setAlienGuessPending(true);
+      return;
+    }
+
+    setAlienGuessPending(false);
+    evaluateRemainingWinCondition(updatedPlayers);
+  };
+
+  const handleSubmitAlienGuess = (e?: React.FormEvent, skipped = false) => {
+    if (e) e.preventDefault();
+    if (!alienGuessPending || !wordPairResult || !lastEliminatedPlayer) return;
+
+    const normalizeWord = (w: string) =>
+      w
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ');
+
+    const cleanGuess = alienGuessInput.trim();
+    if (!skipped && !cleanGuess) return;
+
+    const isCorrect =
+      !skipped &&
+      normalizeWord(cleanGuess) === normalizeWord(wordPairResult.civilianWord);
+
+    setAlienGuessPending(false);
+    setAlienGuessOutcome({
+      guessed: skipped ? '' : cleanGuess,
+      correct: isCorrect,
+    });
+
+    if (isCorrect) {
+      setWinningFaction('MR_WHITE');
+      setWinReason(
+        `${lastEliminatedPlayer.name} (de Alien) werd eruit gestemd, maar raadde het burgerwoord "${wordPairResult.civilianWord}" goed en wint alsnog!`
+      );
+      sounds.playCheerFanfare();
+      confetti({ particleCount: 95, spread: 85, origin: { y: 0.6 } });
+    } else {
+      sounds.playBuzzer();
+      evaluateRemainingWinCondition(players, true);
+    }
+  };
+
   const handleContinueAfterElimination = () => {
+    if (alienGuessPending) return;
     if (winningFaction) {
       setPhase('GAME_OVER');
       sounds.playCheerFanfare();
@@ -356,6 +407,9 @@ export function UndercoverApp() {
   const handleBackToSetup = () => {
     sounds.playWiiBack();
     setPhase('SETUP');
+    setAlienGuessPending(false);
+    setAlienGuessInput('');
+    setAlienGuessOutcome(null);
     setWinningFaction(null);
   };
 
@@ -657,63 +711,49 @@ export function UndercoverApp() {
                   <div className="w-16 h-16 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
                     🛸
                   </div>
-                  <div className="text-center px-4">
-                    <span className="text-xs font-black uppercase text-cyan-400 block tracking-wide">
-                      Tik om te scannen
-                    </span>
-                    <span className="text-[11px] text-slate-400 mt-1 block">
-                      Bekijk jouw geheime identiteit
-                    </span>
-                  </div>
-                </button>
-              </div>
-            ) : (
-              <div className="py-6 sm:py-8 flex flex-col items-center justify-center space-y-3 animate-in zoom-in-95 duration-150">
-                {currentViewingPlayer.role === 'MR_WHITE' ? (
-                  /* ALIEN (ZONDER WOORD) */
-                  <div className="w-full max-w-md p-5 rounded-3xl bg-purple-950/40 border-2 border-purple-500/60 shadow-xl text-center space-y-2">
-                    <span className="text-4xl block animate-bounce">👽</span>
-                    <span className="text-xs font-black uppercase tracking-widest text-purple-400 block">
-                      Jij bent de
-                    </span>
-                    <h3 className="text-2xl sm:text-3xl font-black text-purple-200 tracking-tight">
-                      Alien (Zonder woord)!
-                    </h3>
-                    <div className="p-3 rounded-2xl bg-purple-900/30 border border-purple-500/30 text-xs text-purple-200 font-semibold leading-relaxed">
-                      Je hebt <strong>GEEN</strong> woord gekregen! Luister straks heel goed naar de woorden van de anderen, bluf mee en probeer te raden wat hun woord is zonder ontdekt te worden!
+                    <div className="text-center px-4">
+                      <span className="text-xs font-black uppercase text-cyan-400 block tracking-wide">
+                        Tik om te scannen
+                      </span>
+                      <span className="text-[11px] text-slate-400 mt-1 block">
+                        Bekijk jouw geheime kaart
+                      </span>
                     </div>
-                  </div>
-                ) : currentViewingPlayer.role === 'UNDERCOVER' ? (
-                  /* UNDERCOVER (ASTRONAUT) */
-                  <div className="w-full max-w-md p-5 rounded-3xl bg-cyan-950/40 border-2 border-cyan-500/60 shadow-xl text-center space-y-2">
-                    <span className="text-4xl block">👨‍🚀</span>
-                    <span className="text-xs font-black uppercase tracking-widest text-cyan-400 block">
-                      Jij bent de Undercover (Astronaut)!
-                    </span>
-                    <div className="py-3 px-4 rounded-2xl bg-cyan-950/80 border border-cyan-400 text-3xl sm:text-4xl font-black text-white tracking-wide shadow-inner">
-                      {currentViewingPlayer.word}
+                  </button>
+                </div>
+              ) : (
+                <div className="py-6 sm:py-8 flex flex-col items-center justify-center space-y-3 animate-in zoom-in-95 duration-150">
+                  {currentViewingPlayer.role === 'MR_WHITE' ? (
+                    /* ALIEN (ZONDER WOORD) — alleen de Alien ziet zijn rol */
+                    <div className="w-full max-w-md p-5 rounded-3xl bg-purple-950/40 border-2 border-purple-500/60 shadow-xl text-center space-y-2">
+                      <span className="text-4xl block animate-bounce">👽</span>
+                      <span className="text-xs font-black uppercase tracking-widest text-purple-400 block">
+                        Jij bent de
+                      </span>
+                      <h3 className="text-2xl sm:text-3xl font-black text-purple-200 tracking-tight">
+                        Alien (Zonder woord)!
+                      </h3>
+                      <div className="p-3 rounded-2xl bg-purple-900/30 border border-purple-500/30 text-xs text-purple-200 font-semibold leading-relaxed">
+                        Je hebt <strong>GEEN</strong> woord gekregen! Luister straks heel goed naar de woorden van de anderen, bluf mee en probeer te raden wat hun woord is zonder ontdekt te worden!
+                      </div>
                     </div>
-                    <p className="text-xs text-slate-300 font-semibold">
-                      Jouw geheime woord wijkt net iets af van dat van de burgers. Probeer te achterhalen wie de Alien is en wie de Burgers zijn!
-                    </p>
-                  </div>
-                ) : (
-                  /* BURGER (NORMAAL) */
-                  <div className="w-full max-w-md p-5 rounded-3xl bg-emerald-950/40 border-2 border-emerald-500/60 shadow-xl text-center space-y-2">
-                    <span className="text-4xl block">👨‍💼</span>
-                    <span className="text-xs font-black uppercase tracking-widest text-emerald-400 block">
-                      Jij bent een Burger (Normaal)
-                    </span>
-                    <div className="py-3 px-4 rounded-2xl bg-emerald-950/80 border border-emerald-400 text-3xl sm:text-4xl font-black text-white tracking-wide shadow-inner">
-                      {currentViewingPlayer.word}
+                  ) : (
+                    /* BURGER & UNDERCOVER — geen rol op de kaart, zodat de undercover het zelf niet weet */
+                    <div className="w-full max-w-md p-5 rounded-3xl bg-cyan-950/40 border-2 border-cyan-500/60 shadow-xl text-center space-y-2.5">
+                      <span className="text-4xl block">🔑</span>
+                      <span className="text-xs font-black uppercase tracking-widest text-cyan-400 block">
+                        Jouw Geheime Woord
+                      </span>
+                      <div className="py-3 px-4 rounded-2xl bg-cyan-950/80 border border-cyan-400 text-3xl sm:text-4xl font-black text-white tracking-wide shadow-inner">
+                        {currentViewingPlayer.word}
+                      </div>
+                      <p className="text-xs text-slate-300 font-semibold leading-relaxed">
+                        Onthoud dit woord goed! Geef straks subtiele hints die erbij passen en ontdek wie de Alien is — of wie er misschien een net iets ander woord heeft!
+                      </p>
                     </div>
-                    <p className="text-xs text-slate-300 font-semibold">
-                      Onthoud dit woord goed! Verraad het niet direct, maar geef straks hints die er subtiel aan linken en stem de infiltranten eruit.
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              )}
 
             {/* Confirmation & Next Player Button */}
             {isRevealingWord && (
@@ -982,24 +1022,86 @@ export function UndercoverApp() {
               )}
             </div>
 
-            {/* Outcome notice if game ending */}
-            {winningFaction ? (
-              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/40 text-amber-200 text-xs font-bold leading-relaxed">
-                🎉 {winReason}
-              </div>
-            ) : (
-              <p className="text-xs text-slate-400 font-medium">
-                Het spel gaat door! Er zijn nog {alivePlayers.length} spelers over.
-              </p>
-            )}
+            {/* Laatste kans voor de Alien om het burgerwoord te raden */}
+            {alienGuessPending ? (
+              <form
+                onSubmit={e => handleSubmitAlienGuess(e, false)}
+                className="p-4 rounded-2xl bg-purple-950/50 border-2 border-purple-400/70 space-y-3 text-center animate-in fade-in"
+              >
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-purple-300 block">
+                    Laatste kans voor {lastEliminatedPlayer.name}!
+                  </span>
+                  <p className="text-xs text-purple-100/90 font-semibold mt-1 leading-relaxed">
+                    De Alien mag nog één keer proberen het woord van de Burgers te raden. Is het goed, dan wint de Alien alsnog!
+                  </p>
+                </div>
 
-            {/* Continue button */}
-            <button
-              onClick={handleContinueAfterElimination}
-              className="w-full py-4 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-sm tracking-wide shadow-xl active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
-            >
-              <span>{winningFaction ? 'Bekijk Einduitslag 🏆' : 'Volgende Ronde Starten 🚀'}</span>
-            </button>
+                <input
+                  type="text"
+                  value={alienGuessInput}
+                  onChange={e => setAlienGuessInput(e.target.value)}
+                  placeholder="Typ het geheime woord van de burgers..."
+                  maxLength={40}
+                  autoFocus
+                  className="w-full px-3.5 py-2.5 rounded-xl text-sm font-black text-center"
+                />
+
+                <button
+                  type="submit"
+                  disabled={!alienGuessInput.trim()}
+                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-purple-500 via-fuchsia-500 to-purple-500 hover:from-purple-400 hover:to-fuchsia-400 disabled:opacity-40 text-white font-black text-sm shadow-lg active:scale-95 transition-all cursor-pointer disabled:cursor-not-allowed"
+                >
+                  Raad het Woord! 🛸
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSubmitAlienGuess(undefined, true)}
+                  className="w-full py-1.5 text-xs font-bold text-purple-300/80 hover:text-purple-100 cursor-pointer"
+                >
+                  Geen idee — overslaan →
+                </button>
+              </form>
+            ) : (
+              <>
+                {/* Feedback op gok van de Alien */}
+                {alienGuessOutcome && (
+                  <div
+                    className={`p-3 rounded-2xl border text-xs font-bold leading-relaxed ${
+                      alienGuessOutcome.correct
+                        ? 'bg-purple-500/20 border-purple-400 text-purple-100'
+                        : 'bg-rose-500/15 border-rose-400/50 text-rose-200'
+                    }`}
+                  >
+                    {alienGuessOutcome.correct
+                      ? `👽 Spot-on! "${alienGuessOutcome.guessed}" is helemaal goed!`
+                      : alienGuessOutcome.guessed
+                        ? `❌ "${alienGuessOutcome.guessed}" is helaas fout gegokt!`
+                        : '🤷 De Alien heeft opgegeven met raden.'}
+                  </div>
+                )}
+
+                {/* Outcome notice if game ending */}
+                {winningFaction ? (
+                  <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/40 text-amber-200 text-xs font-bold leading-relaxed">
+                    🎉 {winReason}
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-400 font-medium">
+                    Het spel gaat door! Er zijn nog {alivePlayers.length} spelers over.
+                  </p>
+                )}
+
+                {/* Continue button */}
+                <button
+                  onClick={handleContinueAfterElimination}
+                  className="w-full py-4 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-sm tracking-wide shadow-xl active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <span>{winningFaction ? 'Bekijk Einduitslag 🏆' : 'Volgende Ronde Starten 🚀'}</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}

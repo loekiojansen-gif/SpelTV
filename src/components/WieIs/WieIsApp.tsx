@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
+  BookOpen,
   Play,
   RotateCcw,
   Plus,
@@ -43,6 +44,7 @@ export function WieIsApp({ isCurrentApp = true }: WieIsAppProps) {
 
   // Stellingen viewer modal
   const [showPromptsModal, setShowPromptsModal] = useState<boolean>(false);
+  const [promptTab, setPromptTab] = useState<'all' | 'custom' | 'builtin'>('all');
   const [customInput, setCustomInput] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [customPrompts, setCustomPrompts] = useState<WieIsPrompt[]>(() => loadCustomWieIsPrompts());
@@ -217,7 +219,13 @@ export function WieIsApp({ isCurrentApp = true }: WieIsAppProps) {
   };
 
   const allPrompts = getAllWieIsPrompts();
-  const filteredPrompts = allPrompts.filter(p =>
+  const basePrompts =
+    promptTab === 'custom'
+      ? customPrompts
+      : promptTab === 'builtin'
+        ? DEFAULT_WIE_IS_PROMPTS
+        : allPrompts;
+  const filteredPrompts = basePrompts.filter(p =>
     p.text.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -265,6 +273,31 @@ export function WieIsApp({ isCurrentApp = true }: WieIsAppProps) {
               ))}
             </div>
           </div>
+
+          {/* Stellingen bekijken & toevoegen */}
+          <button
+            type="button"
+            onClick={() => {
+              sounds.playTick(700);
+              setShowPromptsModal(true);
+            }}
+            className="w-full py-3.5 px-4 rounded-2xl bg-white hover:bg-slate-50 border-3 border-slate-200 text-slate-900 font-black text-sm flex items-center justify-between gap-2 shadow-md cursor-pointer active:scale-[0.98] transition-all"
+          >
+            <span className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-blue-600" />
+              <span>Stellingen bekijken &amp; toevoegen</span>
+            </span>
+            <span className="flex items-center gap-1.5 text-xs">
+              {customPrompts.length > 0 && (
+                <span className="px-2 py-0.5 rounded-lg bg-blue-100 text-blue-700 font-black">
+                  {customPrompts.length} eigen
+                </span>
+              )}
+              <span className="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 font-black tabular-nums">
+                {allPrompts.length}×
+              </span>
+            </span>
+          </button>
 
           {/* Big Start Button */}
           <button
@@ -455,16 +488,48 @@ export function WieIsApp({ isCurrentApp = true }: WieIsAppProps) {
               </div>
             </form>
 
-            {/* Search Filter */}
-            <div className="relative mb-3">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Zoek in stellingen..."
-                className="w-full pl-8 pr-3 py-1.5 text-xs font-bold bg-slate-100 text-slate-950 placeholder-slate-400 rounded-xl border border-slate-200 outline-none"
-              />
+            {/* Filter Tabs & Search */}
+            <div className="space-y-2 mb-3">
+              <div className="grid grid-cols-3 gap-1 p-1 rounded-xl bg-slate-100 border border-slate-200 text-[11px] font-black">
+                <button
+                  type="button"
+                  onClick={() => setPromptTab('all')}
+                  className={`py-1.5 rounded-lg cursor-pointer transition-colors ${
+                    promptTab === 'all' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Alle ({allPrompts.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPromptTab('custom')}
+                  className={`py-1.5 rounded-lg cursor-pointer transition-colors ${
+                    promptTab === 'custom' ? 'bg-amber-500 text-white' : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Eigen ({customPrompts.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPromptTab('builtin')}
+                  className={`py-1.5 rounded-lg cursor-pointer transition-colors ${
+                    promptTab === 'builtin' ? 'bg-slate-800 text-white' : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Standaard ({DEFAULT_WIE_IS_PROMPTS.length})
+                </button>
+              </div>
+
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  placeholder="Zoek in stellingen..."
+                  className="w-full pl-8 pr-3 py-1.5 text-xs font-bold rounded-xl outline-none"
+                />
+              </div>
             </div>
 
             {/* Stellingen List */}

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Home, Flag, RotateCcw, HelpCircle, X, Sparkles, Volume2, VolumeX } from 'lucide-react';
+import { useState } from 'react';
+import { Home, Flag, RotateCcw, HelpCircle, X, Sparkles } from 'lucide-react';
 import { sounds } from '../../utils/audio';
 import { SubAppId } from '../../types';
 import { GAME_RULES } from './gameRules';
@@ -37,6 +37,8 @@ const APP_HEADER_CONFIG: Record<SubAppId, { emoji: string; title: string }> = {
   SNELSTE_VINGER: { emoji: '⚡', title: 'Snelste Vinger' },
   HOGER_LAGER: { emoji: '🃏', title: 'Hoger of Lager' },
   NOOIT: { emoji: '😇', title: 'Ik heb nog nooit' },
+  GOUDMIJNEN: { emoji: '⛏️', title: 'Goudmijnen' },
+  SPECTRUM: { emoji: '🌈', title: 'Spectrum' },
 };
 
 export function WiiNavBar({
@@ -47,11 +49,6 @@ export function WiiNavBar({
   appNameTitle,
 }: WiiNavBarProps) {
   const [showRulesModal, setShowRulesModal] = useState<boolean>(false);
-  const [muted, setMuted] = useState<boolean>(() => sounds.getMuted());
-
-  useEffect(() => {
-    setMuted(sounds.getMuted());
-  }, []);
 
   const handleHomeClick = () => {
     sounds.playWiiBack();
@@ -114,7 +111,7 @@ export function WiiNavBar({
             <HelpCircle className="w-3.5 h-3.5 text-sky-300 opacity-70 group-hover:opacity-100 transition-opacity shrink-0" />
           </button>
 
-          {/* Right: Reset Button (Volume button removed per request) */}
+          {/* Right: Reset Button */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {pubGolfActive && currentApp !== 'PUB_GOLF' && (
               <button
@@ -126,25 +123,6 @@ export function WiiNavBar({
                 <span className="hidden xs:inline">Hole {pubGolfHole}</span>
               </button>
             )}
-
-            {/* Volume / Mute Toggle */}
-            <button
-              onClick={() => {
-                const next = !muted;
-                sounds.setMuted(next);
-                setMuted(next);
-                if (!next) sounds.playTick(1000);
-              }}
-              aria-label={muted ? 'Geluid aanzetten' : 'Geluid dempen'}
-              title={muted ? 'Geluid aanzetten' : 'Geluid dempen'}
-              className="w-9 h-9 rounded-full bg-slate-900/90 hover:bg-slate-900 border border-white/25 text-sky-300 hover:text-sky-200 flex items-center justify-center shadow-lg active:scale-95 transition-all cursor-pointer"
-            >
-              {muted ? (
-                <VolumeX className="w-4 h-4 text-slate-400" />
-              ) : (
-                <Volume2 className="w-4 h-4 text-sky-400 animate-pulse" />
-              )}
-            </button>
 
             {/* Reset Knop voor alle spellen */}
             <button

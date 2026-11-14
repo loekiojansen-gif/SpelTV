@@ -1284,6 +1284,40 @@ select:focus {
   animation: typingDot 1.3s ease-in-out infinite;
 }
 
+@keyframes pickaxeSwing {
+  0%, 100% {
+    transform: rotate(-18deg) translateY(0px);
+  }
+  42% {
+    transform: rotate(-34deg) translateY(-2px);
+  }
+  58% {
+    transform: rotate(22deg) translateY(2px);
+  }
+  72% {
+    transform: rotate(-8deg) translateY(0px);
+  }
+}
+
+.animate-pickaxe-swing {
+  animation: pickaxeSwing 2.2s ease-in-out infinite;
+  transform-origin: 24% 82%;
+}
+
+@keyframes spectrumNeedleSweep {
+  0%, 100% {
+    transform: rotate(-42deg);
+  }
+  50% {
+    transform: rotate(38deg);
+  }
+}
+
+.animate-spectrum-needle {
+  animation: spectrumNeedleSweep 3.8s ease-in-out infinite;
+  transform-origin: 50px 64px;
+}
+
 /* --- Gedeelde effecten voor de nieuwe spellen ------------------------------ */
 @keyframes popIn {
   0% {
